@@ -3,6 +3,7 @@ DROP TABLE IF EXISTS events CASCADE;
 DROP TABLE IF EXISTS services CASCADE;
 DROP TABLE IF EXISTS news_items CASCADE;
 DROP TABLE IF EXISTS doctors CASCADE;
+drop table if exists medication_alarms CASCADE;
 
 -- Create Events Table
 CREATE TABLE IF NOT EXISTS events (
@@ -57,6 +58,18 @@ CREATE TABLE IF NOT EXISTS doctors (
     languages TEXT[],
     image_url TEXT,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL
+);
+
+-- Create Medication Alarms Table
+create table medication_alarms (
+  id uuid default gen_random_uuid() primary key,
+  created_at timestamp with time zone default timezone('utc'::text, now()) not null,
+  title text not null,
+  dosage text,
+  time text not null, -- Format "HH:mm"
+  frequency text default 'Daily',
+  is_active boolean default true,
+  user_id uuid references auth.users not null -- Assuming row level security
 );
 
 -- Seed Data: Events
