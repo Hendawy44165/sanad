@@ -77,4 +77,46 @@ void main() {
       expect(find.text('Request Book'), findsAtLeastNWidgets(3));
     });
   });
+
+  group('BooksScreen Directionality Tests', () {
+    testWidgets('app bar layout flips in RTL mode', (WidgetTester tester) async {
+      double getX(Finder finder) => tester.getCenter(finder).dx;
+
+      // 1. Test LTR
+      await tester.pumpWidget(
+        const ProviderScope(
+          child: MaterialApp(
+            home: Directionality(
+              textDirection: TextDirection.ltr,
+              child: BooksScreen(),
+            ),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      final backButtonLtr = find.byType(IconButton);
+      final titleLtr = find.text('Request a Book');
+
+      expect(getX(backButtonLtr) < getX(titleLtr), isTrue);
+
+      // 2. Test RTL
+      await tester.pumpWidget(
+        const ProviderScope(
+          child: MaterialApp(
+            home: Directionality(
+              textDirection: TextDirection.rtl,
+              child: BooksScreen(),
+            ),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      final backButtonRtl = find.byType(IconButton);
+      final titleRtl = find.text('Request a Book');
+
+      expect(getX(backButtonRtl) > getX(titleRtl), isTrue);
+    });
+  });
 }

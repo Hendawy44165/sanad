@@ -151,7 +151,7 @@ class BooksScreen extends ConsumerWidget {
             itemBuilder: (context, index) {
               final isFirst = index == 0;
               return Container(
-                margin: const EdgeInsets.only(right: 8),
+                margin: const EdgeInsetsDirectional.only(end: 8),
                 child: Chip(
                   avatar: index == 1 ? const Icon(LucideIcons.headphones, size: 14) : 
                           index == 2 ? const Icon(LucideIcons.type, size: 14) : null,

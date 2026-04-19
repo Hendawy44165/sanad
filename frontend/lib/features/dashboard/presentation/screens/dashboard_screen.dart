@@ -368,7 +368,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
             children: tags
                 .map(
                   (tag) => Container(
-                    margin: const EdgeInsets.only(right: 8),
+                    margin: const EdgeInsetsDirectional.only(end: 8),
                     padding: const EdgeInsets.symmetric(
                       horizontal: 12,
                       vertical: 6,
@@ -672,7 +672,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                   children: types
                       .map(
                         (type) => Container(
-                          margin: const EdgeInsets.only(right: 8),
+                          margin: const EdgeInsetsDirectional.only(end: 8),
                           padding: const EdgeInsets.symmetric(
                             horizontal: 8,
                             vertical: 4,
