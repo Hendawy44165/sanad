@@ -2,11 +2,24 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:lucide_icons/lucide_icons.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:sanad/l10n/app_localizations.dart';
 import 'package:sanad/features/jobs/presentation/screens/jobs_screen.dart';
 
 void main() {
   Widget createWidgetUnderTest() {
-    return const ProviderScope(child: MaterialApp(home: JobsScreen()));
+    return const ProviderScope(
+      child: MaterialApp(
+        localizationsDelegates: [
+          AppLocalizations.delegate,
+          GlobalMaterialLocalizations.delegate,
+          GlobalWidgetsLocalizations.delegate,
+          GlobalCupertinoLocalizations.delegate,
+        ],
+        supportedLocales: [Locale('en'), Locale('ar')],
+        home: JobsScreen(),
+      ),
+    );
   }
 
   group('JobsScreen Widget Tests', () {
@@ -102,6 +115,14 @@ void main() {
       await tester.pumpWidget(
         const ProviderScope(
           child: MaterialApp(
+            localizationsDelegates: [
+              AppLocalizations.delegate,
+              GlobalMaterialLocalizations.delegate,
+              GlobalWidgetsLocalizations.delegate,
+              GlobalCupertinoLocalizations.delegate,
+            ],
+            supportedLocales: [Locale('en'), Locale('ar')],
+            locale: Locale('en'),
             home: Directionality(
               textDirection: TextDirection.ltr,
               child: JobsScreen(),
@@ -112,7 +133,7 @@ void main() {
       await tester.pumpAndSettle();
 
       final iconLtr = find.byIcon(LucideIcons.fileText);
-      final titleLtr = find.text('Upload Your CV');
+      final titleLtr = find.text('Upload Your CV').first;
 
       expect(getX(iconLtr) < getX(titleLtr), isTrue);
 
@@ -120,6 +141,14 @@ void main() {
       await tester.pumpWidget(
         const ProviderScope(
           child: MaterialApp(
+            localizationsDelegates: [
+              AppLocalizations.delegate,
+              GlobalMaterialLocalizations.delegate,
+              GlobalWidgetsLocalizations.delegate,
+              GlobalCupertinoLocalizations.delegate,
+            ],
+            supportedLocales: [Locale('en'), Locale('ar')],
+            locale: Locale('ar'),
             home: Directionality(
               textDirection: TextDirection.rtl,
               child: JobsScreen(),
@@ -130,7 +159,7 @@ void main() {
       await tester.pumpAndSettle();
 
       final iconRtl = find.byIcon(LucideIcons.fileText);
-      final titleRtl = find.text('Upload Your CV');
+      final titleRtl = find.text('ارفع سيرتك الذاتية').first;
 
       expect(getX(iconRtl) > getX(titleRtl), isTrue);
     });

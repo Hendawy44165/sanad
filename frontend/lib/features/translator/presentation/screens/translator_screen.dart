@@ -10,7 +10,8 @@ class TranslatorScreen extends ConsumerStatefulWidget {
   ConsumerState<TranslatorScreen> createState() => _TranslatorScreenState();
 }
 
-class _TranslatorScreenState extends ConsumerState<TranslatorScreen> with SingleTickerProviderStateMixin {
+class _TranslatorScreenState extends ConsumerState<TranslatorScreen>
+    with SingleTickerProviderStateMixin {
   bool _isRecording = false;
   late AnimationController _pulseController;
 
@@ -44,10 +45,7 @@ class _TranslatorScreenState extends ConsumerState<TranslatorScreen> with Single
                     const SizedBox(height: 24),
                     const Text(
                       'Tap the button and sign your message',
-                      style: TextStyle(
-                        fontSize: 16,
-                        color: Color(0xFF64748B),
-                      ),
+                      style: TextStyle(fontSize: 16, color: Color(0xFF64748B)),
                     ),
                     const SizedBox(height: 40),
                     _buildStatusCard(),
@@ -98,7 +96,7 @@ class _TranslatorScreenState extends ConsumerState<TranslatorScreen> with Single
         borderRadius: BorderRadius.circular(40),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.05),
+            color: Colors.black.withValues(alpha: 0.05),
             blurRadius: 20,
             offset: const Offset(0, 10),
           ),
@@ -140,7 +138,9 @@ class _TranslatorScreenState extends ConsumerState<TranslatorScreen> with Single
           onLongPressStart: (_) => setState(() => _isRecording = true),
           onLongPressEnd: (_) => setState(() => _isRecording = false),
           child: ScaleTransition(
-            scale: _isRecording ? _pulseController.drive(Tween(begin: 1.0, end: 1.2)) : const AlwaysStoppedAnimation(1.0),
+            scale: _isRecording
+                ? _pulseController.drive(Tween(begin: 1.0, end: 1.2))
+                : const AlwaysStoppedAnimation(1.0),
             child: Container(
               width: 100,
               height: 100,
@@ -149,17 +149,13 @@ class _TranslatorScreenState extends ConsumerState<TranslatorScreen> with Single
                 shape: BoxShape.circle,
                 boxShadow: [
                   BoxShadow(
-                    color: const Color(0xFF004D40).withOpacity(0.3),
+                    color: const Color(0xFF004D40).withValues(alpha: 0.3),
                     blurRadius: 20,
                     spreadRadius: 5,
                   ),
                 ],
               ),
-              child: const Icon(
-                LucideIcons.mic,
-                color: Colors.white,
-                size: 40,
-              ),
+              child: const Icon(LucideIcons.mic, color: Colors.white, size: 40),
             ),
           ),
         ),
@@ -221,10 +217,7 @@ class _TranslatorScreenState extends ConsumerState<TranslatorScreen> with Single
           const SizedBox(width: 12),
           Text(
             text,
-            style: const TextStyle(
-              fontSize: 14,
-              color: Color(0xFF64748B),
-            ),
+            style: const TextStyle(fontSize: 14, color: Color(0xFF64748B)),
           ),
         ],
       ),

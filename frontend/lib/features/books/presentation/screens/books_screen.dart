@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 import 'package:go_router/go_router.dart';
+import 'package:sanad/l10n/app_localizations.dart';
 
 class BooksScreen extends ConsumerWidget {
   const BooksScreen({super.key});
@@ -14,10 +15,10 @@ class BooksScreen extends ConsumerWidget {
         child: CustomScrollView(
           slivers: [
             _buildAppBar(context),
-            _buildSearchSection(),
-            _buildFormatsBanner(),
-            _buildFilters(),
-            _buildBooksList(),
+            _buildSearchSection(context),
+            _buildFormatsBanner(context),
+            _buildFilters(context),
+            _buildBooksList(context),
             const SliverToBoxAdapter(child: SizedBox(height: 40)),
           ],
         ),
@@ -32,12 +33,15 @@ class BooksScreen extends ConsumerWidget {
         child: Row(
           children: [
             IconButton(
-              icon: const Icon(LucideIcons.chevronLeft, color: Color(0xFF1E293B)),
+              icon: const Icon(
+                LucideIcons.chevronLeft,
+                color: Color(0xFF1E293B),
+              ),
               onPressed: () => context.pop(),
             ),
             const SizedBox(width: 8),
-            const Text(
-              'Request a Book',
+            Text(
+              AppLocalizations.of(context)!.requestBook,
               style: TextStyle(
                 fontSize: 24,
                 fontWeight: FontWeight.bold,
@@ -50,7 +54,7 @@ class BooksScreen extends ConsumerWidget {
     );
   }
 
-  Widget _buildSearchSection() {
+  Widget _buildSearchSection(BuildContext context) {
     return SliverPadding(
       padding: const EdgeInsets.all(24),
       sliver: SliverToBoxAdapter(
@@ -61,18 +65,18 @@ class BooksScreen extends ConsumerWidget {
             borderRadius: BorderRadius.circular(16),
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withOpacity(0.05),
+                color: Colors.black.withValues(alpha: 0.05),
                 blurRadius: 10,
                 offset: const Offset(0, 4),
               ),
             ],
           ),
-          child: const TextField(
+          child: TextField(
             decoration: InputDecoration(
-              hintText: 'Search books...',
+              hintText: AppLocalizations.of(context)!.searchBooks,
               border: InputBorder.none,
-              icon: Icon(LucideIcons.search, color: Color(0xFF64748B)),
-              hintStyle: TextStyle(color: Color(0xFF64748B)),
+              icon: const Icon(LucideIcons.search, color: Color(0xFF64748B)),
+              hintStyle: const TextStyle(color: Color(0xFF64748B)),
             ),
           ),
         ),
@@ -80,7 +84,7 @@ class BooksScreen extends ConsumerWidget {
     );
   }
 
-  Widget _buildFormatsBanner() {
+  Widget _buildFormatsBanner(BuildContext context) {
     return SliverPadding(
       padding: const EdgeInsets.symmetric(horizontal: 24),
       sliver: SliverToBoxAdapter(
@@ -101,12 +105,12 @@ class BooksScreen extends ConsumerWidget {
                 child: const Icon(LucideIcons.bookOpen, color: Colors.white),
               ),
               const SizedBox(width: 16),
-              const Expanded(
+              Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'Available in Multiple Formats',
+                      AppLocalizations.of(context)!.availableFormats,
                       style: TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
@@ -114,11 +118,8 @@ class BooksScreen extends ConsumerWidget {
                       ),
                     ),
                     Text(
-                      'Request any book in audio, Braille, large print, or e-book format.',
-                      style: TextStyle(
-                        fontSize: 14,
-                        color: Color(0xFF065F46),
-                      ),
+                      AppLocalizations.of(context)!.availableFormatsSubtitle,
+                      style: TextStyle(fontSize: 14, color: Color(0xFF065F46)),
                     ),
                   ],
                 ),
@@ -130,13 +131,13 @@ class BooksScreen extends ConsumerWidget {
     );
   }
 
-  Widget _buildFilters() {
+  Widget _buildFilters(BuildContext context) {
     final filters = [
-      'All Formats',
-      'Audio Book',
-      'Braille',
-      'Large Print',
-      'E-Book',
+      AppLocalizations.of(context)!.allFormats,
+      AppLocalizations.of(context)!.audioBook,
+      AppLocalizations.of(context)!.braille,
+      AppLocalizations.of(context)!.largePrint,
+      AppLocalizations.of(context)!.eBook,
     ];
 
     return SliverPadding(
@@ -153,8 +154,11 @@ class BooksScreen extends ConsumerWidget {
               return Container(
                 margin: const EdgeInsetsDirectional.only(end: 8),
                 child: Chip(
-                  avatar: index == 1 ? const Icon(LucideIcons.headphones, size: 14) : 
-                          index == 2 ? const Icon(LucideIcons.type, size: 14) : null,
+                  avatar: index == 1
+                      ? const Icon(LucideIcons.headphones, size: 14)
+                      : index == 2
+                      ? const Icon(LucideIcons.type, size: 14)
+                      : null,
                   label: Text(
                     filters[index],
                     style: TextStyle(
@@ -162,9 +166,13 @@ class BooksScreen extends ConsumerWidget {
                       fontWeight: isFirst ? FontWeight.bold : FontWeight.normal,
                     ),
                   ),
-                  backgroundColor: isFirst ? const Color(0xFF004D40) : Colors.white,
+                  backgroundColor: isFirst
+                      ? const Color(0xFF004D40)
+                      : Colors.white,
                   side: BorderSide(
-                    color: isFirst ? const Color(0xFF004D40) : const Color(0xFFE2E8F0),
+                    color: isFirst
+                        ? const Color(0xFF004D40)
+                        : const Color(0xFFE2E8F0),
                   ),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(20),
@@ -178,12 +186,13 @@ class BooksScreen extends ConsumerWidget {
     );
   }
 
-  Widget _buildBooksList() {
+  Widget _buildBooksList(BuildContext context) {
     return SliverPadding(
       padding: const EdgeInsets.all(24),
       sliver: SliverList(
         delegate: SliverChildListDelegate([
           _buildBookCard(
+            context,
             'The Art of Possibility',
             'Rosamund Stone Zander',
             'Personal Growth',
@@ -191,6 +200,7 @@ class BooksScreen extends ConsumerWidget {
           ),
           const SizedBox(height: 16),
           _buildBookCard(
+            context,
             'A Still Small Voice',
             'Echo Bodine',
             'Spirituality',
@@ -198,6 +208,7 @@ class BooksScreen extends ConsumerWidget {
           ),
           const SizedBox(height: 16),
           _buildBookCard(
+            context,
             'The Brain That Changes Itself',
             'Norman Doidge',
             'Neuroscience',
@@ -209,6 +220,7 @@ class BooksScreen extends ConsumerWidget {
   }
 
   Widget _buildBookCard(
+    BuildContext context,
     String title,
     String author,
     String category,
@@ -221,7 +233,7 @@ class BooksScreen extends ConsumerWidget {
         borderRadius: BorderRadius.circular(24),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.03),
+            color: Colors.black.withValues(alpha: 0.03),
             blurRadius: 10,
             offset: const Offset(0, 4),
           ),
@@ -239,7 +251,10 @@ class BooksScreen extends ConsumerWidget {
                   color: const Color(0xFFD1FAE5),
                   borderRadius: BorderRadius.circular(12),
                 ),
-                child: const Icon(LucideIcons.bookOpen, color: Color(0xFF065F46)),
+                child: const Icon(
+                  LucideIcons.bookOpen,
+                  color: Color(0xFF065F46),
+                ),
               ),
               const SizedBox(width: 16),
               Expanded(
@@ -263,7 +278,10 @@ class BooksScreen extends ConsumerWidget {
                     ),
                     const SizedBox(height: 8),
                     Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 8,
+                        vertical: 4,
+                      ),
                       decoration: BoxDecoration(
                         color: const Color(0xFFF1F5F9),
                         borderRadius: BorderRadius.circular(8),
@@ -289,7 +307,10 @@ class BooksScreen extends ConsumerWidget {
             children: formats
                 .map(
                   (format) => Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 8,
+                      vertical: 4,
+                    ),
                     decoration: BoxDecoration(
                       color: const Color(0xFFD1FAE5),
                       borderRadius: BorderRadius.circular(20),
@@ -298,9 +319,11 @@ class BooksScreen extends ConsumerWidget {
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         Icon(
-                          format == 'Audio Book' ? LucideIcons.headphones : 
-                          format == 'Braille' ? LucideIcons.type : 
-                          LucideIcons.book,
+                          format == 'Audio Book'
+                              ? LucideIcons.headphones
+                              : format == 'Braille'
+                              ? LucideIcons.type
+                              : LucideIcons.book,
                           size: 12,
                           color: const Color(0xFF065F46),
                         ),
@@ -332,8 +355,8 @@ class BooksScreen extends ConsumerWidget {
                 ),
                 padding: const EdgeInsets.symmetric(vertical: 16),
               ),
-              child: const Text(
-                'Request Book',
+              child: Text(
+                AppLocalizations.of(context)!.requestBook,
                 style: TextStyle(fontWeight: FontWeight.bold),
               ),
             ),

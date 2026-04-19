@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 import 'package:go_router/go_router.dart';
+import '../../../../l10n/app_localizations.dart';
+import '../../../../core/providers/locale_provider.dart';
 
 class DashboardScreen extends ConsumerStatefulWidget {
   const DashboardScreen({super.key});
@@ -48,7 +50,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                 shape: BoxShape.circle,
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.black.withOpacity(0.05),
+                    color: Colors.black.withValues(alpha: 0.05),
                     blurRadius: 10,
                     offset: const Offset(0, 4),
                   ),
@@ -59,13 +61,34 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                 onPressed: () {},
               ),
             ),
-            const Text(
-              'Sanad',
+            Text(
+              AppLocalizations.of(context)!.appTitle,
               style: TextStyle(
                 fontSize: 24,
                 fontWeight: FontWeight.bold,
                 color: Color(0xFF004D40),
               ),
+            ),
+            //! TODO: remove this temp locale flipper
+            Row(
+              children: [
+                IconButton(
+                  icon: const Icon(LucideIcons.globe),
+                  onPressed: () {
+                    ref.read(localeProvider.notifier).setLocale(
+                      const Locale('en'),
+                    );
+                  },
+                ),
+                IconButton(
+                  icon: const Icon(LucideIcons.globe),
+                  onPressed: () {
+                    ref.read(localeProvider.notifier).setLocale(
+                      const Locale('ar'),
+                    );
+                  },
+                ),
+              ],
             ),
             Container(
               width: 40,
@@ -96,8 +119,8 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text(
-              'Dashboard',
+            Text(
+              AppLocalizations.of(context)!.dashboard,
               style: TextStyle(
                 fontSize: 32,
                 fontWeight: FontWeight.bold,
@@ -105,8 +128,8 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
               ),
             ),
             const SizedBox(height: 8),
-            const Text(
-              'Your accessible resources and benefits.',
+            Text(
+              AppLocalizations.of(context)!.dashboardSubtitle,
               style: TextStyle(fontSize: 16, color: Color(0xFF64748B)),
             ),
           ],
@@ -122,8 +145,8 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text(
-              'Quick Actions',
+            Text(
+              AppLocalizations.of(context)!.quickActions,
               style: TextStyle(
                 fontSize: 20,
                 fontWeight: FontWeight.bold,
@@ -141,7 +164,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
               children: [
                 _buildActionCard(
                   context,
-                  'Find Jobs',
+                  AppLocalizations.of(context)!.findJobs,
                   LucideIcons.briefcase,
                   const Color(0xFFD1FAE5),
                   const Color(0xFF065F46),
@@ -149,7 +172,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                 ),
                 _buildActionCard(
                   context,
-                  'Find a Doctor',
+                  AppLocalizations.of(context)!.findDoctor,
                   LucideIcons.stethoscope,
                   const Color(0xFFD1FAE5),
                   const Color(0xFF065F46),
@@ -157,7 +180,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                 ),
                 _buildActionCard(
                   context,
-                  'Request a Book',
+                  AppLocalizations.of(context)!.requestBook,
                   LucideIcons.bookOpen,
                   const Color(0xFFD1FAE5),
                   const Color(0xFF065F46),
@@ -165,7 +188,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                 ),
                 _buildActionCard(
                   context,
-                  'Sign Language',
+                  AppLocalizations.of(context)!.signLanguage,
                   LucideIcons.handMetal,
                   const Color(0xFFD1FAE5),
                   const Color(0xFF065F46),
@@ -196,7 +219,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
           borderRadius: BorderRadius.circular(20),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.03),
+              color: Colors.black.withValues(alpha: 0.03),
               blurRadius: 10,
               offset: const Offset(0, 4),
             ),
@@ -235,8 +258,8 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                const Text(
-                  'Opportunities',
+                Text(
+                  AppLocalizations.of(context)!.opportunities,
                   style: TextStyle(
                     fontSize: 20,
                     fontWeight: FontWeight.bold,
@@ -245,10 +268,10 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                 ),
                 TextButton(
                   onPressed: () => context.go('/jobs'),
-                  child: const Row(
+                  child: Row(
                     children: [
                       Text(
-                        'VIEW ALL JOBS',
+                        AppLocalizations.of(context)!.viewAllJobs,
                         style: TextStyle(
                           fontSize: 14,
                           fontWeight: FontWeight.bold,
@@ -298,7 +321,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
         borderRadius: BorderRadius.circular(24),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.03),
+            color: Colors.black.withValues(alpha: 0.03),
             blurRadius: 10,
             offset: const Offset(0, 4),
           ),
@@ -342,7 +365,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                     color: const Color(0xFFD1FAE5),
                     borderRadius: BorderRadius.circular(20),
                   ),
-                  child: const Row(
+                  child: Row(
                     children: [
                       Icon(
                         Icons.check_circle_outline,
@@ -351,7 +374,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                       ),
                       SizedBox(width: 4),
                       Text(
-                        'Verified Accessible',
+                        AppLocalizations.of(context)!.verifiedAccessible,
                         style: TextStyle(
                           fontSize: 10,
                           fontWeight: FontWeight.bold,
@@ -400,8 +423,8 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                 ),
                 padding: const EdgeInsets.symmetric(vertical: 12),
               ),
-              child: const Text(
-                'View Details',
+              child: Text(
+                AppLocalizations.of(context)!.viewDetails,
                 style: TextStyle(
                   color: Color(0xFF004D40),
                   fontWeight: FontWeight.bold,
@@ -423,8 +446,8 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                const Text(
-                  'Medical Network',
+                Text(
+                  AppLocalizations.of(context)!.medicalNetwork,
                   style: TextStyle(
                     fontSize: 20,
                     fontWeight: FontWeight.bold,
@@ -433,10 +456,10 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                 ),
                 TextButton(
                   onPressed: () => context.go('/doctors'),
-                  child: const Row(
+                  child: Row(
                     children: [
                       Text(
-                        'FIND CARE',
+                        AppLocalizations.of(context)!.findCare,
                         style: TextStyle(
                           fontSize: 14,
                           fontWeight: FontWeight.bold,
@@ -481,7 +504,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
         borderRadius: BorderRadius.circular(24),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.03),
+            color: Colors.black.withValues(alpha: 0.03),
             blurRadius: 10,
             offset: const Offset(0, 4),
           ),
@@ -528,7 +551,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                         const Icon(Icons.star, color: Colors.amber, size: 16),
                         const SizedBox(width: 4),
                         Text(
-                          '$rating ($reviews reviews)',
+                          AppLocalizations.of(context)!.reviews(reviews),
                           style: const TextStyle(
                             fontSize: 12,
                             fontWeight: FontWeight.w600,
@@ -555,8 +578,8 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                 ),
                 padding: const EdgeInsets.symmetric(vertical: 12),
               ),
-              child: const Text(
-                'Book',
+              child: Text(
+                AppLocalizations.of(context)!.book,
                 style: TextStyle(fontWeight: FontWeight.bold),
               ),
             ),
@@ -575,8 +598,8 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                const Text(
-                  'Learn & Grow',
+                Text(
+                  AppLocalizations.of(context)!.learnAndGrow,
                   style: TextStyle(
                     fontSize: 20,
                     fontWeight: FontWeight.bold,
@@ -585,10 +608,10 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                 ),
                 TextButton(
                   onPressed: () => context.go('/books'),
-                  child: const Row(
+                  child: Row(
                     children: [
                       Text(
-                        'BROWSE BOOKS',
+                        AppLocalizations.of(context)!.browseBooks,
                         style: TextStyle(
                           fontSize: 14,
                           fontWeight: FontWeight.bold,
@@ -606,13 +629,15 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
               ],
             ),
             const SizedBox(height: 16),
-            _buildBookCard(
-              'The Art of Possibility',
-              'Rosamund Stone Zander',
-              ['Audio Book', 'Braille'],
-            ),
+            _buildBookCard('The Art of Possibility', 'Rosamund Stone Zander', [
+              'Audio Book',
+              'Braille',
+            ]),
             const SizedBox(height: 16),
-            _buildBookCard('Disability Visibility', 'Alice Wong', ['Audio Book', 'E-Book']),
+            _buildBookCard('Disability Visibility', 'Alice Wong', [
+              'Audio Book',
+              'E-Book',
+            ]),
           ],
         ),
       ),
@@ -627,7 +652,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
         borderRadius: BorderRadius.circular(24),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.03),
+            color: Colors.black.withValues(alpha: 0.03),
             blurRadius: 10,
             offset: const Offset(0, 4),
           ),
@@ -705,8 +730,8 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
               ),
               padding: const EdgeInsets.symmetric(horizontal: 12),
             ),
-            child: const Text(
-              'Request Book',
+            child: Text(
+              AppLocalizations.of(context)!.requestBook,
               style: TextStyle(
                 fontSize: 12,
                 color: Color(0xFF004D40),
@@ -734,7 +759,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
               Container(
                 padding: const EdgeInsets.all(16),
                 decoration: BoxDecoration(
-                  color: Colors.white.withOpacity(0.1),
+                  color: Colors.white.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(20),
                 ),
                 child: const Icon(
@@ -758,10 +783,10 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                     ),
                     const SizedBox(height: 4),
                     Text(
-                      'Tap the button and sign your message',
+                      AppLocalizations.of(context)!.tapToSign,
                       style: TextStyle(
                         fontSize: 14,
-                        color: Colors.white.withOpacity(0.8),
+                        color: Colors.white.withValues(alpha: 0.8),
                       ),
                     ),
                   ],
@@ -781,8 +806,8 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                     vertical: 8,
                   ),
                 ),
-                child: const Text(
-                  'TRANSLATE NOW',
+                child: Text(
+                  AppLocalizations.of(context)!.translateNow,
                   style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
                 ),
               ),
@@ -799,7 +824,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
         color: Colors.white,
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.05),
+            color: Colors.black.withValues(alpha: 0.05),
             blurRadius: 20,
             offset: const Offset(0, -5),
           ),
@@ -817,18 +842,18 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
         showSelectedLabels: true,
         showUnselectedLabels: true,
         type: BottomNavigationBarType.fixed,
-        items: const [
+        items: [
           BottomNavigationBarItem(
             icon: Icon(LucideIcons.home),
-            label: 'Home',
+            label: AppLocalizations.of(context)!.home,
           ),
           BottomNavigationBarItem(
             icon: Icon(LucideIcons.handMetal),
-            label: 'Translator',
+            label: AppLocalizations.of(context)!.translator,
           ),
           BottomNavigationBarItem(
             icon: Icon(LucideIcons.settings),
-            label: 'Settings',
+            label: AppLocalizations.of(context)!.settings,
           ),
         ],
       ),
