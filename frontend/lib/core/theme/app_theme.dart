@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
-
 import 'app_colors.dart';
 
 class AppTheme {
@@ -13,14 +11,9 @@ class AppTheme {
       onPrimary: AppColors.onPrimary,
       secondary: AppColors.secondary,
       onSecondary: AppColors.onSecondary,
-
       surface: AppColors.surface,
       error: AppColors.error,
       brightness: Brightness.light,
-    ),
-    textTheme: GoogleFonts.interTextTheme().apply(
-      bodyColor: AppColors.text,
-      displayColor: AppColors.text,
     ),
     appBarTheme: const AppBarTheme(
       backgroundColor: Colors.transparent,

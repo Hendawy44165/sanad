@@ -1,90 +1,86 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:go_router/go_router.dart';
-import 'package:sanad/core/repositories/supabase_repository.dart';
-import 'package:sanad/core/services/notification_service.dart';
-import 'package:sanad/core/theme/app_colors.dart';
-import 'package:sanad/features/doctors/presentation/screens/doctors_screen.dart';
-import 'package:sanad/features/events/presentation/screens/events_screen.dart';
-import 'package:sanad/features/medications/data/models/medication_alarm.dart';
-import 'package:sanad/features/medications/presentation/screens/add_medication_screen.dart';
-import 'package:sanad/features/news/presentation/screens/news_screen.dart';
-import 'package:sanad/features/services/presentation/screens/services_screen.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
-import '../widgets/dashboard_section.dart';
+import 'package:lucide_icons/lucide_icons.dart';
 
-/// The main dashboard screen displaying an overview of the application features.
-class DashboardScreen extends ConsumerWidget {
-  /// Creates a [DashboardScreen].
+class DashboardScreen extends ConsumerStatefulWidget {
   const DashboardScreen({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    // Check for disability selection
-    ref.listen(userProfileProvider, (previous, next) {
-      next.whenData((profile) {
-        if (profile != null && profile.disabilityType == null) {
-          WidgetsBinding.instance.addPostFrameCallback((_) {
-            context.go('/select_disability');
-          });
-        }
-      });
-    });
+  ConsumerState<DashboardScreen> createState() => _DashboardScreenState();
+}
 
+class _DashboardScreenState extends ConsumerState<DashboardScreen> {
+  int _selectedIndex = 0;
+
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.background,
-      body: RefreshIndicator(
-        onRefresh: () async {
-          await Future.wait([
-            ref.refresh(medicationAlarmsProvider.future),
-            ref.refresh(eventsProvider.future),
-            ref.refresh(servicesProvider.future),
-            ref.refresh(newsProvider.future),
-            ref.refresh(doctorsProvider.future),
-          ]);
-        },
-        child: SafeArea(
-          child: CustomScrollView(
-            physics: const BouncingScrollPhysics(),
-            slivers: [_buildHeader(context), _buildContent(context, ref)],
-          ),
+      backgroundColor: const Color(0xFFF8F5F2),
+      body: SafeArea(
+        child: CustomScrollView(
+          slivers: [
+            _buildAppBar(),
+            _buildWelcomeHeader(),
+            _buildQuickActions(),
+            _buildOpportunities(),
+            _buildMedicalNetwork(),
+            _buildLearnAndGrow(),
+            _buildSignLanguageBanner(),
+            const SliverToBoxAdapter(child: SizedBox(height: 100)),
+          ],
         ),
       ),
+      bottomNavigationBar: _buildBottomNavigationBar(),
     );
   }
 
-  /// Builds the dashboard header with greeting and logout button.
-  Widget _buildHeader(BuildContext context) {
+  Widget _buildAppBar() {
     return SliverPadding(
-      padding: const EdgeInsets.all(24.0),
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       sliver: SliverToBoxAdapter(
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const Text(
-                  'Hello, Friend! 👋',
-                  style: TextStyle(
-                    fontSize: 28,
-                    fontWeight: FontWeight.bold,
-                    color: AppColors.text,
+            Container(
+              decoration: BoxDecoration(
+                color: Colors.white,
+                shape: BoxShape.circle,
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.05),
+                    blurRadius: 10,
+                    offset: const Offset(0, 4),
                   ),
-                ),
-                const SizedBox(height: 8),
-                Text(
-                  "Here's what's happening today",
-                  style: TextStyle(
-                    fontSize: 16,
-                    color: AppColors.text.withValues(alpha: 0.6),
-                  ),
-                ),
-              ],
+                ],
+              ),
+              child: IconButton(
+                icon: const Icon(LucideIcons.menu, color: Color(0xFF1E293B)),
+                onPressed: () {},
+              ),
             ),
-            IconButton(
-              onPressed: () => _handleLogout(context),
-              icon: const Icon(Icons.logout, color: AppColors.primary),
+            Text(
+              'Sanad',
+              style: TextStyle(
+                fontSize: 24,
+                fontWeight: FontWeight.bold,
+                color: const Color(0xFF004D40),
+              ),
+            ),
+            Container(
+              width: 40,
+              height: 40,
+              decoration: const BoxDecoration(
+                color: Color(0xFFD1FAE5),
+                shape: BoxShape.circle,
+              ),
+              alignment: Alignment.center,
+              child: const Text(
+                'A',
+                style: TextStyle(
+                  color: Color(0xFF065F46),
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
             ),
           ],
         ),
@@ -92,369 +88,552 @@ class DashboardScreen extends ConsumerWidget {
     );
   }
 
-  Future<void> _handleLogout(BuildContext context) async {
-    await Supabase.instance.client.auth.signOut();
-  }
-
-  /// Builds the main content content list.
-  Widget _buildContent(BuildContext context, WidgetRef ref) {
+  Widget _buildWelcomeHeader() {
     return SliverPadding(
-      padding: const EdgeInsets.symmetric(horizontal: 24.0),
-      sliver: SliverList(
-        delegate: SliverChildListDelegate([
-          _buildAlarmsSection(context, ref),
-          const SizedBox(height: 24),
-          _buildEntertainmentSection(context, ref),
-          const SizedBox(height: 24),
-          _buildServicesSection(context, ref),
-          const SizedBox(height: 24),
-          _buildNewsSection(context, ref),
-          const SizedBox(height: 24),
-          _buildDoctorsSection(context, ref),
-          const SizedBox(height: 24),
-        ]),
-      ),
-    );
-  }
-
-  Widget _buildAlarmsSection(BuildContext context, WidgetRef ref) {
-    final alarmsAsync = ref.watch(medicationAlarmsProvider);
-
-    return DashboardSection(
-      title: 'Medication Reminders',
-      subtitle: alarmsAsync.when(
-        data: (alarms) {
-          final activeCount = alarms.where((a) => a.isActive).length;
-          return '$activeCount active reminder${activeCount != 1 ? 's' : ''}';
-        },
-        loading: () => 'Loading...',
-        error: (err, stack) => 'Error',
-      ),
-      icon: Icons.notifications_active,
-      iconColor: AppColors.accent,
-      iconBgColor: AppColors.accent,
-      action: IconButton(
-        icon: const Icon(Icons.add_circle_outline),
-        color: AppColors.primary,
-        onPressed: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => const AddMedicationScreen(),
+      padding: const EdgeInsets.all(24.0),
+      sliver: SliverToBoxAdapter(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'Dashboard',
+              style: TextStyle(
+                fontSize: 32,
+                fontWeight: FontWeight.bold,
+                color: const Color(0xFF1E293B),
+              ),
             ),
-          );
-        },
-      ),
-      child: alarmsAsync.when(
-        data: (alarms) {
-          if (alarms.isEmpty) {
-            return const Padding(
-              padding: EdgeInsets.symmetric(vertical: 8.0),
-              child: Text('No reminders set'),
-            );
-          }
-          return Column(
-            children: alarms
-                .take(2)
-                .map(
-                  (alarm) => Padding(
-                    padding: const EdgeInsets.only(bottom: 12.0),
-                    child: _buildAlarmItem(alarm: alarm, ref: ref),
-                  ),
-                )
-                .toList(),
-          );
-        },
-        loading: () => const Center(
-          child: Padding(
-            padding: EdgeInsets.all(16.0),
-            child: CircularProgressIndicator(),
-          ),
+            const SizedBox(height: 8),
+            Text(
+              'Your accessible resources and benefits.',
+              style: TextStyle(fontSize: 16, color: const Color(0xFF64748B)),
+            ),
+          ],
         ),
-        error: (err, _) => Text('Error: $err'),
       ),
     );
   }
 
-  Widget _buildEntertainmentSection(BuildContext context, WidgetRef ref) {
-    final eventsAsync = ref.watch(eventsProvider);
-
-    return DashboardSection(
-      title: 'Entertainment',
-      subtitle: 'Events near you',
-      icon: Icons.movie,
-      iconColor: Colors.purple,
-      iconBgColor: Colors.purple,
-      action: TextButton(
-        onPressed: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (_) => const EventsScreen()),
-          );
-        },
-        child: const Text('View All'),
-      ),
-      child: eventsAsync.when(
-        data: (events) {
-          if (events.isEmpty) {
-            return const Text('No upcoming events');
-          }
-          final event = events.first;
-          return _buildEventItem(
-            title: event.title,
-            date:
-                '${_getMonth(event.date)} ${event.date.day}, ${event.date.year} • ${event.time}',
-            location: event.location ?? 'Online',
-          );
-        },
-        loading: () => const Padding(
-          padding: EdgeInsets.all(16.0),
-          child: Center(child: CircularProgressIndicator()),
+  Widget _buildQuickActions() {
+    return SliverPadding(
+      padding: const EdgeInsets.symmetric(horizontal: 24),
+      sliver: SliverToBoxAdapter(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'Quick Actions',
+              style: TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+                color: const Color(0xFF1E293B),
+              ),
+            ),
+            const SizedBox(height: 16),
+            GridView.count(
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              crossAxisCount: 2,
+              mainAxisSpacing: 16,
+              crossAxisSpacing: 16,
+              childAspectRatio: 1.2,
+              children: [
+                _buildActionCard(
+                  'Find Jobs',
+                  LucideIcons.briefcase,
+                  const Color(0xFFD1FAE5),
+                  const Color(0xFF065F46),
+                ),
+                _buildActionCard(
+                  'Find a Doctor',
+                  LucideIcons.stethoscope,
+                  const Color(0xFFD1FAE5),
+                  const Color(0xFF065F46),
+                ),
+                _buildActionCard(
+                  'Request a Book',
+                  LucideIcons.bookOpen,
+                  const Color(0xFFD1FAE5),
+                  const Color(0xFF065F46),
+                ),
+                _buildActionCard(
+                  'Sign Language',
+                  LucideIcons.handMetal,
+                  const Color(0xFFD1FAE5),
+                  const Color(0xFF065F46),
+                ),
+              ],
+            ),
+          ],
         ),
-        error: (err, _) => Text('Error: $err'),
       ),
     );
   }
 
-  Widget _buildServicesSection(BuildContext context, WidgetRef ref) {
-    final servicesAsync = ref.watch(servicesProvider);
-
-    return DashboardSection(
-      title: 'Support Services',
-      subtitle: 'People ready to help',
-      icon: Icons.handshake,
-      iconColor: AppColors.success,
-      iconBgColor: AppColors.success,
-      action: TextButton(
-        onPressed: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (_) => const ServicesScreen()),
-          );
-        },
-        child: const Text('View All'),
-      ),
-      child: servicesAsync.when(
-        data: (services) {
-          if (services.isEmpty) {
-            return const Text('No services found');
-          }
-          return Column(
-            children: services
-                .take(2)
-                .map(
-                  (service) => Padding(
-                    padding: const EdgeInsets.only(bottom: 12.0),
-                    child: _buildServiceItem(
-                      title: service.title,
-                      provider: service.provider,
-                      rating: service.rating,
-                      isAvailable: service.isAvailable,
-                    ),
-                  ),
-                )
-                .toList(),
-          );
-        },
-        loading: () => const Padding(
-          padding: EdgeInsets.all(16.0),
-          child: Center(child: CircularProgressIndicator()),
-        ),
-        error: (err, _) => Text('Error: $err'),
-      ),
-    );
-  }
-
-  Widget _buildNewsSection(BuildContext context, WidgetRef ref) {
-    final newsAsync = ref.watch(newsProvider);
-
-    return DashboardSection(
-      title: 'Latest News',
-      subtitle: 'Curated for you',
-      icon: Icons.newspaper,
-      iconColor: Colors.blue,
-      iconBgColor: Colors.blue,
-      action: TextButton(
-        onPressed: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (_) => const NewsScreen()),
-          );
-        },
-        child: const Text('View All'),
-      ),
-      child: newsAsync.when(
-        data: (news) {
-          if (news.isEmpty) {
-            return const Text('No news available');
-          }
-          final item = news.first;
-          return _buildNewsItem(
-            title: item.title,
-            source: item.source ?? 'Unknown Source',
-          );
-        },
-        loading: () => const Padding(
-          padding: EdgeInsets.all(16.0),
-          child: Center(child: CircularProgressIndicator()),
-        ),
-        error: (err, _) => Text('Error: $err'),
-      ),
-    );
-  }
-
-  Widget _buildDoctorsSection(BuildContext context, WidgetRef ref) {
-    final doctorsAsync = ref.watch(doctorsProvider);
-
-    return DashboardSection(
-      title: 'Medical Specialists',
-      subtitle: 'Find trusted care',
-      icon: Icons.medical_services,
-      iconColor: Colors.red,
-      iconBgColor: Colors.red,
-      action: TextButton(
-        onPressed: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (_) => const DoctorsScreen()),
-          );
-        },
-        child: const Text('View All'),
-      ),
-      child: doctorsAsync.when(
-        data: (doctors) {
-          if (doctors.isEmpty) {
-            return const Text('No doctors found');
-          }
-          final doctor = doctors.first;
-          return _buildDoctorItem(
-            name: doctor.name,
-            specialty: doctor.specialty ?? 'General',
-            hospital: doctor.hospital ?? 'Unknown',
-          );
-        },
-        loading: () => const Padding(
-          padding: EdgeInsets.all(16.0),
-          child: Center(child: CircularProgressIndicator()),
-        ),
-        error: (err, _) => Text('Error: $err'),
-      ),
-    );
-  }
-
-  Widget _buildAlarmItem({
-    required MedicationAlarm alarm,
-    required WidgetRef ref,
-  }) {
+  Widget _buildActionCard(
+    String title,
+    IconData icon,
+    Color bgColor,
+    Color iconColor,
+  ) {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: AppColors.secondary.withValues(alpha: 0.5),
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: AppColors.primary.withValues(alpha: 0.2)),
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(20),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.03),
+            blurRadius: 10,
+            offset: const Offset(0, 4),
+          ),
+        ],
       ),
-      child: Row(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                alarm.time,
-                style: const TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                  color: AppColors.text,
-                ),
-              ),
-              Text(
-                alarm.frequency,
-                style: const TextStyle(
-                  fontSize: 12,
-                  color: AppColors.textLight,
-                ),
-              ),
-            ],
+          Container(
+            padding: const EdgeInsets.all(12),
+            decoration: BoxDecoration(color: bgColor, shape: BoxShape.circle),
+            child: Icon(icon, color: iconColor, size: 24),
           ),
-          const SizedBox(width: 16),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  alarm.title,
-                  style: const TextStyle(
-                    fontWeight: FontWeight.w600,
-                    color: AppColors.text,
-                  ),
-                ),
-                if (alarm.dosage != null)
-                  Text(
-                    alarm.dosage!,
-                    style: const TextStyle(
-                      fontSize: 12,
-                      color: AppColors.textLight,
-                    ),
-                  ),
-              ],
+          const SizedBox(height: 12),
+          Text(
+            title,
+            style: TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.w600,
+              color: const Color(0xFF1E293B),
             ),
-          ),
-          Switch(
-            value: alarm.isActive,
-            onChanged: (val) async {
-              await ref
-                  .read(supabaseRepositoryProvider)
-                  .toggleAlarmStatus(alarm.id, val);
-
-              // Toggle notification based on switch state
-              final notificationService = ref.read(notificationServiceProvider);
-              if (val) {
-                // Parse time string 'HH:MM' back to TimeOfDay for scheduling
-                final timeParts = alarm.time.split(':');
-                final time = TimeOfDay(
-                  hour: int.parse(timeParts[0]),
-                  minute: int.parse(timeParts[1]),
-                );
-                await notificationService.scheduleAlarm(
-                  id: alarm.id.hashCode,
-                  title: 'Medication Reminder',
-                  body: "It's time to take ${alarm.title}",
-                  time: time,
-                );
-              } else {
-                await notificationService.cancelAlarm(alarm.id.hashCode);
-              }
-
-              ref.invalidate(medicationAlarmsProvider);
-            },
-            activeThumbColor: AppColors.primary,
           ),
         ],
       ),
     );
   }
 
-  Widget _buildEventItem({
-    required String title,
-    required String date,
-    required String location,
-  }) {
+  Widget _buildOpportunities() {
+    return SliverPadding(
+      padding: const EdgeInsets.all(24),
+      sliver: SliverToBoxAdapter(
+        child: Column(
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  'Opportunities',
+                  style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                    color: const Color(0xFF1E293B),
+                  ),
+                ),
+                TextButton(
+                  onPressed: () {},
+                  child: Row(
+                    children: [
+                      Text(
+                        'VIEW ALL JOBS',
+                        style: TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.bold,
+                          color: const Color(0xFF004D40),
+                        ),
+                      ),
+                      const Icon(
+                        Icons.chevron_right,
+                        size: 20,
+                        color: Color(0xFF004D40),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 16),
+            _buildOpportunityCard(
+              'Senior UX Researcher',
+              'TechFlow Innovations',
+              ['Remote', 'Full-Time'],
+              true,
+            ),
+            const SizedBox(height: 16),
+            _buildOpportunityCard(
+              'Accessibility Specialist',
+              'Global Health Corp',
+              ['Hybrid', 'Contract'],
+              true,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildOpportunityCard(
+    String title,
+    String company,
+    List<String> tags,
+    bool isVerified,
+  ) {
+    return Container(
+      padding: const EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(24),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.03),
+            blurRadius: 10,
+            offset: const Offset(0, 4),
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      title,
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                        color: const Color(0xFF1E293B),
+                      ),
+                    ),
+                    Text(
+                      company,
+                      style: TextStyle(
+                        fontSize: 14,
+                        color: const Color(0xFF64748B),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              if (isVerified)
+                Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 10,
+                    vertical: 6,
+                  ),
+                  decoration: BoxDecoration(
+                    color: const Color(0xFFD1FAE5),
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  child: Row(
+                    children: [
+                      const Icon(
+                        Icons.check_circle_outline,
+                        size: 14,
+                        color: Color(0xFF065F46),
+                      ),
+                      const SizedBox(width: 4),
+                      Text(
+                        'Verified Accessible',
+                        style: TextStyle(
+                          fontSize: 10,
+                          fontWeight: FontWeight.bold,
+                          color: const Color(0xFF065F46),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+            ],
+          ),
+          const SizedBox(height: 16),
+          Row(
+            children: tags
+                .map(
+                  (tag) => Container(
+                    margin: const EdgeInsets.only(right: 8),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 12,
+                      vertical: 6,
+                    ),
+                    decoration: BoxDecoration(
+                      color: const Color(0xFFF1F5F9),
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    child: Text(
+                      tag,
+                      style: TextStyle(
+                        fontSize: 12,
+                        color: const Color(0xFF64748B),
+                      ),
+                    ),
+                  ),
+                )
+                .toList(),
+          ),
+          const SizedBox(height: 16),
+          SizedBox(
+            width: double.infinity,
+            child: OutlinedButton(
+              onPressed: () {},
+              style: OutlinedButton.styleFrom(
+                side: const BorderSide(color: Color(0xFF004D40)),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                padding: const EdgeInsets.symmetric(vertical: 12),
+              ),
+              child: Text(
+                'View Details',
+                style: TextStyle(
+                  color: const Color(0xFF004D40),
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildMedicalNetwork() {
+    return SliverPadding(
+      padding: const EdgeInsets.symmetric(horizontal: 24),
+      sliver: SliverToBoxAdapter(
+        child: Column(
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  'Medical Network',
+                  style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                    color: const Color(0xFF1E293B),
+                  ),
+                ),
+                TextButton(
+                  onPressed: () {},
+                  child: Row(
+                    children: [
+                      Text(
+                        'FIND CARE',
+                        style: TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.bold,
+                          color: const Color(0xFF004D40),
+                        ),
+                      ),
+                      const Icon(
+                        Icons.chevron_right,
+                        size: 20,
+                        color: Color(0xFF004D40),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 16),
+            _buildDoctorCard(
+              'Dr. Layla Khaled',
+              'Neurology Specialist',
+              4.9,
+              120,
+            ),
+            const SizedBox(height: 16),
+            _buildDoctorCard('Dr. Omar Nasser', 'Physical Therapy', 4.8, 85),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildDoctorCard(
+    String name,
+    String specialty,
+    double rating,
+    int reviews,
+  ) {
+    return Container(
+      padding: const EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(24),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.03),
+            blurRadius: 10,
+            offset: const Offset(0, 4),
+          ),
+        ],
+      ),
+      child: Column(
+        children: [
+          Row(
+            children: [
+              Container(
+                padding: const EdgeInsets.all(12),
+                decoration: const BoxDecoration(
+                  color: Color(0xFFD1FAE5),
+                  shape: BoxShape.circle,
+                ),
+                child: const Icon(
+                  LucideIcons.stethoscope,
+                  color: Color(0xFF065F46),
+                  size: 24,
+                ),
+              ),
+              const SizedBox(width: 16),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      name,
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                        color: const Color(0xFF1E293B),
+                      ),
+                    ),
+                    Text(
+                      specialty,
+                      style: TextStyle(
+                        fontSize: 14,
+                        color: const Color(0xFF64748B),
+                      ),
+                    ),
+                    Row(
+                      children: [
+                        const Icon(Icons.star, color: Colors.amber, size: 16),
+                        const SizedBox(width: 4),
+                        Text(
+                          '$rating ($reviews reviews)',
+                          style: TextStyle(
+                            fontSize: 12,
+                            fontWeight: FontWeight.w600,
+                            color: const Color(0xFF1E293B),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 16),
+          SizedBox(
+            width: double.infinity,
+            child: ElevatedButton(
+              onPressed: () {},
+              style: ElevatedButton.styleFrom(
+                backgroundColor: const Color(0xFF004D40),
+                foregroundColor: Colors.white,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                padding: const EdgeInsets.symmetric(vertical: 12),
+              ),
+              child: Text(
+                'Book',
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildLearnAndGrow() {
+    return SliverPadding(
+      padding: const EdgeInsets.all(24),
+      sliver: SliverToBoxAdapter(
+        child: Column(
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  'Learn & Grow',
+                  style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                    color: const Color(0xFF1E293B),
+                  ),
+                ),
+                TextButton(
+                  onPressed: () {},
+                  child: Row(
+                    children: [
+                      Text(
+                        'BROWSE BOOKS',
+                        style: TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.bold,
+                          color: const Color(0xFF004D40),
+                        ),
+                      ),
+                      const Icon(
+                        Icons.chevron_right,
+                        size: 20,
+                        color: Color(0xFF004D40),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 16),
+            _buildBookCard('The Art of Possibility', 'Rosamund Stone Zander', [
+              'Audio Book',
+              'Braille',
+            ]),
+            const SizedBox(height: 16),
+            _buildBookCard('Disability Visibility', 'Alice Wong', [
+              'Audio Book',
+              'E-Book',
+            ]),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildBookCard(String title, String author, List<String> types) {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: AppColors.border),
+        borderRadius: BorderRadius.circular(24),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.03),
+            blurRadius: 10,
+            offset: const Offset(0, 4),
+          ),
+        ],
       ),
       child: Row(
         children: [
           Container(
-            width: 50,
-            height: 50,
+            padding: const EdgeInsets.all(12),
             decoration: BoxDecoration(
-              color: Colors.purple.withValues(alpha: 0.1),
+              color: const Color(0xFFD1FAE5),
               borderRadius: BorderRadius.circular(12),
             ),
-            child: const Icon(Icons.event, color: Colors.purple),
+            child: const Icon(
+              LucideIcons.bookOpen,
+              color: Color(0xFF065F46),
+              size: 24,
+            ),
           ),
           const SizedBox(width: 16),
           Expanded(
@@ -463,213 +642,198 @@ class DashboardScreen extends ConsumerWidget {
               children: [
                 Text(
                   title,
-                  style: const TextStyle(
-                    fontWeight: FontWeight.w600,
-                    color: AppColors.text,
-                  ),
-                ),
-                const SizedBox(height: 4),
-                Text(
-                  date,
-                  style: const TextStyle(
-                    fontSize: 12,
-                    color: AppColors.textLight,
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                    color: const Color(0xFF1E293B),
                   ),
                 ),
                 Text(
-                  location,
-                  style: const TextStyle(
+                  author,
+                  style: TextStyle(
                     fontSize: 12,
-                    color: AppColors.textLight,
+                    color: const Color(0xFF64748B),
                   ),
                 ),
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildServiceItem({
-    required String title,
-    required String provider,
-    required double rating,
-    required bool isAvailable,
-  }) {
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: AppColors.border),
-      ),
-      child: Row(
-        children: [
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
+                const SizedBox(height: 8),
                 Row(
-                  children: [
-                    Text(
-                      title,
-                      style: const TextStyle(
-                        fontWeight: FontWeight.w600,
-                        color: AppColors.text,
-                      ),
-                    ),
-                    const SizedBox(width: 8),
-                    Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 8,
-                        vertical: 2,
-                      ),
-                      decoration: BoxDecoration(
-                        color: isAvailable
-                            ? AppColors.success.withValues(alpha: 0.1)
-                            : Colors.grey.withValues(alpha: 0.1),
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      child: Text(
-                        isAvailable ? 'Available' : 'Busy',
-                        style: TextStyle(
-                          fontSize: 10,
-                          fontWeight: FontWeight.w600,
-                          color: isAvailable ? AppColors.success : Colors.grey,
+                  children: types
+                      .map(
+                        (type) => Container(
+                          margin: const EdgeInsets.only(right: 4),
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 8,
+                            vertical: 4,
+                          ),
+                          decoration: BoxDecoration(
+                            color: const Color(0xFFD1FAE5),
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                          child: Text(
+                            type,
+                            style: TextStyle(
+                              fontSize: 10,
+                              fontWeight: FontWeight.bold,
+                              color: const Color(0xFF065F46),
+                            ),
+                          ),
                         ),
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 4),
-                Text(
-                  '🚗 Transport • $provider',
-                  style: const TextStyle(
-                    fontSize: 12,
-                    color: AppColors.textLight,
-                  ),
-                ),
-                const SizedBox(height: 4),
-                Row(
-                  children: [
-                    const Icon(Icons.star, size: 14, color: AppColors.warning),
-                    const SizedBox(width: 4),
-                    Text(
-                      rating.toString(),
-                      style: const TextStyle(
-                        fontWeight: FontWeight.w600,
-                        fontSize: 12,
-                      ),
-                    ),
-                  ],
+                      )
+                      .toList(),
                 ),
               ],
             ),
           ),
-          const Icon(Icons.chevron_right, color: AppColors.textLight),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildNewsItem({required String title, required String source}) {
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: AppColors.border),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            title,
-            style: const TextStyle(
-              fontWeight: FontWeight.w600,
-              color: AppColors.text,
-              fontSize: 16,
+          OutlinedButton(
+            onPressed: () {},
+            style: OutlinedButton.styleFrom(
+              side: const BorderSide(color: Color(0xFF004D40)),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12),
+              ),
+              padding: const EdgeInsets.symmetric(horizontal: 12),
             ),
-          ),
-          const SizedBox(height: 8),
-          Text(
-            source,
-            style: const TextStyle(fontSize: 12, color: AppColors.textLight),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildDoctorItem({
-    required String name,
-    required String specialty,
-    required String hospital,
-  }) {
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: AppColors.border),
-      ),
-      child: Row(
-        children: [
-          CircleAvatar(
-            radius: 20,
-            backgroundColor: AppColors.primary.withValues(alpha: 0.1),
             child: Text(
-              name.isNotEmpty ? name[0] : '',
-              style: const TextStyle(
-                color: AppColors.primary,
+              'Request Book',
+              style: TextStyle(
+                fontSize: 12,
+                color: const Color(0xFF004D40),
                 fontWeight: FontWeight.bold,
               ),
             ),
           ),
-          const SizedBox(width: 16),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  name,
-                  style: const TextStyle(
-                    fontWeight: FontWeight.w600,
-                    color: AppColors.text,
-                  ),
-                ),
-                Text(
-                  '$specialty • $hospital',
-                  style: const TextStyle(
-                    fontSize: 12,
-                    color: AppColors.textLight,
-                  ),
-                ),
-              ],
-            ),
-          ),
-          const Icon(Icons.chevron_right, color: AppColors.textLight),
         ],
       ),
     );
   }
 
-  String _getMonth(DateTime date) {
-    const months = [
-      'Jan',
-      'Feb',
-      'Mar',
-      'Apr',
-      'May',
-      'Jun',
-      'Jul',
-      'Aug',
-      'Sep',
-      'Oct',
-      'Nov',
-      'Dec',
-    ];
-    return months[date.month - 1];
+  Widget _buildSignLanguageBanner() {
+    return SliverPadding(
+      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 8),
+      sliver: SliverToBoxAdapter(
+        child: Container(
+          padding: const EdgeInsets.all(24),
+          decoration: BoxDecoration(
+            color: const Color(0xFF004D40),
+            borderRadius: BorderRadius.circular(24),
+          ),
+          child: Row(
+            children: [
+              Container(
+                padding: const EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                  color: Colors.white.withOpacity(0.1),
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                child: const Icon(
+                  LucideIcons.handMetal,
+                  color: Colors.white,
+                  size: 32,
+                ),
+              ),
+              const SizedBox(width: 16),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Sign Language',
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                      ),
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      'Tap the button and sign your message',
+                      style: TextStyle(
+                        fontSize: 14,
+                        color: Colors.white.withOpacity(0.8),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(width: 8),
+              ElevatedButton(
+                onPressed: () {},
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.white,
+                  foregroundColor: const Color(0xFF004D40),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 12,
+                    vertical: 8,
+                  ),
+                ),
+                child: Text(
+                  'TRANSLATE NOW',
+                  style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildBottomNavigationBar() {
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.white,
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.05),
+            blurRadius: 20,
+            offset: const Offset(0, -5),
+          ),
+        ],
+      ),
+      child: BottomNavigationBar(
+        currentIndex: _selectedIndex,
+        onTap: (index) {
+          setState(() {
+            _selectedIndex = index;
+          });
+        },
+        backgroundColor: Colors.white,
+        elevation: 0,
+        type: BottomNavigationBarType.fixed,
+        selectedItemColor: const Color(0xFF004D40),
+        unselectedItemColor: const Color(0xFF64748B),
+        selectedLabelStyle: TextStyle(
+          fontWeight: FontWeight.bold,
+          fontSize: 12,
+        ),
+        unselectedLabelStyle: TextStyle(fontSize: 12),
+        items: [
+          BottomNavigationBarItem(
+            icon: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+              decoration: BoxDecoration(
+                color: _selectedIndex == 0
+                    ? const Color(0xFFD1FAE5)
+                    : Colors.transparent,
+                borderRadius: BorderRadius.circular(20),
+              ),
+              child: const Icon(LucideIcons.home),
+            ),
+            label: 'Home',
+          ),
+          const BottomNavigationBarItem(
+            icon: Icon(LucideIcons.handMetal),
+            label: 'Translator',
+          ),
+          const BottomNavigationBarItem(
+            icon: Icon(LucideIcons.globe),
+            label: 'العربية',
+          ),
+        ],
+      ),
+    );
   }
 }
