@@ -7,11 +7,6 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:sanad/features/auth/presentation/screens/welcome_screen.dart';
 import 'package:sanad/features/dashboard/presentation/screens/dashboard_screen.dart';
 import 'package:sanad/features/doctors/presentation/screens/doctors_screen.dart';
-import 'package:sanad/features/events/presentation/screens/events_screen.dart';
-import 'package:sanad/features/news/data/models/news_item.dart';
-import 'package:sanad/features/news/presentation/screens/news_details_screen.dart';
-import 'package:sanad/features/news/presentation/screens/news_screen.dart';
-import 'package:sanad/features/services/presentation/screens/services_screen.dart';
 import 'package:sanad/features/jobs/presentation/screens/jobs_screen.dart';
 import 'package:sanad/features/books/presentation/screens/books_screen.dart';
 import 'package:sanad/features/translator/presentation/screens/translator_screen.dart';
@@ -58,27 +53,6 @@ final routerProvider = Provider<GoRouter>((ref) {
           GoRoute(
             path: 'translator',
             builder: (context, state) => const TranslatorScreen(),
-          ),
-          GoRoute(
-            path: 'services',
-            builder: (context, state) => const ServicesScreen(),
-          ),
-          GoRoute(
-            path: 'events',
-            builder: (context, state) => const EventsScreen(),
-          ),
-          GoRoute(
-            path: 'news',
-            builder: (context, state) => const NewsScreen(),
-            routes: [
-              GoRoute(
-                path: 'details',
-                builder: (context, state) {
-                  final newsItem = state.extra as NewsItem;
-                  return NewsDetailsScreen(newsItem: newsItem);
-                },
-              ),
-            ],
           ),
 
           GoRoute(
