@@ -128,7 +128,7 @@ class NewsCard extends StatelessWidget {
       },
       style: TextButton.styleFrom(
         padding: const EdgeInsets.symmetric(vertical: 12),
-        alignment: Alignment.centerLeft,
+        alignment: AlignmentDirectional.centerStart,
         foregroundColor: AppColors.primary,
       ),
       child: const Row(

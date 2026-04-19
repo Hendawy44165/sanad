@@ -100,7 +100,7 @@ class DoctorsScreen extends ConsumerWidget {
             itemBuilder: (context, index) {
               final isFirst = index == 0;
               return Container(
-                margin: const EdgeInsets.only(right: 8),
+                margin: const EdgeInsetsDirectional.only(end: 8),
                 child: Chip(
                   label: Text(
                     filters[index],

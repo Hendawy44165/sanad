@@ -174,7 +174,7 @@ class JobsScreen extends ConsumerWidget {
             itemBuilder: (context, index) {
               final isFirst = index == 0;
               return Container(
-                margin: const EdgeInsets.only(right: 8),
+                margin: const EdgeInsetsDirectional.only(end: 8),
                 child: Chip(
                   label: Text(
                     filters[index],
@@ -339,7 +339,7 @@ class JobsScreen extends ConsumerWidget {
             children: tags
                 .map(
                   (tag) => Container(
-                    margin: const EdgeInsets.only(right: 8),
+                    margin: const EdgeInsetsDirectional.only(end: 8),
                     padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                     decoration: BoxDecoration(
                       color: const Color(0xFFF1F5F9),

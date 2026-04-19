@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:lucide_icons/lucide_icons.dart';
 import 'package:sanad/features/jobs/presentation/screens/jobs_screen.dart';
 
 void main() {
@@ -88,6 +89,50 @@ void main() {
       await tester.pumpAndSettle();
 
       expect(find.text('Apply Now'), findsAtLeastNWidgets(3));
+    });
+  });
+
+  group('JobsScreen Directionality Tests', () {
+    testWidgets('upload banner layout flips in RTL mode', (
+      WidgetTester tester,
+    ) async {
+      double getX(Finder finder) => tester.getCenter(finder).dx;
+
+      // 1. Test LTR
+      await tester.pumpWidget(
+        const ProviderScope(
+          child: MaterialApp(
+            home: Directionality(
+              textDirection: TextDirection.ltr,
+              child: JobsScreen(),
+            ),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      final iconLtr = find.byIcon(LucideIcons.fileText);
+      final titleLtr = find.text('Upload Your CV');
+
+      expect(getX(iconLtr) < getX(titleLtr), isTrue);
+
+      // 2. Test RTL
+      await tester.pumpWidget(
+        const ProviderScope(
+          child: MaterialApp(
+            home: Directionality(
+              textDirection: TextDirection.rtl,
+              child: JobsScreen(),
+            ),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      final iconRtl = find.byIcon(LucideIcons.fileText);
+      final titleRtl = find.text('Upload Your CV');
+
+      expect(getX(iconRtl) > getX(titleRtl), isTrue);
     });
   });
 }

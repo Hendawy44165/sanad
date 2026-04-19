@@ -153,4 +153,67 @@ void main() {
       await tester.pump();
     });
   });
+
+  group('DashboardScreen Directionality Tests', () {
+    testWidgets('layout flips in RTL mode', (WidgetTester tester) async {
+      // Helper to get X coordinate
+      double getX(Finder finder) => tester.getCenter(finder).dx;
+
+      // 1. Test LTR
+      await tester.pumpWidget(
+        const ProviderScope(
+          child: MaterialApp(
+            locale: Locale('en'),
+            home: Directionality(
+              textDirection: TextDirection.ltr,
+              child: DashboardScreen(),
+            ),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      final opportunitiesTextLtr = find.text('Opportunities');
+      final viewAllJobsLtr = find.text('VIEW ALL JOBS');
+
+      await tester.scrollUntilVisible(
+        viewAllJobsLtr,
+        200.0,
+        scrollable: find.byType(Scrollable).first,
+      );
+      await tester.pumpAndSettle();
+
+      expect(getX(opportunitiesTextLtr) < getX(viewAllJobsLtr), isTrue);
+
+      // 2. Test RTL
+      await tester.pumpWidget(
+        const ProviderScope(
+          child: MaterialApp(
+            locale: Locale('ar'),
+            home: Directionality(
+              textDirection: TextDirection.rtl,
+              child: DashboardScreen(),
+            ),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      final opportunitiesTextRtl = find.text('Opportunities');
+      final viewAllJobsRtl = find.text('VIEW ALL JOBS');
+
+      await tester.scrollUntilVisible(
+        viewAllJobsRtl,
+        200.0,
+        scrollable: find.byType(Scrollable).first,
+      );
+      await tester.pumpAndSettle();
+
+      // In RTL, "Opportunities" (start) should be on the right,
+      // but actually "Opportunities" is the first element in the Row,
+      // so it should be on the RIGHT, and "VIEW ALL JOBS" (end) on the LEFT.
+      // So Opportunities.x > VIEW ALL JOBS.x
+      expect(getX(opportunitiesTextRtl) > getX(viewAllJobsRtl), isTrue);
+    });
+  });
 }
