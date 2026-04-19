@@ -3,8 +3,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sanad/l10n/app_localizations.dart';
 import 'package:sanad/core/providers/locale_provider.dart';
+import 'package:sanad/core/providers/shared_prefs_provider.dart';
 import 'package:sanad/core/router/router.dart';
 
 void main() async {
@@ -17,7 +19,16 @@ void main() async {
     anonKey: dotenv.env['SUPABASE_ANON_KEY']!,
   );
 
-  runApp(const ProviderScope(child: SanadApp()));
+  final sharedPrefs = await SharedPreferences.getInstance();
+
+  runApp(
+    ProviderScope(
+      overrides: [
+        sharedPrefsProvider.overrideWithValue(sharedPrefs),
+      ],
+      child: const SanadApp(),
+    ),
+  );
 }
 
 class SanadApp extends ConsumerWidget {

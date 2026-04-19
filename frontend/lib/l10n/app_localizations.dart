@@ -140,6 +140,12 @@ abstract class AppLocalizations {
   /// **'Request a Book'**
   String get requestBook;
 
+  /// No description provided for @requestBookShort.
+  ///
+  /// In en, this message translates to:
+  /// **'Request Book'**
+  String get requestBookShort;
+
   /// No description provided for @signLanguage.
   ///
   /// In en, this message translates to:
@@ -691,6 +697,114 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Read Full Story'**
   String get readFullStory;
+
+  /// No description provided for @profileTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'My Profile'**
+  String get profileTitle;
+
+  /// No description provided for @verifiedMember.
+  ///
+  /// In en, this message translates to:
+  /// **'Verified Member'**
+  String get verifiedMember;
+
+  /// No description provided for @language.
+  ///
+  /// In en, this message translates to:
+  /// **'Language'**
+  String get language;
+
+  /// No description provided for @notifications.
+  ///
+  /// In en, this message translates to:
+  /// **'Notifications'**
+  String get notifications;
+
+  /// No description provided for @notificationsOn.
+  ///
+  /// In en, this message translates to:
+  /// **'You will receive all app notifications'**
+  String get notificationsOn;
+
+  /// No description provided for @notificationsOff.
+  ///
+  /// In en, this message translates to:
+  /// **'Notifications are turned off'**
+  String get notificationsOff;
+
+  /// No description provided for @myCV.
+  ///
+  /// In en, this message translates to:
+  /// **'My CV'**
+  String get myCV;
+
+  /// No description provided for @noCvUploaded.
+  ///
+  /// In en, this message translates to:
+  /// **'No CV uploaded yet'**
+  String get noCvUploaded;
+
+  /// No description provided for @noCvSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Upload your CV to find accessible jobs faster'**
+  String get noCvSubtitle;
+
+  /// No description provided for @cvUploaded.
+  ///
+  /// In en, this message translates to:
+  /// **'CV Uploaded'**
+  String get cvUploaded;
+
+  /// No description provided for @cvUploadedSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Your CV is active and visible to employers'**
+  String get cvUploadedSubtitle;
+
+  /// No description provided for @reuploadCV.
+  ///
+  /// In en, this message translates to:
+  /// **'Re-upload CV'**
+  String get reuploadCV;
+
+  /// No description provided for @cvUploadedSuccess.
+  ///
+  /// In en, this message translates to:
+  /// **'CV uploaded successfully!'**
+  String get cvUploadedSuccess;
+
+  /// No description provided for @cvUploadFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'CV upload failed. Please try again.'**
+  String get cvUploadFailed;
+
+  /// No description provided for @logout.
+  ///
+  /// In en, this message translates to:
+  /// **'Sign Out'**
+  String get logout;
+
+  /// No description provided for @editName.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit Name'**
+  String get editName;
+
+  /// No description provided for @enterName.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter your name'**
+  String get enterName;
+
+  /// No description provided for @save.
+  ///
+  /// In en, this message translates to:
+  /// **'Save'**
+  String get save;
 }
 
 class _AppLocalizationsDelegate
