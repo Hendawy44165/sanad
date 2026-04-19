@@ -1,11 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:sanad/l10n/app_localizations.dart';
 import 'package:sanad/features/dashboard/presentation/screens/dashboard_screen.dart';
 
 void main() {
   Widget createWidgetUnderTest() {
-    return const ProviderScope(child: MaterialApp(home: DashboardScreen()));
+    return const ProviderScope(
+      child: MaterialApp(
+        localizationsDelegates: [
+          AppLocalizations.delegate,
+          GlobalMaterialLocalizations.delegate,
+          GlobalWidgetsLocalizations.delegate,
+          GlobalCupertinoLocalizations.delegate,
+        ],
+        supportedLocales: [Locale('en'), Locale('ar')],
+        home: DashboardScreen(),
+      ),
+    );
   }
 
   group('DashboardScreen Widget Tests', () {
@@ -163,6 +176,13 @@ void main() {
       await tester.pumpWidget(
         const ProviderScope(
           child: MaterialApp(
+            localizationsDelegates: [
+              AppLocalizations.delegate,
+              GlobalMaterialLocalizations.delegate,
+              GlobalWidgetsLocalizations.delegate,
+              GlobalCupertinoLocalizations.delegate,
+            ],
+            supportedLocales: [Locale('en'), Locale('ar')],
             locale: Locale('en'),
             home: Directionality(
               textDirection: TextDirection.ltr,
@@ -189,6 +209,13 @@ void main() {
       await tester.pumpWidget(
         const ProviderScope(
           child: MaterialApp(
+            localizationsDelegates: [
+              AppLocalizations.delegate,
+              GlobalMaterialLocalizations.delegate,
+              GlobalWidgetsLocalizations.delegate,
+              GlobalCupertinoLocalizations.delegate,
+            ],
+            supportedLocales: [Locale('en'), Locale('ar')],
             locale: Locale('ar'),
             home: Directionality(
               textDirection: TextDirection.rtl,
@@ -199,8 +226,8 @@ void main() {
       );
       await tester.pumpAndSettle();
 
-      final opportunitiesTextRtl = find.text('Opportunities');
-      final viewAllJobsRtl = find.text('VIEW ALL JOBS');
+      final opportunitiesTextRtl = find.text('الفرص');
+      final viewAllJobsRtl = find.text('عرض جميع الوظائف');
 
       await tester.scrollUntilVisible(
         viewAllJobsRtl,

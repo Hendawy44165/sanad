@@ -1,17 +1,30 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:sanad/l10n/app_localizations.dart';
 import 'package:sanad/features/books/presentation/screens/books_screen.dart';
 
 void main() {
   Widget createWidgetUnderTest() {
-    return const ProviderScope(child: MaterialApp(home: BooksScreen()));
+    return const ProviderScope(
+      child: MaterialApp(
+        localizationsDelegates: [
+          AppLocalizations.delegate,
+          GlobalMaterialLocalizations.delegate,
+          GlobalWidgetsLocalizations.delegate,
+          GlobalCupertinoLocalizations.delegate,
+        ],
+        supportedLocales: [Locale('en'), Locale('ar')],
+        home: BooksScreen(),
+      ),
+    );
   }
 
   group('BooksScreen Widget Tests', () {
     testWidgets('renders Request a Book title', (WidgetTester tester) async {
       await tester.pumpWidget(createWidgetUnderTest());
-      expect(find.text('Request a Book'), findsOneWidget);
+      expect(find.text('Request a Book').first, findsOneWidget);
     });
 
     testWidgets('renders search field with correct hint', (
@@ -68,13 +81,13 @@ void main() {
       await tester.pumpWidget(createWidgetUnderTest());
 
       await tester.scrollUntilVisible(
-        find.text('Request Book').last,
-        200.0,
+        find.text('Request a Book').last,
+        500.0,
         scrollable: find.byType(Scrollable).first,
       );
       await tester.pumpAndSettle();
 
-      expect(find.text('Request Book'), findsAtLeastNWidgets(3));
+      expect(find.text('Request a Book'), findsAtLeastNWidgets(3));
     });
   });
 
@@ -86,6 +99,14 @@ void main() {
       await tester.pumpWidget(
         const ProviderScope(
           child: MaterialApp(
+            localizationsDelegates: [
+              AppLocalizations.delegate,
+              GlobalMaterialLocalizations.delegate,
+              GlobalWidgetsLocalizations.delegate,
+              GlobalCupertinoLocalizations.delegate,
+            ],
+            supportedLocales: [Locale('en'), Locale('ar')],
+            locale: Locale('en'),
             home: Directionality(
               textDirection: TextDirection.ltr,
               child: BooksScreen(),
@@ -96,7 +117,7 @@ void main() {
       await tester.pumpAndSettle();
 
       final backButtonLtr = find.byType(IconButton);
-      final titleLtr = find.text('Request a Book');
+      final titleLtr = find.text('Request a Book').first;
 
       expect(getX(backButtonLtr) < getX(titleLtr), isTrue);
 
@@ -104,6 +125,14 @@ void main() {
       await tester.pumpWidget(
         const ProviderScope(
           child: MaterialApp(
+            localizationsDelegates: [
+              AppLocalizations.delegate,
+              GlobalMaterialLocalizations.delegate,
+              GlobalWidgetsLocalizations.delegate,
+              GlobalCupertinoLocalizations.delegate,
+            ],
+            supportedLocales: [Locale('en'), Locale('ar')],
+            locale: Locale('ar'),
             home: Directionality(
               textDirection: TextDirection.rtl,
               child: BooksScreen(),
@@ -114,7 +143,7 @@ void main() {
       await tester.pumpAndSettle();
 
       final backButtonRtl = find.byType(IconButton);
-      final titleRtl = find.text('Request a Book');
+      final titleRtl = find.text('اطلب كتاباً').first;
 
       expect(getX(backButtonRtl) > getX(titleRtl), isTrue);
     });

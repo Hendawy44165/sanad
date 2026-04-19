@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 import 'package:go_router/go_router.dart';
+import 'package:sanad/l10n/app_localizations.dart';
 
 class DoctorsScreen extends ConsumerWidget {
   const DoctorsScreen({super.key});
@@ -14,9 +15,9 @@ class DoctorsScreen extends ConsumerWidget {
         child: CustomScrollView(
           slivers: [
             _buildAppBar(context),
-            _buildSearchSection(),
-            _buildFilters(),
-            _buildDoctorsList(),
+            _buildSearchSection(context),
+            _buildFilters(context),
+            _buildDoctorsList(context),
             const SliverToBoxAdapter(child: SizedBox(height: 40)),
           ],
         ),
@@ -31,12 +32,15 @@ class DoctorsScreen extends ConsumerWidget {
         child: Row(
           children: [
             IconButton(
-              icon: const Icon(LucideIcons.chevronLeft, color: Color(0xFF1E293B)),
+              icon: const Icon(
+                LucideIcons.chevronLeft,
+                color: Color(0xFF1E293B),
+              ),
               onPressed: () => context.pop(),
             ),
             const SizedBox(width: 8),
-            const Text(
-              'Find a Doctor',
+            Text(
+              AppLocalizations.of(context)!.findDoctor,
               style: TextStyle(
                 fontSize: 24,
                 fontWeight: FontWeight.bold,
@@ -49,7 +53,7 @@ class DoctorsScreen extends ConsumerWidget {
     );
   }
 
-  Widget _buildSearchSection() {
+  Widget _buildSearchSection(BuildContext context) {
     return SliverPadding(
       padding: const EdgeInsets.all(24),
       sliver: SliverToBoxAdapter(
@@ -60,18 +64,18 @@ class DoctorsScreen extends ConsumerWidget {
             borderRadius: BorderRadius.circular(16),
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withOpacity(0.05),
+                color: Colors.black.withValues(alpha: 0.05),
                 blurRadius: 10,
                 offset: const Offset(0, 4),
               ),
             ],
           ),
-          child: const TextField(
+          child: TextField(
             decoration: InputDecoration(
-              hintText: 'Search specialists...',
+              hintText: AppLocalizations.of(context)!.searchSpecialists,
               border: InputBorder.none,
-              icon: Icon(LucideIcons.search, color: Color(0xFF64748B)),
-              hintStyle: TextStyle(color: Color(0xFF64748B)),
+              icon: const Icon(LucideIcons.search, color: Color(0xFF64748B)),
+              hintStyle: const TextStyle(color: Color(0xFF64748B)),
             ),
           ),
         ),
@@ -79,13 +83,13 @@ class DoctorsScreen extends ConsumerWidget {
     );
   }
 
-  Widget _buildFilters() {
+  Widget _buildFilters(BuildContext context) {
     final filters = [
-      'All',
-      'Neurology',
-      'Physical',
-      'Occupational',
-      'Speech',
+      AppLocalizations.of(context)!.all,
+      AppLocalizations.of(context)!.neurology,
+      AppLocalizations.of(context)!.physical,
+      AppLocalizations.of(context)!.occupational,
+      AppLocalizations.of(context)!.speech,
     ];
 
     return SliverPadding(
@@ -109,9 +113,13 @@ class DoctorsScreen extends ConsumerWidget {
                       fontWeight: isFirst ? FontWeight.bold : FontWeight.normal,
                     ),
                   ),
-                  backgroundColor: isFirst ? const Color(0xFF004D40) : Colors.white,
+                  backgroundColor: isFirst
+                      ? const Color(0xFF004D40)
+                      : Colors.white,
                   side: BorderSide(
-                    color: isFirst ? const Color(0xFF004D40) : const Color(0xFFE2E8F0),
+                    color: isFirst
+                        ? const Color(0xFF004D40)
+                        : const Color(0xFFE2E8F0),
                   ),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(20),
@@ -125,33 +133,46 @@ class DoctorsScreen extends ConsumerWidget {
     );
   }
 
-  Widget _buildDoctorsList() {
+  Widget _buildDoctorsList(BuildContext context) {
     return SliverPadding(
       padding: const EdgeInsets.all(24),
       sliver: SliverList(
         delegate: SliverChildListDelegate([
           _buildDoctorCard(
             'Dr. Layla Khaled',
-            'Neurology Specialist',
+            AppLocalizations.of(context)!.neurologySpecialist,
             4.9,
             120,
-            ['Wheelchair Access', 'Sign Language', 'Audio Aids'],
+            [
+              AppLocalizations.of(context)!.wheelchairAccess,
+              AppLocalizations.of(context)!.signLanguage,
+              AppLocalizations.of(context)!.audioAids,
+            ],
+            context,
           ),
           const SizedBox(height: 16),
           _buildDoctorCard(
             'Dr. Omar Nasser',
-            'Physical Therapy',
+            AppLocalizations.of(context)!.physicalTherapy,
             4.8,
             85,
-            ['Wheelchair Access', 'Sign Language'],
+            [
+              AppLocalizations.of(context)!.wheelchairAccess,
+              AppLocalizations.of(context)!.signLanguage,
+            ],
+            context,
           ),
           const SizedBox(height: 16),
           _buildDoctorCard(
             'Dr. Sarah Ahmed',
-            'Occupational Therapy',
+            AppLocalizations.of(context)!.occupationalTherapy,
             4.7,
             64,
-            ['Wheelchair Access', 'Audio Aids'],
+            [
+              AppLocalizations.of(context)!.wheelchairAccess,
+              AppLocalizations.of(context)!.audioAids,
+            ],
+            context,
           ),
         ]),
       ),
@@ -164,6 +185,7 @@ class DoctorsScreen extends ConsumerWidget {
     double rating,
     int reviews,
     List<String> badges,
+    BuildContext context,
   ) {
     return Container(
       padding: const EdgeInsets.all(24),
@@ -172,7 +194,7 @@ class DoctorsScreen extends ConsumerWidget {
         borderRadius: BorderRadius.circular(24),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.03),
+            color: Colors.black.withValues(alpha: 0.03),
             blurRadius: 10,
             offset: const Offset(0, 4),
           ),
@@ -229,7 +251,7 @@ class DoctorsScreen extends ConsumerWidget {
                         }),
                         const SizedBox(width: 8),
                         Text(
-                          '$rating ($reviews reviews)',
+                          AppLocalizations.of(context)!.reviews(reviews),
                           style: const TextStyle(
                             fontSize: 14,
                             fontWeight: FontWeight.w600,
@@ -287,7 +309,7 @@ class DoctorsScreen extends ConsumerWidget {
             child: ElevatedButton.icon(
               onPressed: () {},
               icon: const Icon(LucideIcons.calendar),
-              label: const Text('Book Appointment'),
+              label: Text(AppLocalizations.of(context)!.bookAppointment),
               style: ElevatedButton.styleFrom(
                 backgroundColor: const Color(0xFF004D40),
                 foregroundColor: Colors.white,

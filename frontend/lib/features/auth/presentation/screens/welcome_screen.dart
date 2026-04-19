@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import '../../../../l10n/app_localizations.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/widgets/custom_button.dart';
 import '../../../../core/widgets/custom_input.dart';
@@ -133,8 +134,8 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
   }
 
   Widget _buildBrandText() {
-    return const Text(
-      'Companion',
+    return Text(
+      AppLocalizations.of(context)!.welcomeTitle,
       style: TextStyle(
         fontSize: 36,
         fontWeight: FontWeight.bold,
@@ -145,8 +146,8 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
   }
 
   Widget _buildTagline() {
-    return const Text(
-      'Your supportive partner for everyday life. Connecting you with care, community, and confidence.',
+    return Text(
+      AppLocalizations.of(context)!.welcomeSubtitle,
       textAlign: TextAlign.center,
       style: TextStyle(fontSize: 18, color: AppColors.textLight, height: 1.5),
     );
@@ -162,8 +163,8 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
             _buildFormHeader(),
             const SizedBox(height: 24),
             CustomInput(
-              labelText: 'Email Address',
-              hintText: 'you@example.com',
+              labelText: AppLocalizations.of(context)!.emailAddress,
+              hintText: AppLocalizations.of(context)!.emailHint,
               controller: _emailController,
               keyboardType: TextInputType.emailAddress,
             ),
@@ -171,7 +172,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
             _buildPasswordField(),
             const SizedBox(height: 24),
             CustomButton(
-              text: 'Sign In',
+              text: AppLocalizations.of(context)!.signIn,
               isLoading: _isLoading,
               onPressed: _handleLogin,
             ),
@@ -184,8 +185,8 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
   }
 
   Widget _buildFormHeader() {
-    return const Text(
-      'Welcome Back',
+    return Text(
+      AppLocalizations.of(context)!.welcomeBack,
       textAlign: TextAlign.center,
       style: TextStyle(
         fontSize: 24,
@@ -197,8 +198,8 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
 
   Widget _buildPasswordField() {
     return CustomInput(
-      labelText: 'Password',
-      hintText: 'Enter your password',
+      labelText: AppLocalizations.of(context)!.password,
+      hintText: AppLocalizations.of(context)!.passwordHint,
       controller: _passwordController,
       obscureText: _obscurePassword,
       suffixIcon: IconButton(
@@ -221,14 +222,14 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
     return Wrap(
       alignment: WrapAlignment.center,
       children: [
-        const Text(
-          "Don't have an account? ",
+        Text(
+          AppLocalizations.of(context)!.noAccount + " ",
           style: TextStyle(color: AppColors.textLight),
         ),
         GestureDetector(
           onTap: _handleSignUp,
-          child: const Text(
-            'Create one',
+          child: Text(
+            AppLocalizations.of(context)!.createOne,
             style: TextStyle(
               color: AppColors.primary,
               fontWeight: FontWeight.w600,
@@ -240,8 +241,8 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
   }
 
   Widget _buildFooter() {
-    return const Text(
-      '🔒 Your data is secure and private',
+    return Text(
+      AppLocalizations.of(context)!.dataSecure,
       style: TextStyle(color: AppColors.textLight, fontSize: 14),
     );
   }

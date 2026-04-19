@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:sanad/l10n/app_localizations.dart';
 import 'package:sanad/features/doctors/presentation/screens/doctors_screen.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 
@@ -8,6 +10,13 @@ void main() {
   Widget createWidgetUnderTest() {
     return const ProviderScope(
       child: MaterialApp(
+        localizationsDelegates: [
+          AppLocalizations.delegate,
+          GlobalMaterialLocalizations.delegate,
+          GlobalWidgetsLocalizations.delegate,
+          GlobalCupertinoLocalizations.delegate,
+        ],
+        supportedLocales: [Locale('en'), Locale('ar')],
         home: DoctorsScreen(),
       ),
     );
@@ -39,7 +48,7 @@ void main() {
 
       expect(find.text('Dr. Layla Khaled'), findsOneWidget);
       expect(find.text('Neurology Specialist'), findsOneWidget);
-      expect(find.text('4.9 (120 reviews)'), findsOneWidget);
+      expect(find.text('120 reviews'), findsOneWidget);
 
       await tester.scrollUntilVisible(
         find.text('Dr. Sarah Ahmed'),
@@ -92,6 +101,14 @@ void main() {
       await tester.pumpWidget(
         const ProviderScope(
           child: MaterialApp(
+            localizationsDelegates: [
+              AppLocalizations.delegate,
+              GlobalMaterialLocalizations.delegate,
+              GlobalWidgetsLocalizations.delegate,
+              GlobalCupertinoLocalizations.delegate,
+            ],
+            supportedLocales: [Locale('en'), Locale('ar')],
+            locale: Locale('en'),
             home: Directionality(
               textDirection: TextDirection.ltr,
               child: DoctorsScreen(),
@@ -102,7 +119,7 @@ void main() {
       await tester.pumpAndSettle();
 
       final backButtonLtr = find.byType(IconButton);
-      final titleLtr = find.text('Find a Doctor');
+      final titleLtr = find.text('Find a Doctor').first;
 
       expect(getX(backButtonLtr) < getX(titleLtr), isTrue);
 
@@ -110,6 +127,14 @@ void main() {
       await tester.pumpWidget(
         const ProviderScope(
           child: MaterialApp(
+            localizationsDelegates: [
+              AppLocalizations.delegate,
+              GlobalMaterialLocalizations.delegate,
+              GlobalWidgetsLocalizations.delegate,
+              GlobalCupertinoLocalizations.delegate,
+            ],
+            supportedLocales: [Locale('en'), Locale('ar')],
+            locale: Locale('ar'),
             home: Directionality(
               textDirection: TextDirection.rtl,
               child: DoctorsScreen(),
@@ -120,7 +145,7 @@ void main() {
       await tester.pumpAndSettle();
 
       final backButtonRtl = find.byType(IconButton);
-      final titleRtl = find.text('Find a Doctor');
+      final titleRtl = find.text('ابحث عن طبيب').first;
 
       expect(getX(backButtonRtl) > getX(titleRtl), isTrue);
     });

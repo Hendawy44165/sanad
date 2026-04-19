@@ -12,10 +12,12 @@
         "flutter_dotenv",
         "flutter_hooks",
         "flutter_local_notifications",
+        "flutter_localizations",
         "flutter_riverpod",
         "get_it",
         "go_router",
         "hooks_riverpod",
+        "intl",
         "lucide_icons",
         "supabase_flutter",
         "timezone"
@@ -212,6 +214,24 @@
       "name": "cupertino_icons",
       "version": "1.0.8",
       "dependencies": []
+    },
+    {
+      "name": "intl",
+      "version": "0.20.2",
+      "dependencies": [
+        "clock",
+        "meta",
+        "path"
+      ]
+    },
+    {
+      "name": "flutter_localizations",
+      "version": "0.0.0",
+      "dependencies": [
+        "flutter",
+        "intl",
+        "path"
+      ]
     },
     {
       "name": "flutter",

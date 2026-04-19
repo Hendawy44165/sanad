@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 import 'package:go_router/go_router.dart';
+import 'package:sanad/l10n/app_localizations.dart';
 
 class JobsScreen extends ConsumerWidget {
   const JobsScreen({super.key});
@@ -14,11 +15,11 @@ class JobsScreen extends ConsumerWidget {
         child: CustomScrollView(
           slivers: [
             _buildAppBar(context),
-            _buildSearchSection(),
-            _buildUploadCVBanner(),
-            _buildFilters(),
-            _buildAvailableJobsHeader(),
-            _buildJobsList(),
+            _buildSearchSection(context),
+            _buildUploadCVBanner(context),
+            _buildFilters(context),
+            _buildAvailableJobsHeader(context),
+            _buildJobsList(context),
             const SliverToBoxAdapter(child: SizedBox(height: 40)),
           ],
         ),
@@ -33,12 +34,15 @@ class JobsScreen extends ConsumerWidget {
         child: Row(
           children: [
             IconButton(
-              icon: const Icon(LucideIcons.chevronLeft, color: Color(0xFF1E293B)),
+              icon: const Icon(
+                LucideIcons.chevronLeft,
+                color: Color(0xFF1E293B),
+              ),
               onPressed: () => context.pop(),
             ),
             const SizedBox(width: 8),
-            const Text(
-              'Find Jobs',
+            Text(
+              AppLocalizations.of(context)!.findJobs,
               style: TextStyle(
                 fontSize: 24,
                 fontWeight: FontWeight.bold,
@@ -51,7 +55,7 @@ class JobsScreen extends ConsumerWidget {
     );
   }
 
-  Widget _buildSearchSection() {
+  Widget _buildSearchSection(BuildContext context) {
     return SliverPadding(
       padding: const EdgeInsets.all(24),
       sliver: SliverToBoxAdapter(
@@ -62,18 +66,18 @@ class JobsScreen extends ConsumerWidget {
             borderRadius: BorderRadius.circular(16),
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withOpacity(0.05),
+                color: Colors.black.withValues(alpha: 0.05),
                 blurRadius: 10,
                 offset: const Offset(0, 4),
               ),
             ],
           ),
-          child: const TextField(
+          child: TextField(
             decoration: InputDecoration(
-              hintText: 'Search jobs...',
+              hintText: AppLocalizations.of(context)!.searchJobs,
               border: InputBorder.none,
-              icon: Icon(LucideIcons.search, color: Color(0xFF64748B)),
-              hintStyle: TextStyle(color: Color(0xFF64748B)),
+              icon: const Icon(LucideIcons.search, color: Color(0xFF64748B)),
+              hintStyle: const TextStyle(color: Color(0xFF64748B)),
             ),
           ),
         ),
@@ -81,7 +85,7 @@ class JobsScreen extends ConsumerWidget {
     );
   }
 
-  Widget _buildUploadCVBanner() {
+  Widget _buildUploadCVBanner(BuildContext context) {
     return SliverPadding(
       padding: const EdgeInsets.symmetric(horizontal: 24),
       sliver: SliverToBoxAdapter(
@@ -99,29 +103,32 @@ class JobsScreen extends ConsumerWidget {
                   Container(
                     padding: const EdgeInsets.all(12),
                     decoration: BoxDecoration(
-                      color: Colors.white.withOpacity(0.1),
+                      color: Colors.white.withValues(alpha: 0.1),
                       borderRadius: BorderRadius.circular(12),
                     ),
-                    child: const Icon(LucideIcons.fileText, color: Colors.white),
+                    child: const Icon(
+                      LucideIcons.fileText,
+                      color: Colors.white,
+                    ),
                   ),
                   const SizedBox(width: 16),
                   Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const Text(
-                          'Upload Your CV',
-                          style: TextStyle(
+                        Text(
+                          AppLocalizations.of(context)!.uploadCV,
+                          style: const TextStyle(
                             fontSize: 18,
                             fontWeight: FontWeight.bold,
                             color: Colors.white,
                           ),
                         ),
                         Text(
-                          'Let us match you with the right accessible jobs',
+                          AppLocalizations.of(context)!.uploadCVSubtitle,
                           style: TextStyle(
                             fontSize: 14,
-                            color: Colors.white.withOpacity(0.8),
+                            color: Colors.white.withValues(alpha: 0.8),
                           ),
                         ),
                       ],
@@ -135,7 +142,7 @@ class JobsScreen extends ConsumerWidget {
                 child: ElevatedButton.icon(
                   onPressed: () {},
                   icon: const Icon(LucideIcons.upload, size: 18),
-                  label: const Text('Upload CV'),
+                  label: Text(AppLocalizations.of(context)!.uploadCVButton),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.white,
                     foregroundColor: const Color(0xFF004D40),
@@ -153,13 +160,13 @@ class JobsScreen extends ConsumerWidget {
     );
   }
 
-  Widget _buildFilters() {
+  Widget _buildFilters(BuildContext context) {
     final filters = [
-      'All Jobs',
-      'Remote',
-      'Full-Time',
-      'Hybrid',
-      'Contract',
+      AppLocalizations.of(context)!.allJobs,
+      AppLocalizations.of(context)!.remote,
+      AppLocalizations.of(context)!.fullTime,
+      AppLocalizations.of(context)!.hybrid,
+      AppLocalizations.of(context)!.contract,
     ];
 
     return SliverPadding(
@@ -183,9 +190,13 @@ class JobsScreen extends ConsumerWidget {
                       fontWeight: isFirst ? FontWeight.bold : FontWeight.normal,
                     ),
                   ),
-                  backgroundColor: isFirst ? const Color(0xFF004D40) : Colors.white,
+                  backgroundColor: isFirst
+                      ? const Color(0xFF004D40)
+                      : Colors.white,
                   side: BorderSide(
-                    color: isFirst ? const Color(0xFF004D40) : const Color(0xFFE2E8F0),
+                    color: isFirst
+                        ? const Color(0xFF004D40)
+                        : const Color(0xFFE2E8F0),
                   ),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(20),
@@ -199,12 +210,12 @@ class JobsScreen extends ConsumerWidget {
     );
   }
 
-  Widget _buildAvailableJobsHeader() {
-    return const SliverPadding(
-      padding: EdgeInsets.symmetric(horizontal: 24),
+  Widget _buildAvailableJobsHeader(BuildContext context) {
+    return SliverPadding(
+      padding: const EdgeInsets.symmetric(horizontal: 24),
       sliver: SliverToBoxAdapter(
         child: Text(
-          '5 Available Jobs',
+          AppLocalizations.of(context)!.availableJobsCount(5),
           style: TextStyle(
             fontSize: 16,
             fontWeight: FontWeight.w600,
@@ -215,12 +226,13 @@ class JobsScreen extends ConsumerWidget {
     );
   }
 
-  Widget _buildJobsList() {
+  Widget _buildJobsList(BuildContext context) {
     return SliverPadding(
       padding: const EdgeInsets.all(24),
       sliver: SliverList(
         delegate: SliverChildListDelegate([
           _buildJobCard(
+            context,
             'Senior UX Researcher',
             'TechFlow Innovations',
             'Research user experiences for accessibility-focused products. Work fully remote.',
@@ -228,6 +240,7 @@ class JobsScreen extends ConsumerWidget {
           ),
           const SizedBox(height: 16),
           _buildJobCard(
+            context,
             'Accessibility Specialist',
             'Global Health Corp',
             'Audit and improve digital accessibility across health platforms.',
@@ -235,6 +248,7 @@ class JobsScreen extends ConsumerWidget {
           ),
           const SizedBox(height: 16),
           _buildJobCard(
+            context,
             'Remote Data Analyst',
             'DataMind Labs',
             'Analyze datasets and create reports. Flexible hours, adaptive tools provided.',
@@ -246,6 +260,7 @@ class JobsScreen extends ConsumerWidget {
   }
 
   Widget _buildJobCard(
+    BuildContext context,
     String title,
     String company,
     String description,
@@ -258,7 +273,7 @@ class JobsScreen extends ConsumerWidget {
         borderRadius: BorderRadius.circular(24),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.03),
+            color: Colors.black.withValues(alpha: 0.03),
             blurRadius: 10,
             offset: const Offset(0, 4),
           ),
@@ -276,7 +291,10 @@ class JobsScreen extends ConsumerWidget {
                   color: const Color(0xFFD1FAE5),
                   borderRadius: BorderRadius.circular(12),
                 ),
-                child: const Icon(LucideIcons.briefcase, color: Color(0xFF065F46)),
+                child: const Icon(
+                  LucideIcons.briefcase,
+                  color: Color(0xFF065F46),
+                ),
               ),
               const SizedBox(width: 16),
               Expanded(
@@ -307,13 +325,17 @@ class JobsScreen extends ConsumerWidget {
                   color: const Color(0xFFD1FAE5),
                   borderRadius: BorderRadius.circular(8),
                 ),
-                child: const Row(
+                child: Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    Icon(Icons.check_circle, size: 12, color: Color(0xFF065F46)),
+                    Icon(
+                      Icons.check_circle,
+                      size: 12,
+                      color: Color(0xFF065F46),
+                    ),
                     SizedBox(width: 4),
                     Text(
-                      'Verified',
+                      AppLocalizations.of(context)!.verified,
                       style: TextStyle(
                         fontSize: 10,
                         fontWeight: FontWeight.bold,
@@ -340,7 +362,10 @@ class JobsScreen extends ConsumerWidget {
                 .map(
                   (tag) => Container(
                     margin: const EdgeInsetsDirectional.only(end: 8),
-                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 12,
+                      vertical: 6,
+                    ),
                     decoration: BoxDecoration(
                       color: const Color(0xFFF1F5F9),
                       borderRadius: BorderRadius.circular(20),
@@ -369,8 +394,8 @@ class JobsScreen extends ConsumerWidget {
                 ),
                 padding: const EdgeInsets.symmetric(vertical: 16),
               ),
-              child: const Text(
-                'Apply Now',
+              child: Text(
+                AppLocalizations.of(context)!.applyNow,
                 style: TextStyle(fontWeight: FontWeight.bold),
               ),
             ),
