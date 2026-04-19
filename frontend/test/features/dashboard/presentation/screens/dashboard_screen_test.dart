@@ -112,7 +112,7 @@ void main() {
 
       expect(find.text('Home'), findsOneWidget);
       expect(find.text('Translator'), findsOneWidget);
-      expect(find.text('العربية'), findsOneWidget);
+      expect(find.text('Settings'), findsOneWidget);
 
       // Tap Translator
       await tester.tap(find.text('Translator'));

@@ -290,6 +290,12 @@
       "languageVersion": "3.0"
     },
     {
+      "name": "get_it",
+      "rootUri": "file:///home/hendawy/.pub-cache/hosted/pub.dev/get_it-8.3.0",
+      "packageUri": "lib/",
+      "languageVersion": "3.0"
+    },
+    {
       "name": "glob",
       "rootUri": "file:///home/hendawy/.pub-cache/hosted/pub.dev/glob-2.1.3",
       "packageUri": "lib/",

@@ -1,60 +1,305 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:sanad/core/repositories/supabase_repository.dart';
-import 'package:sanad/core/theme/app_colors.dart';
-import 'package:sanad/features/doctors/data/models/doctor.dart';
-import '../widgets/doctor_card.dart';
+import 'package:lucide_icons/lucide_icons.dart';
+import 'package:go_router/go_router.dart';
 
-/// Screen that displays a list of medical specialists.
 class DoctorsScreen extends ConsumerWidget {
-  /// Creates a [DoctorsScreen].
   const DoctorsScreen({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final doctorsAsync = ref.watch(doctorsProvider);
-
     return Scaffold(
-      backgroundColor: AppColors.background,
-      appBar: _buildAppBar(),
-      body: RefreshIndicator(
-        onRefresh: () async => ref.refresh(doctorsProvider.future),
-        child: _buildBody(doctorsAsync),
+      backgroundColor: const Color(0xFFF8F5F2),
+      body: SafeArea(
+        child: CustomScrollView(
+          slivers: [
+            _buildAppBar(context),
+            _buildSearchSection(),
+            _buildFilters(),
+            _buildDoctorsList(),
+            const SliverToBoxAdapter(child: SizedBox(height: 40)),
+          ],
+        ),
       ),
     );
   }
 
-  /// Builds the application bar.
-  PreferredSizeWidget _buildAppBar() {
-    return AppBar(title: const Text('Medical Specialists'), centerTitle: false);
-  }
-
-  /// Builds the main body content based on the data state.
-  Widget _buildBody(AsyncValue<List<Doctor>> doctorsAsync) {
-    return doctorsAsync.when(
-      data: (doctors) => _buildDoctorsList(doctors),
-      loading: () => const Center(child: CircularProgressIndicator()),
-      error: (err, stack) => Center(child: Text('Error: $err')),
+  Widget _buildAppBar(BuildContext context) {
+    return SliverPadding(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      sliver: SliverToBoxAdapter(
+        child: Row(
+          children: [
+            IconButton(
+              icon: const Icon(LucideIcons.chevronLeft, color: Color(0xFF1E293B)),
+              onPressed: () => context.pop(),
+            ),
+            const SizedBox(width: 8),
+            const Text(
+              'Find a Doctor',
+              style: TextStyle(
+                fontSize: 24,
+                fontWeight: FontWeight.bold,
+                color: Color(0xFF1E293B),
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 
-  /// Builds the list of doctors.
-  Widget _buildDoctorsList(List<Doctor> doctors) {
-    if (doctors.isEmpty) {
-      return const Center(child: Text('No doctors found'));
-    }
-    return GridView.builder(
-      physics: const AlwaysScrollableScrollPhysics(),
+  Widget _buildSearchSection() {
+    return SliverPadding(
       padding: const EdgeInsets.all(24),
-      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 1, // Full width cards on mobile
-        mainAxisSpacing: 24,
-        childAspectRatio: 0.85, // Adjust based on content
+      sliver: SliverToBoxAdapter(
+        child: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 16),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(16),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.05),
+                blurRadius: 10,
+                offset: const Offset(0, 4),
+              ),
+            ],
+          ),
+          child: const TextField(
+            decoration: InputDecoration(
+              hintText: 'Search specialists...',
+              border: InputBorder.none,
+              icon: Icon(LucideIcons.search, color: Color(0xFF64748B)),
+              hintStyle: TextStyle(color: Color(0xFF64748B)),
+            ),
+          ),
+        ),
       ),
-      itemCount: doctors.length,
-      itemBuilder: (context, index) {
-        return DoctorCard(doctor: doctors[index]);
-      },
+    );
+  }
+
+  Widget _buildFilters() {
+    final filters = [
+      'All',
+      'Neurology',
+      'Physical',
+      'Occupational',
+      'Speech',
+    ];
+
+    return SliverPadding(
+      padding: const EdgeInsets.symmetric(vertical: 8),
+      sliver: SliverToBoxAdapter(
+        child: SizedBox(
+          height: 40,
+          child: ListView.builder(
+            scrollDirection: Axis.horizontal,
+            padding: const EdgeInsets.symmetric(horizontal: 24),
+            itemCount: filters.length,
+            itemBuilder: (context, index) {
+              final isFirst = index == 0;
+              return Container(
+                margin: const EdgeInsets.only(right: 8),
+                child: Chip(
+                  label: Text(
+                    filters[index],
+                    style: TextStyle(
+                      color: isFirst ? Colors.white : const Color(0xFF1E293B),
+                      fontWeight: isFirst ? FontWeight.bold : FontWeight.normal,
+                    ),
+                  ),
+                  backgroundColor: isFirst ? const Color(0xFF004D40) : Colors.white,
+                  side: BorderSide(
+                    color: isFirst ? const Color(0xFF004D40) : const Color(0xFFE2E8F0),
+                  ),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                ),
+              );
+            },
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildDoctorsList() {
+    return SliverPadding(
+      padding: const EdgeInsets.all(24),
+      sliver: SliverList(
+        delegate: SliverChildListDelegate([
+          _buildDoctorCard(
+            'Dr. Layla Khaled',
+            'Neurology Specialist',
+            4.9,
+            120,
+            ['Wheelchair Access', 'Sign Language', 'Audio Aids'],
+          ),
+          const SizedBox(height: 16),
+          _buildDoctorCard(
+            'Dr. Omar Nasser',
+            'Physical Therapy',
+            4.8,
+            85,
+            ['Wheelchair Access', 'Sign Language'],
+          ),
+          const SizedBox(height: 16),
+          _buildDoctorCard(
+            'Dr. Sarah Ahmed',
+            'Occupational Therapy',
+            4.7,
+            64,
+            ['Wheelchair Access', 'Audio Aids'],
+          ),
+        ]),
+      ),
+    );
+  }
+
+  Widget _buildDoctorCard(
+    String name,
+    String specialty,
+    double rating,
+    int reviews,
+    List<String> badges,
+  ) {
+    return Container(
+      padding: const EdgeInsets.all(24),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(24),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.03),
+            blurRadius: 10,
+            offset: const Offset(0, 4),
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Container(
+                padding: const EdgeInsets.all(16),
+                decoration: const BoxDecoration(
+                  color: Color(0xFFD1FAE5),
+                  shape: BoxShape.circle,
+                ),
+                child: const Icon(
+                  LucideIcons.stethoscope,
+                  color: Color(0xFF065F46),
+                  size: 32,
+                ),
+              ),
+              const SizedBox(width: 16),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      name,
+                      style: const TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                        color: Color(0xFF1E293B),
+                      ),
+                    ),
+                    Text(
+                      specialty,
+                      style: const TextStyle(
+                        fontSize: 16,
+                        color: Color(0xFF64748B),
+                      ),
+                    ),
+                    const SizedBox(height: 4),
+                    Row(
+                      children: [
+                        ...List.generate(5, (index) {
+                          return Icon(
+                            Icons.star,
+                            size: 18,
+                            color: index < rating.floor()
+                                ? Colors.amber
+                                : Colors.grey[300],
+                          );
+                        }),
+                        const SizedBox(width: 8),
+                        Text(
+                          '$rating ($reviews reviews)',
+                          style: const TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.w600,
+                            color: Color(0xFF64748B),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 20),
+          Wrap(
+            spacing: 8,
+            runSpacing: 8,
+            children: badges
+                .map(
+                  (badge) => Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 10,
+                      vertical: 6,
+                    ),
+                    decoration: BoxDecoration(
+                      color: const Color(0xFFD1FAE5),
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        const Icon(
+                          Icons.check_circle_outline,
+                          size: 14,
+                          color: Color(0xFF065F46),
+                        ),
+                        const SizedBox(width: 4),
+                        Text(
+                          badge,
+                          style: const TextStyle(
+                            fontSize: 12,
+                            fontWeight: FontWeight.bold,
+                            color: Color(0xFF065F46),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                )
+                .toList(),
+          ),
+          const SizedBox(height: 20),
+          SizedBox(
+            width: double.infinity,
+            child: ElevatedButton.icon(
+              onPressed: () {},
+              icon: const Icon(LucideIcons.calendar),
+              label: const Text('Book Appointment'),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: const Color(0xFF004D40),
+                foregroundColor: Colors.white,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                padding: const EdgeInsets.symmetric(vertical: 16),
+              ),
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

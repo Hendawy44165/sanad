@@ -2,7 +2,6 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:sanad/core/repositories/supabase_repository.dart';
 import 'package:sanad/features/onboarding/presentation/screens/select_disability_screen.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:sanad/features/auth/presentation/screens/welcome_screen.dart';
@@ -13,10 +12,11 @@ import 'package:sanad/features/news/data/models/news_item.dart';
 import 'package:sanad/features/news/presentation/screens/news_details_screen.dart';
 import 'package:sanad/features/news/presentation/screens/news_screen.dart';
 import 'package:sanad/features/services/presentation/screens/services_screen.dart';
+import 'package:sanad/features/jobs/presentation/screens/jobs_screen.dart';
+import 'package:sanad/features/books/presentation/screens/books_screen.dart';
+import 'package:sanad/features/translator/presentation/screens/translator_screen.dart';
 
 final routerProvider = Provider<GoRouter>((ref) {
-  final authState = ref.watch(authStateProvider);
-
   return GoRouter(
     initialLocation: '/',
     // redirect: (context, state) {
@@ -47,6 +47,18 @@ final routerProvider = Provider<GoRouter>((ref) {
         path: '/',
         builder: (context, state) => const DashboardScreen(),
         routes: [
+          GoRoute(
+            path: 'jobs',
+            builder: (context, state) => const JobsScreen(),
+          ),
+          GoRoute(
+            path: 'books',
+            builder: (context, state) => const BooksScreen(),
+          ),
+          GoRoute(
+            path: 'translator',
+            builder: (context, state) => const TranslatorScreen(),
+          ),
           GoRoute(
             path: 'services',
             builder: (context, state) => const ServicesScreen(),

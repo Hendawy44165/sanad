@@ -1,15 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-import 'core/theme/app_theme.dart';
-import 'package:sanad/core/services/notification_service.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:sanad/core/router/router.dart';
 
-import 'package:flutter_dotenv/flutter_dotenv.dart';
-
-Future<void> main() async {
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-
+  
   await dotenv.load(fileName: ".env");
 
   await Supabase.initialize(
@@ -17,14 +14,11 @@ Future<void> main() async {
     anonKey: dotenv.env['SUPABASE_ANON_KEY']!,
   );
 
-  final notificationService = NotificationService();
-  await notificationService.init();
-
-  runApp(const ProviderScope(child: MyApp()));
+  runApp(const ProviderScope(child: SanadApp()));
 }
 
-class MyApp extends ConsumerWidget {
-  const MyApp({super.key});
+class SanadApp extends ConsumerWidget {
+  const SanadApp({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -32,8 +26,13 @@ class MyApp extends ConsumerWidget {
 
     return MaterialApp.router(
       title: 'Sanad',
-      theme: AppTheme.lightTheme,
+      debugShowCheckedModeBanner: false,
       routerConfig: router,
+      theme: ThemeData(
+        useMaterial3: true,
+        primaryColor: const Color(0xFF004D40),
+        scaffoldBackgroundColor: const Color(0xFFF8F5F2),
+      ),
     );
   }
 }
