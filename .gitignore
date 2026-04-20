@@ -1,2 +1,6 @@
 # AI agent workspace — local only, never committed
 .agent/
+
+# Node.js dependencies
+node_modules/
+**/node_modules/
