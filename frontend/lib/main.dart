@@ -6,6 +6,7 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:sanad/l10n/app_localizations.dart';
 import 'package:sanad/core/providers/locale_provider.dart';
 import 'package:sanad/core/router/router.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -13,6 +14,11 @@ void main() async {
   await dotenv.load(fileName: ".env");
 
   await configureDependencies();
+
+  await Supabase.initialize(
+    url: dotenv.env["SUPABASE_URL"]!,
+    anonKey: dotenv.env["SUPABASE_ANON_KEY"]!,
+  );
 
   runApp(ProviderScope(child: const SanadApp()));
 }
