@@ -4,7 +4,6 @@ class ProfileState {
   final String userEmail;
   final bool notificationsEnabled;
   final String language;
-  final bool isLoading;
   final bool cvUploaded;
 
   ProfileState({
@@ -13,7 +12,6 @@ class ProfileState {
     required this.userEmail,
     required this.notificationsEnabled,
     required this.language,
-    this.isLoading = false,
     this.cvUploaded = false,
   });
 
@@ -32,7 +30,6 @@ class ProfileState {
       userEmail: userEmail ?? this.userEmail,
       notificationsEnabled: notificationsEnabled ?? this.notificationsEnabled,
       language: language ?? this.language,
-      isLoading: isLoading ?? this.isLoading,
       cvUploaded: cvUploaded ?? this.cvUploaded,
     );
   }

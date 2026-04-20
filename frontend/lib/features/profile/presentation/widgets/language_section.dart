@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:sanad/core/dependency_injection.dart';
 import '../../../../core/providers/locale_provider.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../providers/profile_provider.dart';
@@ -12,8 +13,9 @@ class LanguageSection extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final state = ref.watch(getIt<LocaleProvider>());
+
     final l10n = AppLocalizations.of(context)!;
-    final currentLocale = ref.watch(localeProvider);
 
     return ProfileCard(
       child: Column(
@@ -26,8 +28,10 @@ class LanguageSection extends ConsumerWidget {
               Expanded(
                 child: _LanguageChip(
                   label: 'English',
-                  isSelected: currentLocale.languageCode == 'en',
+                  isSelected: state.languageCode == 'en',
                   onTap: () {
+                    final localeProvider = getIt<LocaleProvider>();
+                    final profileProvider = getIt<ProfileProvider>();
                     ref
                         .read(localeProvider.notifier)
                         .setLocale(const Locale('en'));
@@ -39,8 +43,10 @@ class LanguageSection extends ConsumerWidget {
               Expanded(
                 child: _LanguageChip(
                   label: 'العربية',
-                  isSelected: currentLocale.languageCode == 'ar',
+                  isSelected: state.languageCode == 'ar',
                   onTap: () {
+                    final localeProvider = getIt<LocaleProvider>();
+                    final profileProvider = getIt<ProfileProvider>();
                     ref
                         .read(localeProvider.notifier)
                         .setLocale(const Locale('ar'));

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:sanad/core/dependency_injection.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../providers/profile_provider.dart';
 import 'profile_card.dart';
@@ -9,10 +10,7 @@ import 'package:lucide_icons/lucide_icons.dart';
 class NotificationsSection extends ConsumerWidget {
   final bool enabled;
 
-  const NotificationsSection({
-    super.key,
-    required this.enabled,
-  });
+  const NotificationsSection({super.key, required this.enabled});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -51,9 +49,10 @@ class NotificationsSection extends ConsumerWidget {
           ),
           Switch.adaptive(
             value: enabled,
-            activeColor: const Color(0xFF004D40),
-            onChanged: (val) =>
-                ref.read(profileProvider.notifier).toggleNotifications(val),
+            activeThumbColor: const Color(0xFF004D40),
+            onChanged: (val) => ref
+                .read(getIt<ProfileProvider>().notifier)
+                .toggleNotifications(val),
           ),
         ],
       ),

@@ -1,57 +1,49 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_riverpod/legacy.dart';
+import 'package:sanad/core/constants/app_keys.dart';
+import 'package:sanad/core/dependency_injection.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import '../../../../core/providers/shared_prefs_provider.dart';
 import 'profile_state.dart';
 
-class ProfileNotifier extends StateNotifier<AsyncValue<ProfileState>> {
-  final SharedPreferences _prefs;
+class ProfileNotifier extends AsyncNotifier<ProfileState> {
+  @override
+  Future<ProfileState> build() async {
+    final prefs = getIt<SharedPreferences>();
+    final name = prefs.getString(AppKeys.username) ?? 'UNKOWN';
+    final pic = prefs.getString(AppKeys.profilePicturePath);
+    final notifications = prefs.getBool(AppKeys.notificationsEnabled) ?? true;
+    final language = prefs.getString(AppKeys.locale) ?? 'en';
 
-  ProfileNotifier(this._prefs) : super(const AsyncValue.loading()) {
-    _init();
-  }
-
-  // TODO: move to enum in the pref service in the core
-  static const _notificationsKey = 'notifications_enabled';
-  static const _localeKey = 'app_locale';
-  static const _nameKey = 'user_name';
-  static const _profilePicKey = 'profile_picture_path';
-
-  void _init() {
-    final name = _prefs.getString(_nameKey) ?? 'UNKOWN';
-    final pic = _prefs.getString(_profilePicKey);
-    final notifications = _prefs.getBool(_notificationsKey) ?? true;
-    final language = _prefs.getString(_localeKey) ?? 'en';
-
-    state = AsyncValue.data(
-      ProfileState(
-        name: name,
-        profilePicturePath: pic,
-        userEmail: 'mocked@example.com',
-        notificationsEnabled: notifications,
-        language: language,
-      ),
+    return ProfileState(
+      name: name,
+      profilePicturePath: pic,
+      userEmail: 'mocked@example.com',
+      notificationsEnabled: notifications,
+      language: language,
     );
   }
 
   void updateName(String name) {
-    final current = state.value;
-    if (current != null) {
-      _prefs.setString(_nameKey, name);
-      state = AsyncValue.data(current.copyWith(name: name));
-    }
+    if (state.isLoading) return;
+    state = AsyncLoading();
+    final prefs = getIt<SharedPreferences>();
+    if (state.value == null) return;
+    prefs.setString(AppKeys.username, name);
+    state = AsyncValue.data(state.value!.copyWith(name: name));
   }
 
   void updateProfilePicture(String path) {
     if (state.isLoading || state.value == null) return;
     state = AsyncLoading();
-    _prefs.setString(_profilePicKey, path);
+    final prefs = getIt<SharedPreferences>();
+    prefs.setString(AppKeys.profilePicturePath, path);
     state = AsyncValue.data(state.value!.copyWith(profilePicturePath: path));
   }
 
   void toggleNotifications(bool enabled) {
-    if (state.value == null) return;
-    _prefs.setBool(_notificationsKey, enabled);
+    if (state.isLoading || state.value == null) return;
+    state = AsyncLoading();
+    final prefs = getIt<SharedPreferences>();
+    prefs.setBool(AppKeys.notificationsEnabled, enabled);
     state = AsyncValue.data(
       state.value!.copyWith(notificationsEnabled: enabled),
     );
@@ -59,7 +51,9 @@ class ProfileNotifier extends StateNotifier<AsyncValue<ProfileState>> {
 
   void updateLanguage(String language) {
     if (state.isLoading || state.value == null) return;
-    _prefs.setString(_localeKey, language);
+    state = AsyncLoading();
+    final prefs = getIt<SharedPreferences>();
+    prefs.setString(AppKeys.locale, language);
     state = AsyncValue.data(state.value!.copyWith(language: language));
   }
 
@@ -74,15 +68,4 @@ class ProfileNotifier extends StateNotifier<AsyncValue<ProfileState>> {
   }
 }
 
-StateNotifierProvider<ProfileNotifier, AsyncValue<ProfileState>>
-getProfileProvider(SharedPreferences sharedPrefsProvider) =>
-    StateNotifierProvider<ProfileNotifier, AsyncValue<ProfileState>>((ref) {
-      // TODO: update to use get it
-      return ProfileNotifier(sharedPrefsProvider);
-    });
-
-final profileProvider =
-    StateNotifierProvider<ProfileNotifier, AsyncValue<ProfileState>>((ref) {
-      final prefs = ref.watch(sharedPrefsProvider);
-      return ProfileNotifier(prefs);
-    });
+typedef ProfileProvider = AsyncNotifierProvider<ProfileNotifier, ProfileState>;

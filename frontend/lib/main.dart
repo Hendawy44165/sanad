@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:sanad/core/dependency_injection.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sanad/l10n/app_localizations.dart';
 import 'package:sanad/core/providers/locale_provider.dart';
-import 'package:sanad/core/providers/shared_prefs_provider.dart';
 import 'package:sanad/core/router/router.dart';
 
 void main() async {
@@ -14,21 +12,9 @@ void main() async {
 
   await dotenv.load(fileName: ".env");
 
-  await Supabase.initialize(
-    url: dotenv.env['SUPABASE_URL']!,
-    anonKey: dotenv.env['SUPABASE_ANON_KEY']!,
-  );
+  await configureDependencies();
 
-  final sharedPrefs = await SharedPreferences.getInstance();
-
-  runApp(
-    ProviderScope(
-      overrides: [
-        sharedPrefsProvider.overrideWithValue(sharedPrefs),
-      ],
-      child: const SanadApp(),
-    ),
-  );
+  runApp(ProviderScope(child: const SanadApp()));
 }
 
 class SanadApp extends ConsumerWidget {
@@ -36,8 +22,9 @@ class SanadApp extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    // TODO: remove the user of go router, use the normal navigation instead
     final router = ref.watch(routerProvider);
-    final locale = ref.watch(localeProvider);
+    final locale = ref.watch(getIt<LocaleProvider>());
 
     return MaterialApp.router(
       title: 'Sanad',

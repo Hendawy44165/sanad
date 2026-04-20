@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 import 'package:go_router/go_router.dart';
+import 'package:sanad/core/dependency_injection.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../providers/profile_provider.dart';
 import '../widgets/profile_header.dart';
@@ -15,8 +16,8 @@ class ProfileScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final profileState = ref.watch(profileProvider);
-    final profileNotifier = ref.read(profileProvider.notifier);
+    final profileState = ref.watch(getIt<ProfileProvider>());
+    final profileNotifier = ref.read(getIt<ProfileProvider>().notifier);
 
     return Scaffold(
       backgroundColor: const Color(0xFFF8F5F2),
@@ -45,7 +46,6 @@ class ProfileScreen extends ConsumerWidget {
                 padding: const EdgeInsets.symmetric(horizontal: 24),
                 sliver: SliverToBoxAdapter(
                   child: CvSection(
-                    isLoading: profile.isLoading,
                     cvUploaded: profile.cvUploaded,
                     onUpload: (cvPath) async {
                       return await profileNotifier.uploadCv(cvPath);

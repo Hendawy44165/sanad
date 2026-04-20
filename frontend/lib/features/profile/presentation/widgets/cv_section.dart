@@ -5,13 +5,11 @@ import 'profile_card.dart';
 import 'profile_section_label.dart';
 
 class CvSection extends StatelessWidget {
-  final bool isLoading;
   final bool cvUploaded;
   final Function onUpload;
 
   const CvSection({
     super.key,
-    required this.isLoading,
     required this.cvUploaded,
     required this.onUpload,
   });
@@ -79,17 +77,8 @@ class CvSection extends StatelessWidget {
           SizedBox(
             width: double.infinity,
             child: ElevatedButton.icon(
-              onPressed: isLoading ? null : () => onUpload(),
-              icon: isLoading
-                  ? const SizedBox(
-                      width: 18,
-                      height: 18,
-                      child: CircularProgressIndicator(
-                        strokeWidth: 2,
-                        color: Colors.white,
-                      ),
-                    )
-                  : const Icon(LucideIcons.upload, size: 18),
+              onPressed: () => onUpload(),
+              icon: const Icon(LucideIcons.upload, size: 18),
               label: Text(
                 cvUploaded ? l10n.reuploadCV : l10n.uploadCVButton,
                 style: const TextStyle(fontWeight: FontWeight.bold),

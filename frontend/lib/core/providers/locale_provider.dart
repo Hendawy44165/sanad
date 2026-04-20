@@ -1,30 +1,28 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'shared_prefs_provider.dart';
+import 'package:sanad/core/constants/app_keys.dart';
+import 'package:sanad/core/dependency_injection.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-/// A Notifier that manages the current locale of the application.
 class LocaleNotifier extends Notifier<Locale> {
-  static const _localeKey = 'app_locale';
-
   @override
   Locale build() {
-    final prefs = ref.watch(sharedPrefsProvider);
-    final languageCode = prefs.getString(_localeKey);
-    
+    final prefs = getIt<SharedPreferences>();
+    final languageCode = prefs.getString(AppKeys.locale);
+
     if (languageCode != null) {
       return Locale(languageCode);
     }
     // Default to English
+    // TODO: should default to the user's device language if it's in the list or to English
     return const Locale('en');
   }
 
   void setLocale(Locale locale) {
     state = locale;
-    ref.read(sharedPrefsProvider).setString(_localeKey, locale.languageCode);
+    final prefs = getIt<SharedPreferences>();
+    prefs.setString(AppKeys.locale, locale.languageCode);
   }
 }
 
-/// Provider that manages the current locale of the application.
-final localeProvider = NotifierProvider<LocaleNotifier, Locale>(() {
-  return LocaleNotifier();
-});
+typedef LocaleProvider = NotifierProvider<LocaleNotifier, Locale>;
