@@ -1,0 +1,537 @@
+{
+  "info": {
+    "name": "Sanad Backend API",
+    "_postman_id": "f2c0b2f3-9d5f-4fc8-8b2f-1d9ab0f83001",
+    "description": "Ready-to-test collection for Sanad backend endpoints with admin auth token automation.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:4000"
+    },
+    {
+      "key": "admin_username",
+      "value": "admin"
+    },
+    {
+      "key": "admin_password",
+      "value": "admin123"
+    },
+    {
+      "key": "admin_token",
+      "value": ""
+    },
+    {
+      "key": "user_token",
+      "value": ""
+    },
+    {
+      "key": "doctor_id",
+      "value": ""
+    },
+    {
+      "key": "job_id",
+      "value": ""
+    },
+    {
+      "key": "product_id",
+      "value": ""
+    }
+  ],
+  "item": [
+    {
+      "name": "Health",
+      "item": [
+        {
+          "name": "GET Health",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/health",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "health"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Admin Auth",
+      "item": [
+        {
+          "name": "POST Admin Login",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('status is 200', function () {",
+                  "  pm.response.to.have.status(200);",
+                  "});",
+                  "const body = pm.response.json();",
+                  "if (body && body.data && body.data.access_token) {",
+                  "  pm.collectionVariables.set('admin_token', body.data.access_token);",
+                  "}",
+                  "pm.test('admin token saved', function () {",
+                  "  pm.expect(pm.collectionVariables.get('admin_token')).to.not.eql('');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"{{admin_username}}\",\n  \"password\": \"{{admin_password}}\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/admin-auth/login",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "admin-auth", "login"]
+            }
+          }
+        },
+        {
+          "name": "GET Admin Me",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/admin-auth/me",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "admin-auth", "me"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Doctors",
+      "item": [
+        {
+          "name": "GET Doctors List",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/doctors",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "doctors"]
+            }
+          }
+        },
+        {
+          "name": "GET Doctor By Id",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/doctors/{{doctor_id}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "doctors", "{{doctor_id}}"]
+            }
+          }
+        },
+        {
+          "name": "POST Admin Upload Image",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}"
+              }
+            ],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "folder",
+                  "value": "doctors",
+                  "type": "text"
+                },
+                {
+                  "key": "image",
+                  "type": "file",
+                  "src": ""
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/admin/uploads/image",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "admin", "uploads", "image"]
+            }
+          }
+        },
+        {
+          "name": "POST Admin Create Doctor With Image",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('status is 201', function () {",
+                  "  pm.response.to.have.status(201);",
+                  "});",
+                  "const body = pm.response.json();",
+                  "if (body && body.data && body.data._id) {",
+                  "  pm.collectionVariables.set('doctor_id', body.data._id);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}"
+              }
+            ],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "name",
+                  "value": "Dr Postman Test",
+                  "type": "text"
+                },
+                {
+                  "key": "specialty",
+                  "value": "Neurology",
+                  "type": "text"
+                },
+                {
+                  "key": "description",
+                  "value": "Created from Postman collection",
+                  "type": "text"
+                },
+                {
+                  "key": "rating",
+                  "value": "4.7",
+                  "type": "text"
+                },
+                {
+                  "key": "rating_count",
+                  "value": "10",
+                  "type": "text"
+                },
+                {
+                  "key": "location",
+                  "value": "{\"address\":\"Clinic A\",\"city\":\"Cairo\",\"lat\":30.1,\"lng\":31.3}",
+                  "type": "text"
+                },
+                {
+                  "key": "work_schedule",
+                  "value": "[{\"day\":\"monday\",\"start_time\":\"09:00\",\"end_time\":\"14:00\",\"is_available\":true}]",
+                  "type": "text"
+                },
+                {
+                  "key": "contact_phone",
+                  "value": "+201111111111",
+                  "type": "text"
+                },
+                {
+                  "key": "contact_email",
+                  "value": "dr.postman@example.com",
+                  "type": "text"
+                },
+                {
+                  "key": "image",
+                  "type": "file",
+                  "src": ""
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/admin/doctors",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "admin", "doctors"]
+            }
+          }
+        },
+        {
+          "name": "PATCH Admin Update Doctor",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"description\": \"Updated from Postman\",\n  \"rating\": 4.9\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/admin/doctors/{{doctor_id}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "admin", "doctors", "{{doctor_id}}"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "User Uploads",
+      "item": [
+        {
+          "name": "POST User Upload Profile Image",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{user_token}}"
+              }
+            ],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "image",
+                  "type": "file",
+                  "src": ""
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/uploads/image",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "uploads", "image"]
+            }
+          }
+        },
+        {
+          "name": "POST User Upload CV",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{user_token}}"
+              }
+            ],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "cv",
+                  "type": "file",
+                  "src": ""
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/uploads/cv",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "uploads", "cv"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Jobs",
+      "item": [
+        {
+          "name": "GET Public Jobs",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/jobs",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "jobs"]
+            }
+          }
+        },
+        {
+          "name": "GET Admin Moderation Queue",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/admin/jobs/moderation-queue",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "admin", "jobs", "moderation-queue"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Store",
+      "item": [
+        {
+          "name": "GET Public Products",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/store/products",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "store", "products"]
+            }
+          }
+        },
+        {
+          "name": "POST Admin Create Product",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('status is 201', function () {",
+                  "  pm.response.to.have.status(201);",
+                  "});",
+                  "const body = pm.response.json();",
+                  "if (body && body.data && body.data._id) {",
+                  "  pm.collectionVariables.set('product_id', body.data._id);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}"
+              }
+            ],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "name",
+                  "value": "Wheelchair Cushion",
+                  "type": "text"
+                },
+                {
+                  "key": "description",
+                  "value": "Pressure relief cushion",
+                  "type": "text"
+                },
+                {
+                  "key": "category",
+                  "value": "mobility",
+                  "type": "text"
+                },
+                {
+                  "key": "price",
+                  "value": "850",
+                  "type": "text"
+                },
+                {
+                  "key": "currency",
+                  "value": "EGP",
+                  "type": "text"
+                },
+                {
+                  "key": "in_stock",
+                  "value": "true",
+                  "type": "text"
+                },
+                {
+                  "key": "stock_quantity",
+                  "value": "25",
+                  "type": "text"
+                },
+                {
+                  "key": "accessibility_tags",
+                  "value": "[\"mobility_support\"]",
+                  "type": "text"
+                },
+                {
+                  "key": "image",
+                  "type": "file",
+                  "src": ""
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/admin/store/products",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "admin", "store", "products"]
+            }
+          }
+        },
+        {
+          "name": "PATCH Admin Update Product",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}"
+              }
+            ],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "price",
+                  "value": "900",
+                  "type": "text"
+                },
+                {
+                  "key": "in_stock",
+                  "value": "true",
+                  "type": "text"
+                },
+                {
+                  "key": "image",
+                  "type": "file",
+                  "src": ""
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/admin/store/products/{{product_id}}",
+              "host": ["{{baseUrl}}"],
+              "path": [
+                "api",
+                "v1",
+                "admin",
+                "store",
+                "products",
+                "{{product_id}}"
+              ]
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

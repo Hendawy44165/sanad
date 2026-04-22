@@ -3,14 +3,24 @@
 ## Navigation
 
 ### Data Models
-- [User Schema](./data/schema.md) - Core user profile and attributes.
-- *Coming Soon: Job Schema*
-- *Coming Soon: Doctor Schema*
+
+- [Database & Schemas](./data/schema.md) - MongoDB collections, fields, indexes, and relations.
 
 ### API Reference
-- *Coming Soon: Auth API*
-- *Coming Soon: Profile API*
+
+- [API Overview](./api/README.md) - API docs index and endpoint status.
+- [API Contract](./api/contract.md) - Standard success/error envelopes and auth/no-data behavior.
+- [Health API](./api/health.md)
+- [Admin Auth API](./api/admin-auth.md) - Admin login and admin session checks.
+- [Profile API](./api/profile.md)
+- [CV API](./api/cv.md)
+- [Jobs API](./api/jobs.md)
+- [Store Products API](./api/store-products.md)
+- [Doctors API](./api/doctors.md) - Public doctor browsing and admin doctor management.
+- [Doctor Bookings API](./api/doctor-bookings.md)
+- [Admin Uploads API](./api/uploads.md)
 
 ### Architecture & Conventions
+
 - [Architecture Overview](./architecture.md) - High-level system design.
-- [Coding Conventions](./conventions.md) - Standards for Flutter and Backend.
+- [Coding & Documentation Conventions](./conventions.md) - Standards for Flutter, backend, and mandatory docs updates.

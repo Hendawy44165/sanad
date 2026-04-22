@@ -1,0 +1,378 @@
+openapi: 3.0.3
+info:
+  title: Sanad Backend API
+  version: 0.1.0
+servers:
+  - url: /api/v1
+paths:
+  /health:
+    get:
+      summary: Health check
+      responses:
+        "200":
+          description: OK
+  /auth/sync-profile:
+    post:
+      summary: Sync user profile on sign-in
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: Synced
+  /profile/me:
+    get:
+      summary: Get current user profile
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: Current profile
+    patch:
+      summary: Update current profile
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: Updated profile
+  /jobs:
+    get:
+      summary: Get public jobs list
+      responses:
+        "200":
+          description: List of approved/published jobs
+  /jobs/submissions:
+    post:
+      summary: User or admin submits job post
+      security:
+        - bearerAuth: []
+      responses:
+        "201":
+          description: Job submission created
+  /admin/jobs/{id}:
+    delete:
+      summary: Admin deletes job post
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: Job deleted
+  /store/products:
+    get:
+      summary: Get store products
+      responses:
+        "200":
+          description: Product list
+  /admin/store/products:
+    post:
+      summary: Admin creates product (supports image upload)
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                category:
+                  type: string
+                price:
+                  type: number
+                description:
+                  type: string
+                currency:
+                  type: string
+                in_stock:
+                  type: boolean
+                stock_quantity:
+                  type: number
+                accessibility_tags:
+                  type: string
+                  description: JSON string array
+                image_urls:
+                  type: string
+                  description: JSON string array
+                thumbnail_url:
+                  type: string
+                image:
+                  type: string
+                  format: binary
+      responses:
+        "201":
+          description: Product created
+  /admin/store/products/{id}:
+    patch:
+      summary: Admin updates product (supports image upload)
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: false
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                category:
+                  type: string
+                price:
+                  type: number
+                description:
+                  type: string
+                currency:
+                  type: string
+                in_stock:
+                  type: boolean
+                stock_quantity:
+                  type: number
+                accessibility_tags:
+                  type: string
+                  description: JSON string array
+                image_urls:
+                  type: string
+                  description: JSON string array
+                thumbnail_url:
+                  type: string
+                image:
+                  type: string
+                  format: binary
+      responses:
+        "200":
+          description: Product updated
+  /cv/me:
+    get:
+      summary: Get current user CV
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: CV data
+    put:
+      summary: Add or replace current user CV (user only)
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: CV upserted
+    patch:
+      summary: Update current user CV (user only)
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: CV updated
+  /doctors:
+    get:
+      summary: Get active doctors list
+      responses:
+        "200":
+          description: Doctors list
+  /doctors/{id}:
+    get:
+      summary: Get doctor details
+      responses:
+        "200":
+          description: Doctor details
+  /admin/doctors:
+    post:
+      summary: Admin creates doctor profile (supports image upload in same request)
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                specialty:
+                  type: string
+                description:
+                  type: string
+                rating:
+                  type: number
+                rating_count:
+                  type: number
+                location:
+                  type: string
+                  description: JSON string object for location
+                work_schedule:
+                  type: string
+                  description: JSON string array for schedule
+                contact_phone:
+                  type: string
+                contact_email:
+                  type: string
+                is_active:
+                  type: boolean
+                image:
+                  type: string
+                  format: binary
+      responses:
+        "201":
+          description: Doctor created
+  /admin/doctors/{id}:
+    patch:
+      summary: Admin updates doctor profile (supports image upload)
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: false
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                specialty:
+                  type: string
+                description:
+                  type: string
+                rating:
+                  type: number
+                rating_count:
+                  type: number
+                location:
+                  type: string
+                  description: JSON string object for location
+                work_schedule:
+                  type: string
+                  description: JSON string array for schedule
+                contact_phone:
+                  type: string
+                contact_email:
+                  type: string
+                is_active:
+                  type: boolean
+                image:
+                  type: string
+                  format: binary
+      responses:
+        "200":
+          description: Doctor updated
+    delete:
+      summary: Admin deletes doctor profile
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: Doctor deleted
+  /doctor-bookings:
+    post:
+      summary: User creates doctor booking
+      security:
+        - bearerAuth: []
+      responses:
+        "201":
+          description: Booking created
+  /doctor-bookings/me:
+    get:
+      summary: User gets own bookings
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: My bookings
+  /doctor-bookings/{id}/cancel:
+    patch:
+      summary: User cancels own booking
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: Booking cancelled
+  /admin/uploads/image:
+    post:
+      summary: Admin uploads image and gets image_url
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                image:
+                  type: string
+                  format: binary
+                folder:
+                  type: string
+                  example: doctors
+      responses:
+        "201":
+          description: Image uploaded
+  /uploads/image:
+    post:
+      summary: User uploads profile image
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                image:
+                  type: string
+                  format: binary
+      responses:
+        "201":
+          description: Profile image uploaded
+  /uploads/cv:
+    post:
+      summary: User uploads CV file
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                cv:
+                  type: string
+                  format: binary
+      responses:
+        "201":
+          description: CV uploaded
+  /admin-auth/login:
+    post:
+      summary: Login with predefined admin username/password
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                password:
+                  type: string
+      responses:
+        "200":
+          description: Admin login result
+  /admin-auth/me:
+    get:
+      summary: Get current admin account profile
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: Current admin profile
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
