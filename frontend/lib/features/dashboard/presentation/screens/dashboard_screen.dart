@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 import 'package:go_router/go_router.dart';
+import 'package:sanad/core/theme/app_colors.dart';
 import '../../../../l10n/app_localizations.dart';
-import '../../../../core/providers/locale_provider.dart';
 
 class DashboardScreen extends ConsumerStatefulWidget {
   const DashboardScreen({super.key});
@@ -33,7 +33,33 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
           ],
         ),
       ),
+      floatingActionButton: _buildSanadFloatingButton(),
       bottomNavigationBar: _buildBottomNavigationBar(),
+    );
+  }
+
+  Widget _buildSanadFloatingButton() {
+    return Container(
+      width: 64,
+      height: 64,
+      decoration: BoxDecoration(
+        color: AppColors.primary,
+        shape: BoxShape.circle,
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.1),
+            blurRadius: 20,
+            offset: const Offset(0, 10),
+          ),
+        ],
+      ),
+      child: IconButton(
+        icon: const Icon(
+          LucideIcons.heartHandshake,
+          color: AppColors.secondary,
+        ),
+        onPressed: () {},
+      ),
     );
   }
 
@@ -69,40 +95,22 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                 color: Color(0xFF004D40),
               ),
             ),
-            //! TODO: remove this temp locale flipper
-            Row(
-              children: [
-                IconButton(
-                  icon: const Icon(LucideIcons.globe),
-                  onPressed: () {
-                    ref.read(localeProvider.notifier).setLocale(
-                      const Locale('en'),
-                    );
-                  },
+            GestureDetector(
+              onTap: () => context.go('/profile'),
+              child: Container(
+                width: 40,
+                height: 40,
+                decoration: const BoxDecoration(
+                  color: Color(0xFFD1FAE5),
+                  shape: BoxShape.circle,
                 ),
-                IconButton(
-                  icon: const Icon(LucideIcons.globe),
-                  onPressed: () {
-                    ref.read(localeProvider.notifier).setLocale(
-                      const Locale('ar'),
-                    );
-                  },
-                ),
-              ],
-            ),
-            Container(
-              width: 40,
-              height: 40,
-              decoration: const BoxDecoration(
-                color: Color(0xFFD1FAE5),
-                shape: BoxShape.circle,
-              ),
-              alignment: Alignment.center,
-              child: const Text(
-                'A',
-                style: TextStyle(
-                  color: Color(0xFF065F46),
-                  fontWeight: FontWeight.bold,
+                alignment: Alignment.center,
+                child: const Text(
+                  'A',
+                  style: TextStyle(
+                    color: Color(0xFF065F46),
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
               ),
             ),

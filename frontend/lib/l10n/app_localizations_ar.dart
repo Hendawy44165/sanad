@@ -30,6 +30,9 @@ class AppLocalizationsAr extends AppLocalizations {
   String get requestBook => 'اطلب كتاباً';
 
   @override
+  String get requestBookShort => 'اطلب الكتاب';
+
+  @override
   String get signLanguage => 'لغة الإشارة';
 
   @override
@@ -313,4 +316,60 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get readFullStory => 'اقرأ القصة كاملة';
+
+  @override
+  String get profileTitle => 'ملفي الشخصي';
+
+  @override
+  String get verifiedMember => 'عضو موثق';
+
+  @override
+  String get language => 'اللغة';
+
+  @override
+  String get notifications => 'الإشعارات';
+
+  @override
+  String get notificationsOn => 'ستتلقى جميع إشعارات التطبيق';
+
+  @override
+  String get notificationsOff => 'الإشعارات مُعطَّلة';
+
+  @override
+  String get myCV => 'سيرتي الذاتية';
+
+  @override
+  String get noCvUploaded => 'لم يتم رفع السيرة الذاتية بعد';
+
+  @override
+  String get noCvSubtitle =>
+      'ارفع سيرتك الذاتية للعثور على الوظائف المناسبة بشكل أسرع';
+
+  @override
+  String get cvUploaded => 'تم رفع السيرة الذاتية';
+
+  @override
+  String get cvUploadedSubtitle => 'سيرتك الذاتية نشطة وظاهرة لأصحاب العمل';
+
+  @override
+  String get reuploadCV => 'إعادة رفع السيرة الذاتية';
+
+  @override
+  String get cvUploadedSuccess => 'تم رفع السيرة الذاتية بنجاح!';
+
+  @override
+  String get cvUploadFailed =>
+      'فشل رفع السيرة الذاتية. يرجى المحاولة مرة أخرى.';
+
+  @override
+  String get logout => 'تسجيل الخروج';
+
+  @override
+  String get editName => 'تعديل الاسم';
+
+  @override
+  String get enterName => 'أدخل اسمك';
+
+  @override
+  String get save => 'حفظ';
 }

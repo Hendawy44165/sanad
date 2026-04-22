@@ -30,6 +30,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get requestBook => 'Request a Book';
 
   @override
+  String get requestBookShort => 'Request Book';
+
+  @override
   String get signLanguage => 'Sign Language';
 
   @override
@@ -313,4 +316,58 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get readFullStory => 'Read Full Story';
+
+  @override
+  String get profileTitle => 'My Profile';
+
+  @override
+  String get verifiedMember => 'Verified Member';
+
+  @override
+  String get language => 'Language';
+
+  @override
+  String get notifications => 'Notifications';
+
+  @override
+  String get notificationsOn => 'You will receive all app notifications';
+
+  @override
+  String get notificationsOff => 'Notifications are turned off';
+
+  @override
+  String get myCV => 'My CV';
+
+  @override
+  String get noCvUploaded => 'No CV uploaded yet';
+
+  @override
+  String get noCvSubtitle => 'Upload your CV to find accessible jobs faster';
+
+  @override
+  String get cvUploaded => 'CV Uploaded';
+
+  @override
+  String get cvUploadedSubtitle => 'Your CV is active and visible to employers';
+
+  @override
+  String get reuploadCV => 'Re-upload CV';
+
+  @override
+  String get cvUploadedSuccess => 'CV uploaded successfully!';
+
+  @override
+  String get cvUploadFailed => 'CV upload failed. Please try again.';
+
+  @override
+  String get logout => 'Sign Out';
+
+  @override
+  String get editName => 'Edit Name';
+
+  @override
+  String get enterName => 'Enter your name';
+
+  @override
+  String get save => 'Save';
 }
