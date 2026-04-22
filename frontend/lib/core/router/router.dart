@@ -10,6 +10,7 @@ import 'package:sanad/features/doctors/presentation/screens/doctors_screen.dart'
 import 'package:sanad/features/jobs/presentation/screens/jobs_screen.dart';
 import 'package:sanad/features/books/presentation/screens/books_screen.dart';
 import 'package:sanad/features/translator/presentation/screens/translator_screen.dart';
+import 'package:sanad/features/profile/presentation/screens/profile_screen.dart';
 
 final routerProvider = Provider<GoRouter>((ref) {
   return GoRouter(
@@ -58,6 +59,10 @@ final routerProvider = Provider<GoRouter>((ref) {
           GoRoute(
             path: 'doctors',
             builder: (context, state) => const DoctorsScreen(),
+          ),
+          GoRoute(
+            path: 'profile',
+            builder: (context, state) => const ProfileScreen(),
           ),
         ],
       ),
