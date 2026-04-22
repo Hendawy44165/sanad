@@ -95,6 +95,15 @@ class AppLocalizationsAr extends AppLocalizations {
   String get settings => 'الإعدادات';
 
   @override
+  String get jobs => 'وظائف';
+
+  @override
+  String get doctors => 'أطباء';
+
+  @override
+  String get books => 'كتب';
+
+  @override
   String get welcomeTitle => 'رفيق';
 
   @override

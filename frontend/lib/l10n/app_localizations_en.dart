@@ -95,6 +95,15 @@ class AppLocalizationsEn extends AppLocalizations {
   String get settings => 'Settings';
 
   @override
+  String get jobs => 'Jobs';
+
+  @override
+  String get doctors => 'Doctors';
+
+  @override
+  String get books => 'Books';
+
+  @override
   String get welcomeTitle => 'Companion';
 
   @override

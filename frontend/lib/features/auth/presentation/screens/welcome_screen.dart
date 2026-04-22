@@ -1,105 +1,29 @@
 import 'package:flutter/material.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
-import '../../../../l10n/app_localizations.dart';
-import '../../../../core/theme/app_colors.dart';
-import '../../../../core/widgets/custom_button.dart';
-import '../../../../core/widgets/custom_input.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:sanad/core/dependency_injection.dart';
+import 'package:sanad/core/theme/app_colors.dart';
+import 'package:sanad/l10n/app_localizations.dart';
+import '../providers/auth_provider.dart';
+import '../widgets/auth_logo.dart';
+import '../widgets/auth_form_card.dart';
+import '../widgets/auth_footer.dart';
 
-/// Screen that handles user authentication (Login and Sign Up).
-///
-/// Displays a branded welcome UI with togglable login/signup forms.
-class WelcomeScreen extends StatefulWidget {
-  /// Creates a [WelcomeScreen].
+class WelcomeScreen extends ConsumerStatefulWidget {
   const WelcomeScreen({super.key});
 
   @override
-  State<WelcomeScreen> createState() => _WelcomeScreenState();
+  ConsumerState<WelcomeScreen> createState() => _WelcomeScreenState();
 }
 
-class _WelcomeScreenState extends State<WelcomeScreen> {
+class _WelcomeScreenState extends ConsumerState<WelcomeScreen> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
-  bool _isLoading = false;
-  bool _obscurePassword = true;
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: Container(
-        decoration: _buildBackgroundDecoration(),
-        child: SafeArea(
-          child: Center(
-            child: SingleChildScrollView(
-              padding: const EdgeInsets.all(24.0),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  _buildLogo(),
-                  const SizedBox(height: 24),
-                  _buildBrandText(),
-                  const SizedBox(height: 12),
-                  _buildTagline(),
-                  const SizedBox(height: 48),
-                  _buildFormCard(),
-                  const SizedBox(height: 32),
-                  _buildFooter(),
-                ],
-              ),
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-
-  Future<void> _handleLogin() async {
-    final email = _emailController.text.trim();
-    final password = _passwordController.text.trim();
-
-    if (email.isEmpty || password.isEmpty) {
-      _showSnackBar('Please fill in all fields');
-      return;
-    }
-
-    setState(() => _isLoading = true);
-
-    try {
-      await Supabase.instance.client.auth.signInWithPassword(
-        email: email,
-        password: password,
-      );
-    } on AuthException catch (e) {
-      if (mounted) _showSnackBar(e.message, isError: true);
-    } catch (e) {
-      if (mounted) _showSnackBar('Unexpected error occurred', isError: true);
-    } finally {
-      if (mounted) setState(() => _isLoading = false);
-    }
-  }
-
-  Future<void> _handleSignUp() async {
-    final email = _emailController.text.trim();
-    final password = _passwordController.text.trim();
-
-    if (email.isEmpty || password.isEmpty) {
-      _showSnackBar('Please fill in all fields');
-      return;
-    }
-
-    setState(() => _isLoading = true);
-
-    try {
-      await Supabase.instance.client.auth.signUp(
-        email: email,
-        password: password,
-      );
-    } on AuthException catch (e) {
-      if (mounted) _showSnackBar(e.message, isError: true);
-    } catch (e) {
-      if (mounted) _showSnackBar('Unexpected error occurred', isError: true);
-    } finally {
-      if (mounted) setState(() => _isLoading = false);
-    }
+  void dispose() {
+    _emailController.dispose();
+    _passwordController.dispose();
+    super.dispose();
   }
 
   void _showSnackBar(String message, {bool isError = false}) {
@@ -111,146 +35,80 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
     );
   }
 
-  BoxDecoration _buildBackgroundDecoration() {
-    return const BoxDecoration(
-      gradient: LinearGradient(
-        begin: Alignment.topCenter,
-        end: Alignment.bottomCenter,
-        colors: [AppColors.background, AppColors.secondary],
-      ),
-    );
-  }
+  @override
+  Widget build(BuildContext context) {
+    final authState = ref.watch(getIt<AuthProvider>());
+    final authNotifier = ref.read(getIt<AuthProvider>().notifier);
 
-  Widget _buildLogo() {
-    return Container(
-      width: 80,
-      height: 80,
-      decoration: BoxDecoration(
-        color: AppColors.primary.withValues(alpha: 0.1),
-        borderRadius: BorderRadius.circular(20),
-      ),
-      child: const Icon(Icons.favorite, color: AppColors.primary, size: 40),
-    );
-  }
+    ref.listen(getIt<AuthProvider>(), (previous, next) {
+      next.whenData((state) {
+        if (state.errorMessage != null) {
+          _showSnackBar(state.errorMessage!, isError: true);
+        }
+      });
+    });
 
-  Widget _buildBrandText() {
-    return Text(
-      AppLocalizations.of(context)!.welcomeTitle,
-      style: TextStyle(
-        fontSize: 36,
-        fontWeight: FontWeight.bold,
-        color: AppColors.text,
-        letterSpacing: -1,
-      ),
-    );
-  }
-
-  Widget _buildTagline() {
-    return Text(
-      AppLocalizations.of(context)!.welcomeSubtitle,
-      textAlign: TextAlign.center,
-      style: TextStyle(fontSize: 18, color: AppColors.textLight, height: 1.5),
-    );
-  }
-
-  Widget _buildFormCard() {
-    return Card(
-      child: Padding(
-        padding: const EdgeInsets.all(32.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            _buildFormHeader(),
-            const SizedBox(height: 24),
-            CustomInput(
-              labelText: AppLocalizations.of(context)!.emailAddress,
-              hintText: AppLocalizations.of(context)!.emailHint,
-              controller: _emailController,
-              keyboardType: TextInputType.emailAddress,
-            ),
-            const SizedBox(height: 20),
-            _buildPasswordField(),
-            const SizedBox(height: 24),
-            CustomButton(
-              text: AppLocalizations.of(context)!.signIn,
-              isLoading: _isLoading,
-              onPressed: _handleLogin,
-            ),
-            const SizedBox(height: 24),
-            _buildSignupLink(),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildFormHeader() {
-    return Text(
-      AppLocalizations.of(context)!.welcomeBack,
-      textAlign: TextAlign.center,
-      style: TextStyle(
-        fontSize: 24,
-        fontWeight: FontWeight.w600,
-        color: AppColors.text,
-      ),
-    );
-  }
-
-  Widget _buildPasswordField() {
-    return CustomInput(
-      labelText: AppLocalizations.of(context)!.password,
-      hintText: AppLocalizations.of(context)!.passwordHint,
-      controller: _passwordController,
-      obscureText: _obscurePassword,
-      suffixIcon: IconButton(
-        icon: Icon(
-          _obscurePassword
-              ? Icons.visibility_outlined
-              : Icons.visibility_off_outlined,
-          color: AppColors.textLight,
-        ),
-        onPressed: () {
-          setState(() {
-            _obscurePassword = !_obscurePassword;
-          });
-        },
-      ),
-    );
-  }
-
-  Widget _buildSignupLink() {
-    return Wrap(
-      alignment: WrapAlignment.center,
-      children: [
-        Text(
-          AppLocalizations.of(context)!.noAccount + " ",
-          style: TextStyle(color: AppColors.textLight),
-        ),
-        GestureDetector(
-          onTap: _handleSignUp,
-          child: Text(
-            AppLocalizations.of(context)!.createOne,
-            style: TextStyle(
-              color: AppColors.primary,
-              fontWeight: FontWeight.w600,
-            ),
+    return Scaffold(
+      body: Container(
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [AppColors.background, AppColors.secondary],
           ),
         ),
-      ],
+        child: SafeArea(
+          child: authState.when(
+            data: (state) => Center(
+              child: SingleChildScrollView(
+                padding: const EdgeInsets.all(24.0),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const AuthLogo(),
+                    const SizedBox(height: 24),
+                    Text(
+                      AppLocalizations.of(context)!.welcomeTitle,
+                      style: const TextStyle(
+                        fontSize: 36,
+                        fontWeight: FontWeight.bold,
+                        color: AppColors.text,
+                        letterSpacing: -1,
+                      ),
+                    ),
+                    const SizedBox(height: 12),
+                    Text(
+                      AppLocalizations.of(context)!.welcomeSubtitle,
+                      textAlign: TextAlign.center,
+                      style: const TextStyle(fontSize: 18, color: AppColors.textLight, height: 1.5),
+                    ),
+                    const SizedBox(height: 48),
+                    AuthFormCard(
+                      emailController: _emailController,
+                      passwordController: _passwordController,
+                      isLoading: state.isLoading,
+                      obscurePassword: state.obscurePassword,
+                      onTogglePassword: () => authNotifier.togglePasswordVisibility(),
+                      onLogin: () => authNotifier.signIn(
+                        _emailController.text.trim(),
+                        _passwordController.text.trim(),
+                      ),
+                      onSignUp: () => authNotifier.signUp(
+                        _emailController.text.trim(),
+                        _passwordController.text.trim(),
+                      ),
+                    ),
+                    const SizedBox(height: 32),
+                    const AuthFooter(),
+                  ],
+                ),
+              ),
+            ),
+            loading: () => const Center(child: CircularProgressIndicator()),
+            error: (err, stack) => Center(child: Text('Error: $err')),
+          ),
+        ),
+      ),
     );
-  }
-
-  Widget _buildFooter() {
-    return Text(
-      AppLocalizations.of(context)!.dataSecure,
-      style: TextStyle(color: AppColors.textLight, fontSize: 14),
-    );
-  }
-
-  @override
-  void dispose() {
-    _emailController.dispose();
-    _passwordController.dispose();
-    super.dispose();
   }
 }
