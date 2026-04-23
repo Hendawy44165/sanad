@@ -15,18 +15,15 @@ import 'package:sanad/features/profile/presentation/screens/profile_screen.dart'
 final routerProvider = Provider<GoRouter>((ref) {
   return GoRouter(
     initialLocation: '/',
-    // redirect: (context, state) {
-    //   // If auth state is loading, don't redirect yet
-    //   if (authState.isLoading) return null;
+    redirect: (context, state) {
+      final session = Supabase.instance.client.auth.currentSession;
+      final isLoggingIn = state.uri.path == '/login';
 
-    //   final session = authState.value?.session;
-    //   final isLoggingIn = state.uri.path == '/login';
+      if (session == null && !isLoggingIn) return '/login';
+      if (session != null && isLoggingIn) return '/';
 
-    //   if (session == null && !isLoggingIn) return '/login';
-    //   if (session != null && isLoggingIn) return '/';
-
-    //   return null;
-    // },
+      return null;
+    },
     refreshListenable: GoRouterRefreshStream(
       Supabase.instance.client.auth.onAuthStateChange,
     ),

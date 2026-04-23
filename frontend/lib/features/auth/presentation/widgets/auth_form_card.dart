@@ -82,9 +82,9 @@ class AuthFormCard extends StatelessWidget {
                 ),
                 GestureDetector(
                   onTap: onSignUp,
-                  child: const Text(
-                    'Create one', // TODO: use l10n.createOne if available, keeping as is for now
-                    style: TextStyle(
+                  child: Text(
+                    l10n.createOne,
+                    style: const TextStyle(
                       color: AppColors.primary,
                       fontWeight: FontWeight.w600,
                     ),

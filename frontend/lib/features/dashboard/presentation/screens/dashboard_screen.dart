@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sanad/core/dependency_injection.dart';
+import '../../../../l10n/app_localizations.dart';
 import '../providers/dashboard_provider.dart';
 import '../widgets/dashboard_app_bar.dart';
 import '../widgets/dashboard_welcome_header.dart';
@@ -20,6 +21,8 @@ class DashboardScreen extends ConsumerWidget {
     final dashboardState = ref.watch(getIt<DashboardProvider>());
     final dashboardNotifier = ref.read(getIt<DashboardProvider>().notifier);
 
+    final l10n = AppLocalizations.of(context)!;
+
     return Scaffold(
       backgroundColor: const Color(0xFFF8F5F2),
       body: SafeArea(
@@ -37,7 +40,7 @@ class DashboardScreen extends ConsumerWidget {
             ],
           ),
           loading: () => const Center(child: CircularProgressIndicator()),
-          error: (err, stack) => Center(child: Text('Error: $err')),
+          error: (err, stack) => Center(child: Text('${l10n.errorPrefix}$err')),
         ),
       ),
       floatingActionButton: const SanadFloatingButton(),

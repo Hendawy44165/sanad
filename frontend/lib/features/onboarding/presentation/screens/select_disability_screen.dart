@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:sanad/core/dependency_injection.dart';
 import 'package:sanad/core/theme/app_colors.dart';
+import 'package:sanad/l10n/app_localizations.dart';
 import '../providers/onboarding_provider.dart';
 import '../widgets/onboarding_header.dart';
 import '../widgets/disability_option_card.dart';
@@ -16,41 +17,43 @@ class SelectDisabilityScreen extends ConsumerWidget {
     final onboardingState = ref.watch(getIt<OnboardingProvider>());
     final onboardingNotifier = ref.read(getIt<OnboardingProvider>().notifier);
 
+    final l10n = AppLocalizations.of(context)!;
+
     final List<Map<String, dynamic>> options = [
       {
         'id': 'visual',
-        'label': 'Visual',
-        'description': 'Blindness, low vision, or color blindness',
+        'label': l10n.visualLabel,
+        'description': l10n.visualDesc,
         'icon': Icons.visibility,
       },
       {
         'id': 'hearing',
-        'label': 'Hearing',
-        'description': 'Deafness or hard of hearing',
+        'label': l10n.hearingLabel,
+        'description': l10n.hearingDesc,
         'icon': Icons.hearing,
       },
       {
         'id': 'mobility',
-        'label': 'Mobility',
-        'description': 'Difficulty with movement or physical tasks',
+        'label': l10n.mobilityLabel,
+        'description': l10n.mobilityDesc,
         'icon': Icons.accessible,
       },
       {
         'id': 'cognitive',
-        'label': 'Cognitive',
-        'description': 'Learning, memory, or concentration challenges',
+        'label': l10n.cognitiveLabel,
+        'description': l10n.cognitiveDesc,
         'icon': Icons.psychology,
       },
       {
         'id': 'chronic',
-        'label': 'Chronic Illness',
-        'description': 'Long-term health conditions',
+        'label': l10n.chronicLabel,
+        'description': l10n.chronicDesc,
         'icon': Icons.favorite,
       },
       {
         'id': 'other',
-        'label': 'Other',
-        'description': 'Another type of disability or multiple',
+        'label': l10n.otherLabel,
+        'description': l10n.otherDesc,
         'icon': Icons.help_outline,
       },
     ];
@@ -111,7 +114,7 @@ class SelectDisabilityScreen extends ConsumerWidget {
               ],
             ),
             loading: () => const Center(child: CircularProgressIndicator()),
-            error: (err, stack) => Center(child: Text('Error: $err')),
+            error: (err, stack) => Center(child: Text('${l10n.errorPrefix}$err')),
           ),
         ),
       ),

@@ -1,6 +1,9 @@
 import 'package:get_it/get_it.dart';
 import 'package:sanad/core/providers/locale_provider.dart';
 import 'package:sanad/features/auth/presentation/providers/auth_provider.dart';
+import 'package:sanad/features/auth/logic/repositories/auth_repository.dart';
+import 'package:sanad/features/auth/data/datasources/auth_remote_datasource.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:sanad/features/books/presentation/providers/books_provider.dart';
 import 'package:sanad/features/dashboard/presentation/providers/dashboard_provider.dart';
 import 'package:sanad/features/doctors/presentation/providers/doctors_provider.dart';
@@ -23,6 +26,12 @@ Future<void> configureDependencies() async {
     () => LocaleProvider(LocaleNotifier.new),
   );
   //? Auth
+  getIt.registerLazySingleton<AuthRemoteDataSource>(
+    () => AuthRemoteDataSource(Supabase.instance.client),
+  );
+  getIt.registerLazySingleton<AuthRepository>(
+    () => AuthRepository(getIt<AuthRemoteDataSource>()),
+  );
   getIt.registerLazySingleton<AuthProvider>(
     () => AuthProvider(AuthNotifier.new),
   );
