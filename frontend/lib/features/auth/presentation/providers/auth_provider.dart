@@ -1,6 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sanad/features/auth/presentation/providers/auth_state.dart'
-    as sanad_auth_state;
+    as sanad_auth;
 
 import 'package:sanad/core/dependency_injection.dart';
 import 'package:sanad/features/auth/logic/repositories/auth_repository.dart';
@@ -9,17 +9,17 @@ import 'package:sanad/core/constants/codes.dart';
 import 'package:sanad/l10n/app_localizations.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
-class AuthNotifier extends AsyncNotifier<sanad_auth_state.AuthState> {
+class AuthNotifier extends AsyncNotifier<sanad_auth.AuthState> {
   final AuthRepository _repository = getIt<AuthRepository>();
 
   @override
-  Future<sanad_auth_state.AuthState> build() async {
+  Future<sanad_auth.AuthState> build() async {
     final response = await _repository.restoreSession();
 
     final subscription = _repository.onAuthStateChange.listen((data) {
       final event = data.event;
       if (event == AuthChangeEvent.signedOut && state.value?.user != null) {
-        state = AsyncValue.data(sanad_auth_state.AuthState());
+        state = AsyncValue.data(sanad_auth.AuthState());
       }
     });
 
@@ -27,10 +27,10 @@ class AuthNotifier extends AsyncNotifier<sanad_auth_state.AuthState> {
       subscription.cancel();
     });
 
-    if (response.isSuccess) {
-      return sanad_auth_state.AuthState(user: response.data);
+    if (response.isSuccess && response.data != null) {
+      return sanad_auth.AuthState(user: response.data);
     }
-    return sanad_auth_state.AuthState();
+    return sanad_auth.AuthState();
   }
 
   void togglePasswordVisibility() {
@@ -102,7 +102,7 @@ class AuthNotifier extends AsyncNotifier<sanad_auth_state.AuthState> {
     final response = await _repository.signOut();
 
     if (response.isSuccess) {
-      state = AsyncValue.data(sanad_auth_state.AuthState());
+      state = AsyncValue.data(sanad_auth.AuthState());
     } else {
       final errorMessage = ErrorHandlingService.getMessage(
         response.errorCode ?? Codes.unknown,
@@ -115,4 +115,4 @@ class AuthNotifier extends AsyncNotifier<sanad_auth_state.AuthState> {
 }
 
 typedef AuthProvider =
-    AsyncNotifierProvider<AuthNotifier, sanad_auth_state.AuthState>;
+    AsyncNotifierProvider<AuthNotifier, sanad_auth.AuthState>;

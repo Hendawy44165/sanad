@@ -11,7 +11,7 @@ class ResponseModel<T> {
       error = null,
       errorCode = null;
 
-  const ResponseModel.failure(this.errorCode, this.error)
+  const ResponseModel.failure(this.errorCode, {this.error})
     : state = ResponseState.failure,
       data = null;
 

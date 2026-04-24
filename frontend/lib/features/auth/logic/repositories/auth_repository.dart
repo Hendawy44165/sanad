@@ -17,15 +17,9 @@ class AuthRepository {
   Future<ResponseModel<UserEntity?>> restoreSession() async {
     try {
       final userModel = await _remoteDataSource.restoreSession();
-      if (userModel == null)
-        // TODO: make the messages here localized
-        return ResponseModel.failure(Codes.userNotFound, 'No user found');
       return ResponseModel.success(userModel);
     } catch (e) {
-      return ResponseModel.failure(
-        Codes.unknown,
-        'An unexpected error occurred during session restore: $e',
-      );
+      return ResponseModel.failure(Codes.unknown);
     }
   }
 
@@ -41,15 +35,12 @@ class AuthRepository {
 
       return ResponseModel.success(userModel);
     } on AppException catch (e) {
-      return ResponseModel.failure(e.code, e.message);
+      return ResponseModel.failure(e.code);
     } on AuthException catch (e) {
       final errorCode = ErrorHandlingService.getErrorCode(e.message);
-      return ResponseModel.failure(errorCode, e.message);
+      return ResponseModel.failure(errorCode);
     } catch (e) {
-      return ResponseModel.failure(
-        Codes.unknown,
-        'An unexpected error occurred: $e',
-      );
+      return ResponseModel.failure(Codes.unknown);
     }
   }
 
@@ -62,15 +53,12 @@ class AuthRepository {
 
       return ResponseModel.success(userModel);
     } on AppException catch (e) {
-      return ResponseModel.failure(e.code, e.message);
+      return ResponseModel.failure(e.code);
     } on AuthException catch (e) {
       final errorCode = ErrorHandlingService.getErrorCode(e.message);
-      return ResponseModel.failure(errorCode, e.message);
+      return ResponseModel.failure(errorCode);
     } catch (e) {
-      return ResponseModel.failure(
-        Codes.unknown,
-        'An unexpected error occurred: $e',
-      );
+      return ResponseModel.failure(Codes.unknown);
     }
   }
 
@@ -79,10 +67,7 @@ class AuthRepository {
       await _remoteDataSource.signOut();
       return const ResponseModel.success(null);
     } catch (e) {
-      return ResponseModel.failure(
-        Codes.unknown,
-        'An unexpected error occurred: $e',
-      );
+      return ResponseModel.failure(Codes.unknown);
     }
   }
 }
