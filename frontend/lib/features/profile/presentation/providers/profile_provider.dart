@@ -2,6 +2,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sanad/core/constants/app_keys.dart';
 import 'package:sanad/core/dependency_injection.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:sanad/features/profile/logic/repositories/profile_repository.dart';
 import 'profile_state.dart';
 
 class ProfileNotifier extends AsyncNotifier<ProfileState> {
@@ -63,8 +64,18 @@ class ProfileNotifier extends AsyncNotifier<ProfileState> {
   }
 
   Future<void> logout() async {
-    // TODO: add when the auth system is implemented
-    throw UnimplementedError();
+    state = const AsyncLoading();
+    final repository = getIt<ProfileRepository>();
+    final response = await repository.logout();
+
+    if (response.isSuccess) {
+      final prefs = getIt<SharedPreferences>();
+      await prefs.remove(AppKeys.username);
+      await prefs.remove(AppKeys.profilePicturePath);
+      // Note: Navigation to login is typically handled by the Auth listener in the app root
+    } else {
+      state = AsyncError(response.error ?? 'Logout failed', StackTrace.current);
+    }
   }
 }
 

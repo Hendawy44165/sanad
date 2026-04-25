@@ -1,8 +1,6 @@
-import 'dart:convert';
-import 'dart:io';
-import 'dart:async';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
+import 'package:dio/dio.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:sanad/features/auth/data/datasources/auth_remote_datasource.dart';
 import 'package:sanad/core/models/app_exception.dart';
@@ -13,16 +11,7 @@ class MockSupabaseClient extends Mock implements SupabaseClient {}
 
 class MockGoTrueClient extends Mock implements GoTrueClient {}
 
-class MockHttpClient extends Mock implements HttpClient {}
-
-class MockHttpClientRequest extends Mock implements HttpClientRequest {}
-
-class MockHttpHeaders extends Mock implements HttpHeaders {}
-
-class MockHttpClientResponse extends Mock implements HttpClientResponse {}
-
-class FakeStreamTransformer extends Fake
-    implements StreamTransformer<List<int>, String> {}
+class MockDio extends Mock implements Dio {}
 
 class FakeAuthState extends Fake implements AuthState {}
 
@@ -30,36 +19,22 @@ void main() {
   late AuthRemoteDataSource dataSource;
   late MockSupabaseClient mockSupabase;
   late MockGoTrueClient mockGoTrue;
-  late MockHttpClient mockHttpClient;
-  late MockHttpClientRequest mockRequest;
-  late MockHttpClientResponse mockResponse;
-  late MockHttpHeaders mockHeaders;
+  late MockDio mockDio;
 
   setUpAll(() async {
     await getIt.reset();
-    registerFallbackValue(
-      Uri.parse('http://localhost:4000/api/v1/auth/sync-profile'),
-    );
-    registerFallbackValue(utf8.decoder);
     registerFallbackValue(FakeAuthState());
+    registerFallbackValue(Options());
   });
 
   setUp(() {
     mockSupabase = MockSupabaseClient();
     mockGoTrue = MockGoTrueClient();
-    mockHttpClient = MockHttpClient();
-    mockRequest = MockHttpClientRequest();
-    mockResponse = MockHttpClientResponse();
-    mockHeaders = MockHttpHeaders();
+    mockDio = MockDio();
 
     when(() => mockSupabase.auth).thenReturn(mockGoTrue);
-    when(() => mockRequest.headers).thenReturn(mockHeaders);
-    when(() => mockRequest.close()).thenAnswer((_) async => mockResponse);
-    when(
-      () => mockHttpClient.postUrl(any()),
-    ).thenAnswer((_) async => mockRequest);
 
-    dataSource = AuthRemoteDataSource(mockSupabase, mockHttpClient);
+    dataSource = AuthRemoteDataSource(mockSupabase, mockDio);
   });
 
   const tEmail = 'test@example.com';
@@ -103,19 +78,24 @@ void main() {
             ),
           ).thenAnswer((_) async => authResponse);
 
-          when(() => mockResponse.statusCode).thenReturn(200);
           when(
-            () => mockResponse.transform(
-              any<StreamTransformer<List<int>, String>>(),
+            () => mockDio.post(any(), options: any(named: 'options')),
+          ).thenAnswer(
+            (_) async => Response(
+              data: tResponseJson,
+              statusCode: 200,
+              requestOptions: RequestOptions(path: ''),
             ),
-          ).thenAnswer((_) => Stream.fromIterable([jsonEncode(tResponseJson)]));
+          );
 
           // act
           final result = await dataSource.signInWithPassword(tEmail, tPassword);
 
           // assert
           expect(result.email, tEmail);
-          verify(() => mockHttpClient.postUrl(any())).called(1);
+          verify(
+            () => mockDio.post(any(), options: any(named: 'options')),
+          ).called(1);
         },
       );
 
@@ -198,8 +178,13 @@ void main() {
           ).thenAnswer((_) async => authResponse);
 
           when(
-            () => mockHttpClient.postUrl(any()),
-          ).thenThrow(const SocketException('timeout'));
+            () => mockDio.post(any(), options: any(named: 'options')),
+          ).thenThrow(
+            DioException(
+              requestOptions: RequestOptions(path: ''),
+              type: DioExceptionType.connectionTimeout,
+            ),
+          );
           when(() => mockGoTrue.signOut()).thenAnswer((_) async => {});
 
           // act & assert
@@ -244,15 +229,14 @@ void main() {
             ),
           ).thenAnswer((_) async => authResponse);
 
-          when(() => mockResponse.statusCode).thenReturn(400);
           when(
-            () => mockResponse.transform(
-              any<StreamTransformer<List<int>, String>>(),
-            ),
+            () => mockDio.post(any(), options: any(named: 'options')),
           ).thenAnswer(
-            (_) => Stream.fromIterable([
-              jsonEncode({'success': false}),
-            ]),
+            (_) async => Response(
+              data: {'success': false},
+              statusCode: 400,
+              requestOptions: RequestOptions(path: ''),
+            ),
           );
 
           // act & assert
@@ -293,15 +277,14 @@ void main() {
             ),
           ).thenAnswer((_) async => authResponse);
 
-          when(() => mockResponse.statusCode).thenReturn(401);
           when(
-            () => mockResponse.transform(
-              any<StreamTransformer<List<int>, String>>(),
-            ),
+            () => mockDio.post(any(), options: any(named: 'options')),
           ).thenAnswer(
-            (_) => Stream.fromIterable([
-              jsonEncode({'success': false}),
-            ]),
+            (_) async => Response(
+              data: {'success': false},
+              statusCode: 401,
+              requestOptions: RequestOptions(path: ''),
+            ),
           );
 
           // act & assert
@@ -341,15 +324,14 @@ void main() {
             ),
           );
           when(() => mockGoTrue.currentSession).thenReturn(session);
-          when(() => mockResponse.statusCode).thenReturn(401);
           when(
-            () => mockResponse.transform(
-              any<StreamTransformer<List<int>, String>>(),
-            ),
+            () => mockDio.post(any(), options: any(named: 'options')),
           ).thenAnswer(
-            (_) => Stream.fromIterable([
-              jsonEncode({'success': false}),
-            ]),
+            (_) async => Response(
+              data: {'success': false},
+              statusCode: 401,
+              requestOptions: RequestOptions(path: ''),
+            ),
           );
           when(() => mockGoTrue.signOut()).thenAnswer((_) async => {});
 
@@ -374,8 +356,13 @@ void main() {
         );
         when(() => mockGoTrue.currentSession).thenReturn(session);
         when(
-          () => mockHttpClient.postUrl(any()),
-        ).thenThrow(const SocketException('timeout'));
+          () => mockDio.post(any(), options: any(named: 'options')),
+        ).thenThrow(
+          DioException(
+            requestOptions: RequestOptions(path: ''),
+            type: DioExceptionType.connectionTimeout,
+          ),
+        );
 
         final result = await dataSource.restoreSession();
 

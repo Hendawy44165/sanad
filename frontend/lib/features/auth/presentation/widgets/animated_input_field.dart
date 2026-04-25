@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../../../core/theme/app_colors.dart';
 
 class AnimatedInputField extends StatefulWidget {
   final String label;
@@ -35,12 +36,12 @@ class _AnimatedInputFieldState extends State<AnimatedInputField> {
     return AnimatedContainer(
       duration: const Duration(milliseconds: 300),
       decoration: BoxDecoration(
-        color: Colors.white.withValues(alpha: _isFocused ? 0.2 : 0.1),
+        color: AppColors.inputFill,
         borderRadius: BorderRadius.circular(16),
         border: Border.all(
           color: _isFocused
-              ? Colors.white
-              : Colors.white.withValues(alpha: 0.3),
+              ? AppColors.primary
+              : AppColors.border,
           width: 1.5,
         ),
       ),
@@ -49,7 +50,7 @@ class _AnimatedInputFieldState extends State<AnimatedInputField> {
         child: TextFormField(
           controller: widget.controller,
           obscureText: _obscureText,
-          style: const TextStyle(color: Colors.white),
+          style: const TextStyle(color: AppColors.text),
           validator: widget.validator,
           decoration: InputDecoration(
             border: InputBorder.none,
@@ -59,18 +60,18 @@ class _AnimatedInputFieldState extends State<AnimatedInputField> {
             ),
             labelText: widget.label,
             labelStyle: TextStyle(
-              color: Colors.white.withValues(alpha: 0.8),
+              color: AppColors.text.withValues(alpha: 0.7),
               fontWeight: FontWeight.w500,
             ),
             prefixIcon: Icon(
               widget.icon,
-              color: Colors.white.withValues(alpha: 0.8),
+              color: AppColors.text.withValues(alpha: 0.5),
             ),
             suffixIcon: widget.isPassword
                 ? IconButton(
                     icon: Icon(
                       _obscureText ? Icons.visibility_off : Icons.visibility,
-                      color: Colors.white.withValues(alpha: 0.8),
+                      color: AppColors.text.withValues(alpha: 0.5),
                     ),
                     onPressed: () =>
                         setState(() => _obscureText = !_obscureText),

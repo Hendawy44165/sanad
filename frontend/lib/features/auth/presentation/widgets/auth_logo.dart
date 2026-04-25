@@ -10,10 +10,14 @@ class AuthLogo extends StatelessWidget {
       width: 80,
       height: 80,
       decoration: BoxDecoration(
-        color: AppColors.primary.withValues(alpha: 0.1),
-        borderRadius: BorderRadius.circular(20),
+        color: const Color(0xFFE0F2F1), // Very light teal
+        borderRadius: BorderRadius.circular(24),
       ),
-      child: const Icon(Icons.favorite, color: AppColors.primary, size: 40),
+      child: const Icon(
+        Icons.favorite_border,
+        color: AppColors.primary,
+        size: 40,
+      ),
     );
   }
 }

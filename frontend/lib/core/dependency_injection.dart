@@ -10,8 +10,10 @@ import 'package:sanad/features/doctors/presentation/providers/doctors_provider.d
 import 'package:sanad/features/onboarding/presentation/providers/onboarding_provider.dart';
 import 'package:sanad/features/jobs/presentation/providers/jobs_provider.dart';
 import 'package:sanad/features/profile/presentation/providers/profile_provider.dart';
+import 'package:sanad/features/profile/logic/repositories/profile_repository.dart';
 import 'package:sanad/features/translator/presentation/providers/translator_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:dio/dio.dart';
 
 final getIt = GetIt.instance;
 
@@ -20,18 +22,29 @@ Future<void> configureDependencies() async {
   final prefs = await SharedPreferences.getInstance();
   getIt.registerLazySingleton<SharedPreferences>(() => prefs);
 
+  final dio = Dio();
+  getIt.registerLazySingleton<Dio>(() => dio);
+
+  //! Datasources
+  //? Auth
+  getIt.registerLazySingleton<AuthRemoteDataSource>(
+    () => AuthRemoteDataSource(Supabase.instance.client, getIt<Dio>()),
+  );
+
+  //! Repositories
+  getIt.registerLazySingleton<AuthRepository>(
+    () => AuthRepository(getIt<AuthRemoteDataSource>()),
+  );
+  getIt.registerLazySingleton<ProfileRepository>(
+    () => ProfileRepository(getIt<AuthRemoteDataSource>()),
+  );
+
   //! Providers
   //? Locale
   getIt.registerLazySingleton<LocaleProvider>(
     () => LocaleProvider(LocaleNotifier.new),
   );
-  //? Auth
-  getIt.registerLazySingleton<AuthRemoteDataSource>(
-    () => AuthRemoteDataSource(Supabase.instance.client),
-  );
-  getIt.registerLazySingleton<AuthRepository>(
-    () => AuthRepository(getIt<AuthRemoteDataSource>()),
-  );
+
   getIt.registerLazySingleton<AuthProvider>(
     () => AuthProvider(AuthNotifier.new),
   );

@@ -1,21 +1,19 @@
 import 'dart:async';
-import 'dart:convert';
 import 'dart:io';
+import 'package:dio/dio.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:sanad/core/constants/codes.dart';
 import 'package:sanad/core/models/app_exception.dart';
 import 'package:sanad/features/auth/data/models/user_model.dart';
 
-// TODO: make the private methods and variables at the end of the class so the latter is more readable
-
 class AuthRemoteDataSource {
   final SupabaseClient _supabaseClient;
-  // TODO: make this client fed via get it
-  final HttpClient? _httpClient;
+  final Dio _dio;
   final String _baseUrl =
-      'http://localhost:4000/api/v1'; // Change this for production
+      dotenv.env['API_BASE_URL'] ?? 'http://localhost:4000/api/v1';
 
-  AuthRemoteDataSource(this._supabaseClient, [this._httpClient]);
+  AuthRemoteDataSource(this._supabaseClient, this._dio);
 
   Stream<AuthState> get onAuthStateChange =>
       _supabaseClient.auth.onAuthStateChange;
@@ -71,7 +69,10 @@ class AuthRemoteDataSource {
       throw const AppException(Codes.requestTimeout);
     } on TimeoutException {
       throw const AppException(Codes.requestTimeout);
-    } catch (e) {
+    } catch (e, st) {
+      print('=== SIGNUP FATAL ERROR ===');
+      print(e);
+      print(st);
       if (e is AuthException || e is AppException) rethrow;
       throw const AppException(Codes.unexpectedFailure);
     }
@@ -96,22 +97,24 @@ class AuthRemoteDataSource {
 
   Future<UserModel> _syncProfile(String accessToken) async {
     // TODO: Make this atomic via Supabase Functions instead of a manual HTTP call from the client
-    final url = Uri.parse('$_baseUrl/auth/sync-profile');
-    final client = _httpClient ?? HttpClient();
+    final url = '$_baseUrl/auth/sync-profile';
 
     try {
-      final request = await client.postUrl(url);
-      request.headers.set(
-        HttpHeaders.authorizationHeader,
-        'Bearer $accessToken',
+      final response = await _dio.post(
+        url,
+        options: Options(
+          headers: {
+            'Authorization': 'Bearer $accessToken',
+            'Content-Type': 'application/json',
+          },
+        ),
       );
-      request.headers.set(HttpHeaders.contentTypeHeader, 'application/json');
 
-      final response = await request.close();
-      final responseBody = await response.transform(utf8.decoder).join();
-      final decoded = jsonDecode(responseBody);
+      final decoded = response.data;
 
-      if (response.statusCode >= 200 && response.statusCode < 300) {
+      if (response.statusCode != null &&
+          response.statusCode! >= 200 &&
+          response.statusCode! < 300) {
         if (decoded['success'] == true) {
           return UserModel.fromJson(decoded['data']);
         } else {
@@ -122,14 +125,18 @@ class AuthRemoteDataSource {
       } else {
         throw const AppException(Codes.unexpectedFailure);
       }
-    } on SocketException {
-      throw const AppException(Codes.requestTimeout);
-    } on TimeoutException {
-      throw const AppException(Codes.requestTimeout);
-    } on FormatException {
+    } on DioException catch (e) {
+      if (e.type == DioExceptionType.connectionTimeout ||
+          e.type == DioExceptionType.receiveTimeout) {
+        throw const AppException(Codes.requestTimeout);
+      }
+      if (e.response?.statusCode == 401 || e.response?.statusCode == 403) {
+        throw const AppException(Codes.reauthenticationNeeded);
+      }
       throw const AppException(Codes.unexpectedFailure);
-    } finally {
-      client.close();
+    } catch (e) {
+      if (e is AppException) rethrow;
+      throw const AppException(Codes.unexpectedFailure);
     }
   }
 

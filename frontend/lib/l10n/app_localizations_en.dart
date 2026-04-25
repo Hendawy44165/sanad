@@ -129,7 +129,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get noAccount => 'Don\'t have an account?';
 
   @override
-  String get createOne => 'Create one';
+  String get createOne => 'Create account';
 
   @override
   String get dataSecure => '🔒 Your data is secure and private';

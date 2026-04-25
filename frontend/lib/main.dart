@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sanad/core/theme/app_theme.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sanad/core/dependency_injection.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -13,12 +14,12 @@ void main() async {
 
   await dotenv.load(fileName: ".env");
 
-  await configureDependencies();
-
   await Supabase.initialize(
     url: dotenv.env["SUPABASE_URL"]!,
     anonKey: dotenv.env["SUPABASE_ANON_KEY"]!,
   );
+
+  await configureDependencies();
 
   runApp(ProviderScope(child: const SanadApp()));
 }
@@ -44,11 +45,7 @@ class SanadApp extends ConsumerWidget {
       ],
       supportedLocales: const [Locale('en'), Locale('ar')],
       locale: locale,
-      theme: ThemeData(
-        useMaterial3: true,
-        primaryColor: const Color(0xFF004D40),
-        scaffoldBackgroundColor: const Color(0xFFF8F5F2),
-      ),
+      theme: AppTheme.lightTheme,
     );
   }
 }

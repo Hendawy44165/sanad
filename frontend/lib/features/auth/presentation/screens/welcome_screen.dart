@@ -4,7 +4,7 @@ import 'package:sanad/core/dependency_injection.dart';
 import 'package:sanad/core/theme/app_colors.dart';
 import 'package:sanad/l10n/app_localizations.dart';
 import 'package:sanad/features/auth/presentation/providers/auth_provider.dart';
-import 'package:sanad/features/auth/presentation/widgets/glass_card.dart';
+import 'package:sanad/features/auth/presentation/widgets/auth_logo.dart';
 import 'package:sanad/features/auth/presentation/widgets/animated_input_field.dart';
 import 'package:go_router/go_router.dart';
 
@@ -103,185 +103,202 @@ class _WelcomeScreenState extends ConsumerState<WelcomeScreen>
     });
 
     return Scaffold(
-      body: Container(
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: [AppColors.primary, AppColors.onSecondary],
-          ),
-        ),
-        child: SafeArea(
-          child: Center(
-            child: SingleChildScrollView(
-              padding: const EdgeInsets.symmetric(
-                horizontal: 24.0,
-                vertical: 40.0,
-              ),
-              child: FadeTransition(
-                opacity: _fadeAnimation,
-                child: SlideTransition(
-                  position: _slideAnimation,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      // App Logo / Icon
-                      Container(
-                        padding: const EdgeInsets.all(20),
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: Colors.white.withValues(alpha: 0.15),
-                          border: Border.all(
-                            color: Colors.white.withValues(alpha: 0.3),
-                            width: 2,
-                          ),
-                        ),
-                        child: const Icon(
-                          Icons.health_and_safety,
-                          size: 64,
-                          color: Colors.white,
-                        ),
+      backgroundColor: AppColors.background,
+      body: SafeArea(
+        child: Center(
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.symmetric(
+              horizontal: 24.0,
+              vertical: 40.0,
+            ),
+            child: FadeTransition(
+              opacity: _fadeAnimation,
+              child: SlideTransition(
+                position: _slideAnimation,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    // App Logo
+                    const AuthLogo(),
+                    const SizedBox(height: 32),
+                    Text(
+                      l10n.welcomeTitle,
+                      style: const TextStyle(
+                        fontSize: 48,
+                        fontWeight: FontWeight.w900,
+                        color: AppColors.text,
+                        fontFamily: 'Pacifico', // Attempting script feel
+                        letterSpacing: -1,
                       ),
-                      const SizedBox(height: 32),
-                      Text(
-                        l10n.welcomeTitle,
-                        style: const TextStyle(
-                          fontSize: 40,
-                          fontWeight: FontWeight.w800,
-                          color: Colors.white,
-                          letterSpacing: 1.5,
-                        ),
-                      ),
-                      const SizedBox(height: 12),
-                      Text(
+                    ),
+                    const SizedBox(height: 12),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 20),
+                      child: Text(
                         l10n.welcomeSubtitle,
                         textAlign: TextAlign.center,
                         style: TextStyle(
                           fontSize: 16,
-                          color: Colors.white.withValues(alpha: 0.8),
+                          color: AppColors.text.withValues(alpha: 0.6),
                           height: 1.5,
                         ),
                       ),
-                      const SizedBox(height: 48),
-                      GlassCard(
-                        child: Form(
-                          key: _formKey,
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.stretch,
-                            children: [
-                              Text(
-                                _isLogin
-                                    ? l10n.welcomeBack
-                                    : l10n.createAccount,
-                                style: const TextStyle(
-                                  fontSize: 24,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.white,
+                    ),
+                    const SizedBox(height: 40),
+                    // Solid Card
+                    Container(
+                      padding: const EdgeInsets.all(32),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(32),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withValues(alpha: 0.05),
+                            blurRadius: 20,
+                            offset: const Offset(0, 10),
+                          ),
+                        ],
+                      ),
+                      child: Form(
+                        key: _formKey,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                          children: [
+                            Text(
+                              _isLogin
+                                  ? l10n.welcomeBack
+                                  : l10n.createAccount,
+                              style: const TextStyle(
+                                fontSize: 28,
+                                fontWeight: FontWeight.bold,
+                                color: AppColors.text,
+                                fontFamily: 'Pacifico',
+                              ),
+                              textAlign: TextAlign.center,
+                            ),
+                            const SizedBox(height: 32),
+                            AnimatedInputField(
+                              label: l10n.emailAddress,
+                              icon: Icons.email_outlined,
+                              controller: _emailController,
+                              validator: (value) {
+                                if (value == null || value.isEmpty) {
+                                  return l10n.emailRequired;
+                                }
+                                if (!value.contains('@')) {
+                                  return l10n.emailInvalid;
+                                }
+                                return null;
+                              },
+                            ),
+                            const SizedBox(height: 20),
+                            AnimatedInputField(
+                              label: l10n.password,
+                              icon: Icons.lock_outline,
+                              isPassword: true,
+                              controller: _passwordController,
+                              validator: (value) {
+                                if (value == null || value.isEmpty) {
+                                  return l10n.passwordRequired;
+                                }
+                                if (value.length < 6) {
+                                  return l10n.passwordTooShort;
+                                }
+                                return null;
+                              },
+                            ),
+                            const SizedBox(height: 32),
+                            authState.maybeWhen(
+                              data: (state) => ElevatedButton(
+                                onPressed: _submit,
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: AppColors.primary,
+                                  foregroundColor: Colors.white,
+                                  padding: const EdgeInsets.symmetric(
+                                    vertical: 18,
+                                  ),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(20),
+                                  ),
+                                  elevation: 0,
                                 ),
-                                textAlign: TextAlign.center,
-                              ),
-                              const SizedBox(height: 32),
-                              AnimatedInputField(
-                                label: l10n.emailAddress,
-                                icon: Icons.email_outlined,
-                                controller: _emailController,
-                                validator: (value) {
-                                  if (value == null || value.isEmpty) {
-                                    return l10n.emailRequired;
-                                  }
-                                  if (!value.contains('@')) {
-                                    return l10n.emailInvalid;
-                                  }
-                                  return null;
-                                },
-                              ),
-                              const SizedBox(height: 20),
-                              AnimatedInputField(
-                                label: l10n.password,
-                                icon: Icons.lock_outline,
-                                isPassword: true,
-                                controller: _passwordController,
-                                validator: (value) {
-                                  if (value == null || value.isEmpty) {
-                                    return l10n.passwordRequired;
-                                  }
-                                  if (value.length < 6) {
-                                    return l10n.passwordTooShort;
-                                  }
-                                  return null;
-                                },
-                              ),
-                              const SizedBox(height: 32),
-                              authState.maybeWhen(
-                                data: (state) => ElevatedButton(
-                                  onPressed: _submit,
-                                  style: ElevatedButton.styleFrom(
-                                    backgroundColor: AppColors.accent,
-                                    foregroundColor: Colors.white,
-                                    padding: const EdgeInsets.symmetric(
-                                      vertical: 16,
-                                    ),
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(16),
-                                    ),
-                                    elevation: 8,
-                                    shadowColor: AppColors.accent.withValues(
-                                      alpha: 0.5,
-                                    ),
-                                  ),
-                                  child: Text(
-                                    _isLogin ? l10n.signIn : l10n.createOne,
-                                    style: const TextStyle(
-                                      fontSize: 18,
-                                      fontWeight: FontWeight.bold,
-                                      letterSpacing: 1.2,
-                                    ),
-                                  ),
-                                ),
-                                loading: () => const Center(
-                                  child: CircularProgressIndicator(
-                                    color: Colors.white,
-                                  ),
-                                ),
-                                orElse: () => const SizedBox.shrink(),
-                              ),
-                              const SizedBox(height: 24),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Text(
-                                    _isLogin
-                                        ? l10n.noAccount
-                                        : l10n.alreadyHaveAccount,
-                                    style: TextStyle(
-                                      color: Colors.white.withValues(
-                                        alpha: 0.8,
-                                      ),
-                                    ),
-                                  ),
-                                  TextButton(
-                                    onPressed: () {
-                                      setState(() {
-                                        _isLogin = !_isLogin;
-                                        _formKey.currentState?.reset();
-                                      });
-                                    },
-                                    child: Text(
-                                      _isLogin ? l10n.signUp : l10n.logIn,
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Text(
+                                      _isLogin ? l10n.signIn : l10n.createOne,
                                       style: const TextStyle(
-                                        color: AppColors.accent,
+                                        fontSize: 18,
                                         fontWeight: FontWeight.bold,
                                       ),
                                     ),
-                                  ),
-                                ],
+                                    const SizedBox(width: 8),
+                                    const Icon(Icons.arrow_forward, size: 20),
+                                  ],
+                                ),
                               ),
-                            ],
-                          ),
+                              loading: () => const Center(
+                                child: CircularProgressIndicator(
+                                  color: AppColors.primary,
+                                ),
+                              ),
+                              orElse: () => const SizedBox.shrink(),
+                            ),
+                            const SizedBox(height: 24),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text(
+                                  _isLogin
+                                      ? l10n.noAccount
+                                      : l10n.alreadyHaveAccount,
+                                  style: TextStyle(
+                                    color: AppColors.text.withValues(
+                                      alpha: 0.6,
+                                    ),
+                                  ),
+                                ),
+                                TextButton(
+                                  onPressed: () {
+                                    setState(() {
+                                      _isLogin = !_isLogin;
+                                      _formKey.currentState?.reset();
+                                    });
+                                  },
+                                  child: Text(
+                                    _isLogin ? l10n.signUp : l10n.logIn,
+                                    style: const TextStyle(
+                                      color: AppColors.primary,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
                         ),
                       ),
-                    ],
-                  ),
+                    ),
+                    const SizedBox(height: 40),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const Icon(
+                          Icons.lock_outline,
+                          size: 16,
+                          color: AppColors.textLight,
+                        ),
+                        const SizedBox(width: 8),
+                        Text(
+                          'Your data is secure and private',
+                          style: TextStyle(
+                            color: AppColors.text.withValues(alpha: 0.5),
+                            fontSize: 14,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
                 ),
               ),
             ),

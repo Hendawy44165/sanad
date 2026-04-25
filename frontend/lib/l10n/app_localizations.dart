@@ -335,7 +335,7 @@ abstract class AppLocalizations {
   /// No description provided for @createOne.
   ///
   /// In en, this message translates to:
-  /// **'Create one'**
+  /// **'Create account'**
   String get createOne;
 
   /// No description provided for @dataSecure.
