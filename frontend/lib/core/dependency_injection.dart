@@ -3,6 +3,7 @@ import 'package:sanad/core/providers/locale_provider.dart';
 import 'package:sanad/features/auth/presentation/providers/auth_provider.dart';
 import 'package:sanad/features/auth/logic/repositories/auth_repository.dart';
 import 'package:sanad/features/auth/data/datasources/auth_remote_datasource.dart';
+import 'package:sanad/core/constants/api_constants.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:sanad/features/books/presentation/providers/books_provider.dart';
 import 'package:sanad/features/dashboard/presentation/providers/dashboard_provider.dart';
@@ -27,15 +28,17 @@ Future<void> configureDependencies() async {
   final dio = Dio();
   getIt.registerLazySingleton<Dio>(() => dio);
 
+  getIt.registerLazySingleton<ApiConfig>(() => ApiConfig.fromDotEnv());
+
   //! Datasources
   //? Auth
   getIt.registerLazySingleton<AuthRemoteDataSource>(
-    () => AuthRemoteDataSource(Supabase.instance.client, getIt<Dio>()),
+    () => AuthRemoteDataSource(Supabase.instance.client, getIt<Dio>(), getIt<ApiConfig>()),
   );
 
   //? Onboarding
   getIt.registerLazySingleton<OnboardingRemoteDataSource>(
-    () => OnboardingRemoteDataSource(Supabase.instance.client, getIt<Dio>()),
+    () => OnboardingRemoteDataSource(Supabase.instance.client, getIt<Dio>(), getIt<ApiConfig>()),
   );
 
   //! Repositories

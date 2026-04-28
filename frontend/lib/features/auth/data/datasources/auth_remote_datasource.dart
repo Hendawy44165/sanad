@@ -1,18 +1,18 @@
 import 'dart:async';
 import 'dart:io';
 import 'package:dio/dio.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:sanad/core/constants/codes.dart';
+import 'package:sanad/core/constants/api_constants.dart';
 import 'package:sanad/core/models/app_exception.dart';
 import 'package:sanad/features/auth/data/models/user_model.dart';
 
 class AuthRemoteDataSource {
   final SupabaseClient _supabaseClient;
   final Dio _dio;
-  final String _baseUrl = dotenv.env['API_BASE_URL']!;
+  final ApiConfig _apiConfig;
 
-  AuthRemoteDataSource(this._supabaseClient, this._dio);
+  AuthRemoteDataSource(this._supabaseClient, this._dio, this._apiConfig);
 
   Stream<AuthState> get onAuthStateChange => _supabaseClient.auth.onAuthStateChange;
 
@@ -50,7 +50,7 @@ class AuthRemoteDataSource {
         final userModel = await _syncProfile(authResponse.session!.accessToken);
 
         // Update full name in the profile
-        final url = '$_baseUrl/profile/me';
+        final url = _apiConfig.profile.me;
         await _dio.patch(
           url,
           data: {'full_name': '$firstName $lastName'},
@@ -92,7 +92,7 @@ class AuthRemoteDataSource {
   }
 
   Future<UserModel> _syncProfile(String accessToken) async {
-    final url = '$_baseUrl/auth/sync-profile';
+    final url = _apiConfig.auth.syncProfile;
 
     try {
       final response = await _dio.post(url, options: Options(headers: {'Authorization': 'Bearer $accessToken', 'Content-Type': 'application/json'}));

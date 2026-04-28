@@ -1,23 +1,23 @@
 import 'dart:async';
 import 'dart:io';
 import 'package:dio/dio.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:sanad/core/constants/codes.dart';
+import 'package:sanad/core/constants/api_constants.dart';
 import 'package:sanad/core/models/app_exception.dart';
 
 class OnboardingRemoteDataSource {
   final SupabaseClient _supabaseClient;
   final Dio _dio;
-  final String _baseUrl = dotenv.env['API_BASE_URL']!;
+  final ApiConfig _apiConfig;
 
-  OnboardingRemoteDataSource(this._supabaseClient, this._dio);
+  OnboardingRemoteDataSource(this._supabaseClient, this._dio, this._apiConfig);
 
   Future<void> updateProfile(Map<String, dynamic> data) async {
     final session = _supabaseClient.auth.currentSession;
     if (session == null) throw const AppException(Codes.noAuthorization);
 
-    final url = '$_baseUrl/profile/me';
+    final url = _apiConfig.profile.me;
 
     try {
       final response = await _dio.patch(
