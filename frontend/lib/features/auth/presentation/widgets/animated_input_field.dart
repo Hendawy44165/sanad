@@ -23,7 +23,6 @@ class AnimatedInputField extends StatefulWidget {
 
 class _AnimatedInputFieldState extends State<AnimatedInputField> {
   bool _obscureText = true;
-  bool _isFocused = false;
 
   @override
   void initState() {
@@ -33,51 +32,55 @@ class _AnimatedInputFieldState extends State<AnimatedInputField> {
 
   @override
   Widget build(BuildContext context) {
-    return AnimatedContainer(
-      duration: const Duration(milliseconds: 300),
-      decoration: BoxDecoration(
-        color: AppColors.inputFill,
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(
-          color: _isFocused
-              ? AppColors.primary
-              : AppColors.border,
-          width: 1.5,
+    return TextFormField(
+      controller: widget.controller,
+      obscureText: _obscureText,
+      style: const TextStyle(color: AppColors.text),
+      validator: widget.validator,
+      decoration: InputDecoration(
+        filled: true,
+        fillColor: AppColors.inputFill,
+        contentPadding: const EdgeInsets.symmetric(
+          horizontal: 20,
+          vertical: 18,
         ),
-      ),
-      child: Focus(
-        onFocusChange: (hasFocus) => setState(() => _isFocused = hasFocus),
-        child: TextFormField(
-          controller: widget.controller,
-          obscureText: _obscureText,
-          style: const TextStyle(color: AppColors.text),
-          validator: widget.validator,
-          decoration: InputDecoration(
-            border: InputBorder.none,
-            contentPadding: const EdgeInsets.symmetric(
-              horizontal: 20,
-              vertical: 16,
-            ),
-            labelText: widget.label,
-            labelStyle: TextStyle(
-              color: AppColors.text.withValues(alpha: 0.7),
-              fontWeight: FontWeight.w500,
-            ),
-            prefixIcon: Icon(
-              widget.icon,
-              color: AppColors.text.withValues(alpha: 0.5),
-            ),
-            suffixIcon: widget.isPassword
-                ? IconButton(
-                    icon: Icon(
-                      _obscureText ? Icons.visibility_off : Icons.visibility,
-                      color: AppColors.text.withValues(alpha: 0.5),
-                    ),
-                    onPressed: () =>
-                        setState(() => _obscureText = !_obscureText),
-                  )
-                : null,
-          ),
+        labelText: widget.label,
+        labelStyle: TextStyle(
+          color: AppColors.text.withValues(alpha: 0.7),
+          fontWeight: FontWeight.w500,
+        ),
+        prefixIcon: Icon(
+          widget.icon,
+          color: AppColors.text.withValues(alpha: 0.5),
+        ),
+        suffixIcon: widget.isPassword
+            ? IconButton(
+                icon: Icon(
+                  _obscureText ? Icons.visibility_off : Icons.visibility,
+                  color: AppColors.text.withValues(alpha: 0.5),
+                ),
+                onPressed: () => setState(() => _obscureText = !_obscureText),
+              )
+            : null,
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(16),
+          borderSide: const BorderSide(color: AppColors.border, width: 1.5),
+        ),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(16),
+          borderSide: const BorderSide(color: AppColors.border, width: 1.5),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(16),
+          borderSide: const BorderSide(color: AppColors.primary, width: 1.5),
+        ),
+        errorBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(16),
+          borderSide: const BorderSide(color: Colors.red, width: 1.5),
+        ),
+        focusedErrorBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(16),
+          borderSide: const BorderSide(color: Colors.red, width: 2),
         ),
       ),
     );
