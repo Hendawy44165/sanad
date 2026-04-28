@@ -104,7 +104,7 @@ class SelectDisabilityScreen extends ConsumerWidget {
                   isLoading: state.isLoading,
                   onContinue: state.selectedDisabilityId != null
                       ? () async {
-                          await onboardingNotifier.saveSelection();
+                          await onboardingNotifier.saveSelection(l10n);
                           if (context.mounted) {
                             context.go('/');
                           }

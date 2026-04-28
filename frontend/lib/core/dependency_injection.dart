@@ -12,6 +12,8 @@ import 'package:sanad/features/jobs/presentation/providers/jobs_provider.dart';
 import 'package:sanad/features/profile/presentation/providers/profile_provider.dart';
 import 'package:sanad/features/profile/logic/repositories/profile_repository.dart';
 import 'package:sanad/features/translator/presentation/providers/translator_provider.dart';
+import 'package:sanad/features/onboarding/data/datasources/onboarding_datasource.dart';
+import 'package:sanad/features/onboarding/logic/repositories/onboarding_repository.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:dio/dio.dart';
 
@@ -31,12 +33,21 @@ Future<void> configureDependencies() async {
     () => AuthRemoteDataSource(Supabase.instance.client, getIt<Dio>()),
   );
 
+  //? Onboarding
+  getIt.registerLazySingleton<OnboardingRemoteDataSource>(
+    () => OnboardingRemoteDataSource(Supabase.instance.client, getIt<Dio>()),
+  );
+
   //! Repositories
   getIt.registerLazySingleton<AuthRepository>(
     () => AuthRepository(getIt<AuthRemoteDataSource>()),
   );
   getIt.registerLazySingleton<ProfileRepository>(
     () => ProfileRepository(getIt<AuthRemoteDataSource>()),
+  );
+
+  getIt.registerLazySingleton<OnboardingRepository>(
+    () => OnboardingRepository(getIt<OnboardingRemoteDataSource>()),
   );
 
   //! Providers

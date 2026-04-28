@@ -28,20 +28,11 @@ class _WelcomeScreenState extends ConsumerState<WelcomeScreen> with SingleTicker
   @override
   void initState() {
     super.initState();
-    _animationController = AnimationController(
-      vsync: this,
-      duration: const Duration(milliseconds: 800),
-    );
+    _animationController = AnimationController(vsync: this, duration: const Duration(milliseconds: 800));
 
-    _fadeAnimation = Tween<double>(
-      begin: 0.0,
-      end: 1.0,
-    ).animate(CurvedAnimation(parent: _animationController, curve: Curves.easeIn));
+    _fadeAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(CurvedAnimation(parent: _animationController, curve: Curves.easeIn));
 
-    _slideAnimation = Tween<Offset>(
-      begin: const Offset(0, 0.2),
-      end: Offset.zero,
-    ).animate(CurvedAnimation(parent: _animationController, curve: Curves.easeOutQuart));
+    _slideAnimation = Tween<Offset>(begin: const Offset(0, 0.2), end: Offset.zero).animate(CurvedAnimation(parent: _animationController, curve: Curves.easeOutQuart));
 
     _animationController.forward();
   }
@@ -132,11 +123,7 @@ class _WelcomeScreenState extends ConsumerState<WelcomeScreen> with SingleTicker
                       child: Text(
                         l10n.welcomeSubtitle,
                         textAlign: TextAlign.center,
-                        style: TextStyle(
-                          fontSize: 16,
-                          color: AppColors.text.withValues(alpha: 0.6),
-                          height: 1.5,
-                        ),
+                        style: TextStyle(fontSize: 16, color: AppColors.text.withValues(alpha: 0.6), height: 1.5),
                       ),
                     ),
                     const SizedBox(height: 40),
@@ -146,13 +133,7 @@ class _WelcomeScreenState extends ConsumerState<WelcomeScreen> with SingleTicker
                       decoration: BoxDecoration(
                         color: Colors.white,
                         borderRadius: BorderRadius.circular(32),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black.withValues(alpha: 0.05),
-                            blurRadius: 20,
-                            offset: const Offset(0, 10),
-                          ),
-                        ],
+                        boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.05), blurRadius: 20, offset: const Offset(0, 10))],
                       ),
                       child: Form(
                         key: _formKey,
@@ -161,12 +142,7 @@ class _WelcomeScreenState extends ConsumerState<WelcomeScreen> with SingleTicker
                           children: [
                             Text(
                               _isLogin ? l10n.welcomeBack : l10n.createAccount,
-                              style: const TextStyle(
-                                fontSize: 28,
-                                fontWeight: FontWeight.bold,
-                                color: AppColors.text,
-                                fontFamily: 'Pacifico',
-                              ),
+                              style: const TextStyle(fontSize: 28, fontWeight: FontWeight.bold, color: AppColors.text, fontFamily: 'Pacifico'),
                               textAlign: TextAlign.center,
                             ),
                             const SizedBox(height: 32),
@@ -208,39 +184,26 @@ class _WelcomeScreenState extends ConsumerState<WelcomeScreen> with SingleTicker
                                   backgroundColor: AppColors.primary,
                                   foregroundColor: Colors.white,
                                   padding: const EdgeInsets.symmetric(vertical: 18),
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(20),
-                                  ),
+                                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
                                   elevation: 0,
                                 ),
                                 child: Row(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
-                                    Text(
-                                      _isLogin ? l10n.signIn : l10n.createOne,
-                                      style: const TextStyle(
-                                        fontSize: 18,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
+                                    Text(_isLogin ? l10n.signIn : l10n.createOne, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
                                     const SizedBox(width: 8),
                                     const Icon(Icons.arrow_forward, size: 20),
                                   ],
                                 ),
                               ),
-                              loading: () => const Center(
-                                child: CircularProgressIndicator(color: AppColors.primary),
-                              ),
+                              loading: () => const Center(child: CircularProgressIndicator(color: AppColors.primary)),
                               orElse: () => const SizedBox.shrink(),
                             ),
                             const SizedBox(height: 24),
                             Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                Text(
-                                  _isLogin ? l10n.noAccount : l10n.alreadyHaveAccount,
-                                  style: TextStyle(color: AppColors.text.withValues(alpha: 0.6)),
-                                ),
+                                Text(_isLogin ? l10n.noAccount : l10n.alreadyHaveAccount, style: TextStyle(color: AppColors.text.withValues(alpha: 0.6))),
                                 TextButton(
                                   onPressed: () {
                                     setState(() {
@@ -250,10 +213,7 @@ class _WelcomeScreenState extends ConsumerState<WelcomeScreen> with SingleTicker
                                   },
                                   child: Text(
                                     _isLogin ? l10n.signUp : l10n.logIn,
-                                    style: const TextStyle(
-                                      color: AppColors.primary,
-                                      fontWeight: FontWeight.bold,
-                                    ),
+                                    style: const TextStyle(color: AppColors.primary, fontWeight: FontWeight.bold),
                                   ),
                                 ),
                               ],
@@ -268,13 +228,7 @@ class _WelcomeScreenState extends ConsumerState<WelcomeScreen> with SingleTicker
                       children: [
                         const Icon(Icons.lock_outline, size: 16, color: AppColors.textLight),
                         const SizedBox(width: 8),
-                        Text(
-                          'Your data is secure and private',
-                          style: TextStyle(
-                            color: AppColors.text.withValues(alpha: 0.5),
-                            fontSize: 14,
-                          ),
-                        ),
+                        Text('Your data is secure and private', style: TextStyle(color: AppColors.text.withValues(alpha: 0.5), fontSize: 14)),
                       ],
                     ),
                   ],
