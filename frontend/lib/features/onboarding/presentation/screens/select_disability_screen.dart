@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:sanad/core/dependency_injection.dart';
 import 'package:sanad/core/theme/app_colors.dart';
 import 'package:sanad/l10n/app_localizations.dart';
+import 'package:sanad/core/services/error_handling_service.dart';
 import '../providers/onboarding_provider.dart';
 import '../widgets/onboarding_header.dart';
 import '../widgets/disability_option_card.dart';
@@ -18,6 +19,17 @@ class SelectDisabilityScreen extends ConsumerWidget {
     final onboardingNotifier = ref.read(getIt<OnboardingProvider>().notifier);
 
     final l10n = AppLocalizations.of(context)!;
+
+    ref.listen(getIt<OnboardingProvider>(), (previous, next) {
+      final error = next.value?.error;
+      if (error != null) {
+        final errorMessage = ErrorHandlingService.getMessage(error, l10n);
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(errorMessage), backgroundColor: Colors.red),
+        );
+        ref.read(getIt<OnboardingProvider>().notifier).clearError();
+      }
+    });
 
     final List<Map<String, dynamic>> options = [
       {
@@ -104,7 +116,7 @@ class SelectDisabilityScreen extends ConsumerWidget {
                   isLoading: state.isLoading,
                   onContinue: state.selectedDisabilityId != null
                       ? () async {
-                          await onboardingNotifier.saveSelection(l10n);
+                          await onboardingNotifier.saveSelection();
                           if (context.mounted) {
                             context.go('/');
                           }

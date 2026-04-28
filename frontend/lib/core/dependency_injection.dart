@@ -56,7 +56,7 @@ Future<void> configureDependencies() async {
   //! Providers
   //? Locale
   getIt.registerLazySingleton<LocaleProvider>(
-    () => LocaleProvider(LocaleNotifier.new),
+    () => LocaleProvider(() => LocaleNotifier(getIt<SharedPreferences>())),
   );
 
   getIt.registerLazySingleton<AuthProvider>(
@@ -64,7 +64,9 @@ Future<void> configureDependencies() async {
   );
   //? Profile
   getIt.registerLazySingleton<ProfileProvider>(
-    () => ProfileProvider(ProfileNotifier.new),
+    () => ProfileProvider(
+      () => ProfileNotifier(getIt<ProfileRepository>(), getIt<SharedPreferences>()),
+    ),
   );
   //? Books
   getIt.registerLazySingleton<BooksProvider>(
@@ -80,7 +82,7 @@ Future<void> configureDependencies() async {
   );
   //? Onboarding
   getIt.registerLazySingleton<OnboardingProvider>(
-    () => OnboardingProvider(OnboardingNotifier.new),
+    () => OnboardingProvider(() => OnboardingNotifier(getIt<OnboardingRepository>())),
   );
   //? Jobs
   getIt.registerLazySingleton<JobsProvider>(

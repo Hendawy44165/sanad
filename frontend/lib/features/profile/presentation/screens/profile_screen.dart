@@ -4,6 +4,7 @@ import 'package:lucide_icons/lucide_icons.dart';
 import 'package:go_router/go_router.dart';
 import 'package:sanad/core/dependency_injection.dart';
 import '../../../../l10n/app_localizations.dart';
+import 'package:sanad/core/services/error_handling_service.dart';
 import '../providers/profile_provider.dart';
 import '../widgets/profile_header.dart';
 import '../widgets/language_section.dart';
@@ -19,6 +20,17 @@ class ProfileScreen extends ConsumerWidget {
     final profileState = ref.watch(getIt<ProfileProvider>());
     final profileNotifier = ref.read(getIt<ProfileProvider>().notifier);
     final l10n = AppLocalizations.of(context)!;
+
+    ref.listen(getIt<ProfileProvider>(), (previous, next) {
+      final error = next.value?.error;
+      if (error != null) {
+        final errorMessage = ErrorHandlingService.getMessage(error, l10n);
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(errorMessage), backgroundColor: Colors.red),
+        );
+        ref.read(getIt<ProfileProvider>().notifier).clearError();
+      }
+    });
 
     return Scaffold(
       backgroundColor: const Color(0xFFF8F5F2),
