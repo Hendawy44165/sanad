@@ -2,8 +2,8 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:dio/dio.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:sanad/features/auth/data/datasources/auth_remote_datasource.dart';
+import 'package:sanad/core/constants/api_constants.dart';
 import 'package:sanad/core/models/app_exception.dart';
 import 'package:sanad/core/constants/codes.dart';
 import 'package:sanad/core/dependency_injection.dart';
@@ -21,10 +21,11 @@ void main() {
   late MockSupabaseClient mockSupabase;
   late MockGoTrueClient mockGoTrue;
   late MockDio mockDio;
+  late ApiConfig apiConfig;
 
   setUpAll(() async {
     await getIt.reset();
-    dotenv.loadFromString(envString: 'API_BASE_URL=http://localhost:4000/api/v1');
+    apiConfig = ApiConfig('http://localhost:4000/api/v1');
     registerFallbackValue(FakeAuthState());
     registerFallbackValue(Options());
     registerFallbackValue(SignOutScope.local);
@@ -38,7 +39,7 @@ void main() {
     when(() => mockSupabase.auth).thenReturn(mockGoTrue);
     when(() => mockGoTrue.signOut(scope: any(named: 'scope'))).thenAnswer((_) async => {});
 
-    dataSource = AuthRemoteDataSource(mockSupabase, mockDio);
+    dataSource = AuthRemoteDataSource(mockSupabase, mockDio, apiConfig);
   });
 
   const tEmail = 'test@example.com';
