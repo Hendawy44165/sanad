@@ -4,6 +4,8 @@ import 'package:sanad/core/dependency_injection.dart';
 import 'package:sanad/core/theme/app_colors.dart';
 import 'package:sanad/l10n/app_localizations.dart';
 import 'package:sanad/features/auth/presentation/providers/auth_provider.dart';
+import 'package:sanad/core/constants/codes.dart';
+import 'package:sanad/core/services/error_handling_service.dart';
 import 'package:sanad/features/auth/presentation/widgets/auth_logo.dart';
 import 'package:sanad/features/auth/presentation/widgets/animated_input_field.dart';
 import 'package:go_router/go_router.dart';
@@ -67,17 +69,10 @@ class _WelcomeScreenState extends ConsumerState<WelcomeScreen> with SingleTicker
       final email = _emailController.text.trim().toLowerCase();
       final password = _passwordController.text;
 
-      final l10n = AppLocalizations.of(context)!;
       if (_isLogin) {
-        authNotifier.signIn(email, password, l10n);
+        authNotifier.signIn(email, password);
       } else {
-        authNotifier.signUp(
-          email,
-          password,
-          _firstNameController.text.trim(),
-          _lastNameController.text.trim(),
-          l10n,
-        );
+        authNotifier.signUp(email, password, _firstNameController.text.trim(), _lastNameController.text.trim());
       }
     }
   }
@@ -89,7 +84,9 @@ class _WelcomeScreenState extends ConsumerState<WelcomeScreen> with SingleTicker
 
     ref.listen(getIt<AuthProvider>(), (previous, next) {
       if (next.hasError) {
-        _showSnackBar(next.error.toString(), isError: true);
+        final errorCode = next.error as Codes;
+        final errorMessage = ErrorHandlingService.getMessage(errorCode, l10n);
+        _showSnackBar(errorMessage, isError: true);
       } else if (next.hasValue && next.value?.user != null && (previous?.value?.user == null)) {
         _showSnackBar(_isLogin ? l10n.loginSuccessful : l10n.signUpSuccessful);
         if (mounted) {
@@ -150,46 +147,46 @@ class _WelcomeScreenState extends ConsumerState<WelcomeScreen> with SingleTicker
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.stretch,
                           children: [
-                              Text(
-                                _isLogin ? l10n.welcomeBack : l10n.createAccount,
-                                style: const TextStyle(fontSize: 28, fontWeight: FontWeight.bold, color: AppColors.text, fontFamily: 'Pacifico'),
-                                textAlign: TextAlign.center,
+                            Text(
+                              _isLogin ? l10n.welcomeBack : l10n.createAccount,
+                              style: const TextStyle(fontSize: 28, fontWeight: FontWeight.bold, color: AppColors.text, fontFamily: 'Pacifico'),
+                              textAlign: TextAlign.center,
+                            ),
+                            const SizedBox(height: 32),
+                            if (!_isLogin) ...[
+                              Row(
+                                children: [
+                                  Expanded(
+                                    child: AnimatedInputField(
+                                      label: l10n.firstName,
+                                      icon: Icons.person_outline,
+                                      controller: _firstNameController,
+                                      validator: (value) {
+                                        if (!_isLogin && (value == null || value.isEmpty)) {
+                                          return l10n.firstNameRequired;
+                                        }
+                                        return null;
+                                      },
+                                    ),
+                                  ),
+                                  const SizedBox(width: 16),
+                                  Expanded(
+                                    child: AnimatedInputField(
+                                      label: l10n.lastName,
+                                      icon: Icons.person_outline,
+                                      controller: _lastNameController,
+                                      validator: (value) {
+                                        if (!_isLogin && (value == null || value.isEmpty)) {
+                                          return l10n.lastNameRequired;
+                                        }
+                                        return null;
+                                      },
+                                    ),
+                                  ),
+                                ],
                               ),
-                              const SizedBox(height: 32),
-                              if (!_isLogin) ...[
-                                Row(
-                                  children: [
-                                    Expanded(
-                                      child: AnimatedInputField(
-                                        label: l10n.firstName,
-                                        icon: Icons.person_outline,
-                                        controller: _firstNameController,
-                                        validator: (value) {
-                                          if (!_isLogin && (value == null || value.isEmpty)) {
-                                            return l10n.firstNameRequired;
-                                          }
-                                          return null;
-                                        },
-                                      ),
-                                    ),
-                                    const SizedBox(width: 16),
-                                    Expanded(
-                                      child: AnimatedInputField(
-                                        label: l10n.lastName,
-                                        icon: Icons.person_outline,
-                                        controller: _lastNameController,
-                                        validator: (value) {
-                                          if (!_isLogin && (value == null || value.isEmpty)) {
-                                            return l10n.lastNameRequired;
-                                          }
-                                          return null;
-                                        },
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                const SizedBox(height: 20),
-                              ],
+                              const SizedBox(height: 20),
+                            ],
                             AnimatedInputField(
                               label: l10n.emailAddress,
                               icon: Icons.email_outlined,

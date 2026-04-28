@@ -92,7 +92,6 @@ class AuthRemoteDataSource {
   }
 
   Future<UserModel> _syncProfile(String accessToken) async {
-    // TODO: Make this atomic via Supabase Functions instead of a manual HTTP call from the client
     final url = '$_baseUrl/auth/sync-profile';
 
     try {

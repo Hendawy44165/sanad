@@ -13,8 +13,6 @@ class LocaleNotifier extends Notifier<Locale> {
     if (languageCode != null) {
       return Locale(languageCode);
     }
-    // Default to English
-    // TODO: should default to the user's device language if it's in the list or to English
     return const Locale('en');
   }
 

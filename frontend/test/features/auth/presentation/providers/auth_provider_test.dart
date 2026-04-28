@@ -8,20 +8,15 @@ import 'package:sanad/features/auth/presentation/providers/auth_provider.dart';
 import 'package:sanad/features/auth/presentation/providers/auth_state.dart';
 import 'package:sanad/core/models/response_model.dart';
 import 'package:sanad/core/constants/codes.dart';
-import 'package:sanad/l10n/app_localizations.dart';
 
 class MockAuthRepository extends Mock implements AuthRepository {}
 
-class MockAppLocalizations extends Mock implements AppLocalizations {}
-
 void main() {
   late MockAuthRepository mockRepository;
-  late MockAppLocalizations mockL10n;
 
   setUpAll(() async {
     await getIt.reset();
     mockRepository = MockAuthRepository();
-    mockL10n = MockAppLocalizations();
 
     // Register mock repository in GetIt
     if (!getIt.isRegistered<AuthRepository>()) {
@@ -32,12 +27,6 @@ void main() {
         () => AuthProvider(AuthNotifier.new),
       );
     }
-
-    // Mock l10n strings
-    when(
-      () => mockL10n.err_invalidCredentials,
-    ).thenReturn('Invalid credentials');
-    when(() => mockL10n.err_unknown).thenReturn('Unknown error');
   });
 
   const tUser = UserEntity(
@@ -85,7 +74,7 @@ void main() {
       await container.read(getIt<AuthProvider>().future);
 
       // act
-      await notifier.signIn('email', 'password', mockL10n);
+      await notifier.signIn('email', 'password');
 
       // assert
       final state = container.read(getIt<AuthProvider>()).value;
@@ -115,13 +104,13 @@ void main() {
         );
 
         // act
-        await notifier.signIn('email', 'password', mockL10n);
+        await notifier.signIn('email', 'password');
 
         // assert
-        // States should be: data(initial), loading, error('Invalid credentials'), data(initial)
+        // States should be: data(initial), loading, error(Codes.invalidCredentials), data(initial)
         expect(states.any((s) => s is AsyncLoading), isTrue);
         expect(
-          states.any((s) => s.hasError && s.error == 'Invalid credentials'),
+          states.any((s) => s.hasError && s.error == Codes.invalidCredentials),
           isTrue,
         );
         expect(container.read(getIt<AuthProvider>()).value?.user, isNull);
@@ -141,7 +130,7 @@ void main() {
       await container.read(getIt<AuthProvider>().future);
 
       // act
-      await notifier.signUp('email', 'password', 'first', 'last', mockL10n);
+      await notifier.signUp('email', 'password', 'first', 'last');
 
       // assert
       final state = container.read(getIt<AuthProvider>()).value;
@@ -161,7 +150,7 @@ void main() {
       await container.read(getIt<AuthProvider>().future);
 
       // act
-      await notifier.signOut(mockL10n);
+      await notifier.signOut();
 
       // assert
       final state = container.read(getIt<AuthProvider>()).value;

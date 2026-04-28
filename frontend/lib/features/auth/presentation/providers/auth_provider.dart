@@ -4,9 +4,7 @@ import 'package:sanad/features/auth/presentation/providers/auth_state.dart'
 
 import 'package:sanad/core/dependency_injection.dart';
 import 'package:sanad/features/auth/logic/repositories/auth_repository.dart';
-import 'package:sanad/core/services/error_handling_service.dart';
 import 'package:sanad/core/constants/codes.dart';
-import 'package:sanad/l10n/app_localizations.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class AuthNotifier extends AsyncNotifier<sanad_auth.AuthState> {
@@ -43,7 +41,6 @@ class AuthNotifier extends AsyncNotifier<sanad_auth.AuthState> {
   Future<void> signIn(
     String email,
     String password,
-    AppLocalizations l10n,
   ) async {
     if (state.isLoading) return;
 
@@ -57,11 +54,10 @@ class AuthNotifier extends AsyncNotifier<sanad_auth.AuthState> {
     if (response.isSuccess) {
       state = AsyncValue.data(oldState.copyWith(user: response.data));
     } else {
-      final errorMessage = ErrorHandlingService.getMessage(
+      state = AsyncValue.error(
         response.errorCode ?? Codes.unknown,
-        l10n,
+        StackTrace.current,
       );
-      state = AsyncValue.error(errorMessage, StackTrace.current);
       state = AsyncValue.data(oldState);
     }
   }
@@ -71,7 +67,6 @@ class AuthNotifier extends AsyncNotifier<sanad_auth.AuthState> {
     String password,
     String firstName,
     String lastName,
-    AppLocalizations l10n,
   ) async {
     if (state.isLoading) return;
 
@@ -90,16 +85,15 @@ class AuthNotifier extends AsyncNotifier<sanad_auth.AuthState> {
     if (response.isSuccess) {
       state = AsyncValue.data(oldState.copyWith(user: response.data));
     } else {
-      final errorMessage = ErrorHandlingService.getMessage(
+      state = AsyncValue.error(
         response.errorCode ?? Codes.unknown,
-        l10n,
+        StackTrace.current,
       );
-      state = AsyncValue.error(errorMessage, StackTrace.current);
       state = AsyncValue.data(oldState);
     }
   }
 
-  Future<void> signOut(AppLocalizations l10n) async {
+  Future<void> signOut() async {
     if (state.isLoading) return;
 
     final oldState = state.value;
@@ -111,11 +105,10 @@ class AuthNotifier extends AsyncNotifier<sanad_auth.AuthState> {
     if (response.isSuccess) {
       state = AsyncValue.data(sanad_auth.AuthState());
     } else {
-      final errorMessage = ErrorHandlingService.getMessage(
+      state = AsyncValue.error(
         response.errorCode ?? Codes.unknown,
-        l10n,
+        StackTrace.current,
       );
-      state = AsyncValue.error(errorMessage, StackTrace.current);
       state = AsyncValue.data(oldState);
     }
   }
