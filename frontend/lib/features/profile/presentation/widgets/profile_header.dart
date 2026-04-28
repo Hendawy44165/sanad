@@ -171,14 +171,16 @@ class ProfileHeader extends StatelessWidget {
 
   Future<void> _handlePickImage(BuildContext context) async {
     final picker = ImagePicker();
+    final l10n = AppLocalizations.of(context)!;
     try {
       final XFile? image = await picker.pickImage(source: ImageSource.gallery);
       if (image != null) {
         profileNotifier.updateProfilePicture(image.path);
       }
     } catch (e) {
-      if (context.mounted)
-        _showSnackBar(context, 'Failed to pick image: $e', isError: true);
+      if (context.mounted) {
+        _showSnackBar(context, '${l10n.failedToPickImage}$e', isError: true);
+      }
     }
   }
 

@@ -290,96 +290,6 @@ abstract class AppLocalizations {
   /// **'Companion'**
   String get welcomeTitle;
 
-  String get err_anonymousProviderDisabled;
-  String get err_badCodeVerifier;
-  String get err_badJson;
-  String get err_badJwt;
-  String get err_badOauthCallback;
-  String get err_badOauthState;
-  String get err_captchaFailed;
-  String get err_conflict;
-  String get err_couldNotAddElevenLabsApiKey;
-  String get err_couldNotDeleteElevenLabsApiKey;
-  String get err_couldNotGetElevenLabsApiKeys;
-  String get err_emailAddressInvalid;
-  String get err_emailAddressNotAuthorized;
-  String get err_emailConflictIdentityNotDeletable;
-  String get err_emailExists;
-  String get err_emailNotConfirmed;
-  String get err_emailProviderDisabled;
-  String get err_flowStateExpired;
-  String get err_flowStateNotFound;
-  String get err_googleIdTokenMissing;
-  String get err_googleSignInFailed;
-  String get err_hookPayloadInvalidContentType;
-  String get err_hookPayloadOverSizeLimit;
-  String get err_hookTimeout;
-  String get err_hookTimeoutAfterRetry;
-  String get err_identityAlreadyExists;
-  String get err_identityNotFound;
-  String get err_insufficientAal;
-  String get err_invalidCredentials;
-  String get err_inviteNotFound;
-  String get err_manualLinkingDisabled;
-  String get err_mfaChallengeExpired;
-  String get err_mfaFactorNameConflict;
-  String get err_mfaFactorNotFound;
-  String get err_mfaIpAddressMismatch;
-  String get err_mfaPhoneEnrollNotEnabled;
-  String get err_mfaPhoneVerifyNotEnabled;
-  String get err_mfaTotpEnrollNotEnabled;
-  String get err_mfaTotpVerifyNotEnabled;
-  String get err_mfaVerificationFailed;
-  String get err_mfaVerificationRejected;
-  String get err_mfaVerifiedFactorExists;
-  String get err_mfaWebAuthnEnrollNotEnabled;
-  String get err_mfaWebAuthnVerifyNotEnabled;
-  String get err_noAuthorization;
-  String get err_notAdmin;
-  String get err_oauthProviderNotSupported;
-  String get err_otpDisabled;
-  String get err_otpExpired;
-  String get err_overEmailSendRateLimit;
-  String get err_overRequestRateLimit;
-  String get err_overSmsSendRateLimit;
-  String get err_phoneExists;
-  String get err_phoneNotConfirmed;
-  String get err_phoneProviderDisabled;
-  String get err_providerDisabled;
-  String get err_providerEmailNeedsVerification;
-  String get err_reauthenticationNeeded;
-  String get err_reauthenticationNotValid;
-  String get err_refreshTokenAlreadyUsed;
-  String get err_refreshTokenNotFound;
-  String get err_requestTimeout;
-  String get err_samePassword;
-  String get err_samlAssertionNoEmail;
-  String get err_samlAssertionNoUserId;
-  String get err_samlEntityIdMismatch;
-  String get err_samlIdpAlreadyExists;
-  String get err_samlIdpNotFound;
-  String get err_samlMetadataFetchFailed;
-  String get err_samlProviderDisabled;
-  String get err_samlRelayStateExpired;
-  String get err_samlRelayStateNotFound;
-  String get err_sessionExpired;
-  String get err_sessionNotFound;
-  String get err_signupDisabled;
-  String get err_singleIdentityNotDeletable;
-  String get err_smsSendFailed;
-  String get err_ssoDomainAlreadyExists;
-  String get err_ssoProviderNotFound;
-  String get err_tooManyEnrolledMfaFactors;
-  String get err_unexpectedAudience;
-  String get err_unexpectedFailure;
-  String get err_userAlreadyExists;
-  String get err_userBanned;
-  String get err_userNotFound;
-  String get err_userSsoManaged;
-  String get err_validationFailed;
-  String get err_weakPassword;
-  String get err_unknown;
-
   /// No description provided for @welcomeSubtitle.
   ///
   /// In en, this message translates to:
@@ -404,6 +314,18 @@ abstract class AppLocalizations {
   /// **'Password'**
   String get password;
 
+  /// No description provided for @firstName.
+  ///
+  /// In en, this message translates to:
+  /// **'First Name'**
+  String get firstName;
+
+  /// No description provided for @lastName.
+  ///
+  /// In en, this message translates to:
+  /// **'Last Name'**
+  String get lastName;
+
   /// No description provided for @passwordHint.
   ///
   /// In en, this message translates to:
@@ -425,7 +347,7 @@ abstract class AppLocalizations {
   /// No description provided for @createOne.
   ///
   /// In en, this message translates to:
-  /// **'Create one'**
+  /// **'Create account'**
   String get createOne;
 
   /// No description provided for @dataSecure.
@@ -913,6 +835,726 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Save'**
   String get save;
+
+  /// No description provided for @err_anonymousProviderDisabled.
+  ///
+  /// In en, this message translates to:
+  /// **'Anonymous sign-ins are disabled.'**
+  String get err_anonymousProviderDisabled;
+
+  /// No description provided for @err_badCodeVerifier.
+  ///
+  /// In en, this message translates to:
+  /// **'Invalid code verifier. Please try again.'**
+  String get err_badCodeVerifier;
+
+  /// No description provided for @err_badJson.
+  ///
+  /// In en, this message translates to:
+  /// **'Invalid request format.'**
+  String get err_badJson;
+
+  /// No description provided for @err_badJwt.
+  ///
+  /// In en, this message translates to:
+  /// **'Invalid authentication token.'**
+  String get err_badJwt;
+
+  /// No description provided for @err_badOauthCallback.
+  ///
+  /// In en, this message translates to:
+  /// **'OAuth authentication failed. Please try again.'**
+  String get err_badOauthCallback;
+
+  /// No description provided for @err_badOauthState.
+  ///
+  /// In en, this message translates to:
+  /// **'OAuth state is invalid. Please try again.'**
+  String get err_badOauthState;
+
+  /// No description provided for @err_captchaFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'CAPTCHA verification failed. Please try again.'**
+  String get err_captchaFailed;
+
+  /// No description provided for @err_conflict.
+  ///
+  /// In en, this message translates to:
+  /// **'A conflict occurred. Please try again.'**
+  String get err_conflict;
+
+  /// No description provided for @err_couldNotAddElevenLabsApiKey.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not add ElevenLabs API key. Please try again.'**
+  String get err_couldNotAddElevenLabsApiKey;
+
+  /// No description provided for @err_couldNotDeleteElevenLabsApiKey.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not delete ElevenLabs API key. Please try again.'**
+  String get err_couldNotDeleteElevenLabsApiKey;
+
+  /// No description provided for @err_couldNotGetElevenLabsApiKeys.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not retrieve ElevenLabs API keys. Please try again.'**
+  String get err_couldNotGetElevenLabsApiKeys;
+
+  /// No description provided for @err_emailAddressInvalid.
+  ///
+  /// In en, this message translates to:
+  /// **'Email address is invalid. Please use a valid email.'**
+  String get err_emailAddressInvalid;
+
+  /// No description provided for @err_emailAddressNotAuthorized.
+  ///
+  /// In en, this message translates to:
+  /// **'This email address is not authorized.'**
+  String get err_emailAddressNotAuthorized;
+
+  /// No description provided for @err_emailConflictIdentityNotDeletable.
+  ///
+  /// In en, this message translates to:
+  /// **'Cannot unlink this identity due to email conflict.'**
+  String get err_emailConflictIdentityNotDeletable;
+
+  /// No description provided for @err_emailExists.
+  ///
+  /// In en, this message translates to:
+  /// **'Email address already exists in the system.'**
+  String get err_emailExists;
+
+  /// No description provided for @err_emailNotConfirmed.
+  ///
+  /// In en, this message translates to:
+  /// **'Please confirm your email address before signing in.'**
+  String get err_emailNotConfirmed;
+
+  /// No description provided for @err_emailProviderDisabled.
+  ///
+  /// In en, this message translates to:
+  /// **'Email sign-ups are currently disabled.'**
+  String get err_emailProviderDisabled;
+
+  /// No description provided for @err_flowStateExpired.
+  ///
+  /// In en, this message translates to:
+  /// **'Authentication session expired. Please sign in again.'**
+  String get err_flowStateExpired;
+
+  /// No description provided for @err_flowStateNotFound.
+  ///
+  /// In en, this message translates to:
+  /// **'Authentication session not found. Please sign in again.'**
+  String get err_flowStateNotFound;
+
+  /// No description provided for @err_googleIdTokenMissing.
+  ///
+  /// In en, this message translates to:
+  /// **'Google ID token is missing. Please try signing in again.'**
+  String get err_googleIdTokenMissing;
+
+  /// No description provided for @err_googleSignInFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Google sign-in failed. Please try again.'**
+  String get err_googleSignInFailed;
+
+  /// No description provided for @err_hookPayloadInvalidContentType.
+  ///
+  /// In en, this message translates to:
+  /// **'Invalid webhook payload format.'**
+  String get err_hookPayloadInvalidContentType;
+
+  /// No description provided for @err_hookPayloadOverSizeLimit.
+  ///
+  /// In en, this message translates to:
+  /// **'Webhook payload exceeds size limit.'**
+  String get err_hookPayloadOverSizeLimit;
+
+  /// No description provided for @err_hookTimeout.
+  ///
+  /// In en, this message translates to:
+  /// **'Webhook request timed out.'**
+  String get err_hookTimeout;
+
+  /// No description provided for @err_hookTimeoutAfterRetry.
+  ///
+  /// In en, this message translates to:
+  /// **'Webhook request failed after retries.'**
+  String get err_hookTimeoutAfterRetry;
+
+  /// No description provided for @err_identityAlreadyExists.
+  ///
+  /// In en, this message translates to:
+  /// **'This identity is already linked to another user.'**
+  String get err_identityAlreadyExists;
+
+  /// No description provided for @err_identityNotFound.
+  ///
+  /// In en, this message translates to:
+  /// **'Identity not found.'**
+  String get err_identityNotFound;
+
+  /// No description provided for @err_insufficientAal.
+  ///
+  /// In en, this message translates to:
+  /// **'Additional authentication required. Please complete MFA.'**
+  String get err_insufficientAal;
+
+  /// No description provided for @err_invalidCredentials.
+  ///
+  /// In en, this message translates to:
+  /// **'Invalid email or password.'**
+  String get err_invalidCredentials;
+
+  /// No description provided for @err_inviteNotFound.
+  ///
+  /// In en, this message translates to:
+  /// **'Invitation expired or already used.'**
+  String get err_inviteNotFound;
+
+  /// No description provided for @err_manualLinkingDisabled.
+  ///
+  /// In en, this message translates to:
+  /// **'Manual account linking is disabled.'**
+  String get err_manualLinkingDisabled;
+
+  /// No description provided for @err_mfaChallengeExpired.
+  ///
+  /// In en, this message translates to:
+  /// **'MFA challenge expired. Please request a new code.'**
+  String get err_mfaChallengeExpired;
+
+  /// No description provided for @err_mfaFactorNameConflict.
+  ///
+  /// In en, this message translates to:
+  /// **'MFA factor name already exists. Choose a different name.'**
+  String get err_mfaFactorNameConflict;
+
+  /// No description provided for @err_mfaFactorNotFound.
+  ///
+  /// In en, this message translates to:
+  /// **'MFA factor not found.'**
+  String get err_mfaFactorNotFound;
+
+  /// No description provided for @err_mfaIpAddressMismatch.
+  ///
+  /// In en, this message translates to:
+  /// **'IP address mismatch during MFA enrollment.'**
+  String get err_mfaIpAddressMismatch;
+
+  /// No description provided for @err_mfaPhoneEnrollNotEnabled.
+  ///
+  /// In en, this message translates to:
+  /// **'Phone MFA enrollment is disabled.'**
+  String get err_mfaPhoneEnrollNotEnabled;
+
+  /// No description provided for @err_mfaPhoneVerifyNotEnabled.
+  ///
+  /// In en, this message translates to:
+  /// **'Phone MFA verification is disabled.'**
+  String get err_mfaPhoneVerifyNotEnabled;
+
+  /// No description provided for @err_mfaTotpEnrollNotEnabled.
+  ///
+  /// In en, this message translates to:
+  /// **'TOTP MFA enrollment is disabled.'**
+  String get err_mfaTotpEnrollNotEnabled;
+
+  /// No description provided for @err_mfaTotpVerifyNotEnabled.
+  ///
+  /// In en, this message translates to:
+  /// **'TOTP MFA verification is disabled.'**
+  String get err_mfaTotpVerifyNotEnabled;
+
+  /// No description provided for @err_mfaVerificationFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Incorrect MFA code. Please try again.'**
+  String get err_mfaVerificationFailed;
+
+  /// No description provided for @err_mfaVerificationRejected.
+  ///
+  /// In en, this message translates to:
+  /// **'MFA verification rejected.'**
+  String get err_mfaVerificationRejected;
+
+  /// No description provided for @err_mfaVerifiedFactorExists.
+  ///
+  /// In en, this message translates to:
+  /// **'A verified phone factor already exists.'**
+  String get err_mfaVerifiedFactorExists;
+
+  /// No description provided for @err_mfaWebAuthnEnrollNotEnabled.
+  ///
+  /// In en, this message translates to:
+  /// **'WebAuthn MFA enrollment is disabled.'**
+  String get err_mfaWebAuthnEnrollNotEnabled;
+
+  /// No description provided for @err_mfaWebAuthnVerifyNotEnabled.
+  ///
+  /// In en, this message translates to:
+  /// **'WebAuthn MFA verification is disabled.'**
+  String get err_mfaWebAuthnVerifyNotEnabled;
+
+  /// No description provided for @err_noAuthorization.
+  ///
+  /// In en, this message translates to:
+  /// **'Authorization required.'**
+  String get err_noAuthorization;
+
+  /// No description provided for @err_notAdmin.
+  ///
+  /// In en, this message translates to:
+  /// **'Admin access required.'**
+  String get err_notAdmin;
+
+  /// No description provided for @err_oauthProviderNotSupported.
+  ///
+  /// In en, this message translates to:
+  /// **'OAuth provider is not supported.'**
+  String get err_oauthProviderNotSupported;
+
+  /// No description provided for @err_otpDisabled.
+  ///
+  /// In en, this message translates to:
+  /// **'OTP sign-in is disabled.'**
+  String get err_otpDisabled;
+
+  /// No description provided for @err_otpExpired.
+  ///
+  /// In en, this message translates to:
+  /// **'OTP code expired. Please request a new one.'**
+  String get err_otpExpired;
+
+  /// No description provided for @err_overEmailSendRateLimit.
+  ///
+  /// In en, this message translates to:
+  /// **'Too many emails sent. Please try again later.'**
+  String get err_overEmailSendRateLimit;
+
+  /// No description provided for @err_overRequestRateLimit.
+  ///
+  /// In en, this message translates to:
+  /// **'Too many requests. Please try again later.'**
+  String get err_overRequestRateLimit;
+
+  /// No description provided for @err_overSmsSendRateLimit.
+  ///
+  /// In en, this message translates to:
+  /// **'Too many SMS sent. Please try again later.'**
+  String get err_overSmsSendRateLimit;
+
+  /// No description provided for @err_phoneExists.
+  ///
+  /// In en, this message translates to:
+  /// **'Phone number already exists in the system.'**
+  String get err_phoneExists;
+
+  /// No description provided for @err_phoneNotConfirmed.
+  ///
+  /// In en, this message translates to:
+  /// **'Please confirm your phone number before signing in.'**
+  String get err_phoneNotConfirmed;
+
+  /// No description provided for @err_phoneProviderDisabled.
+  ///
+  /// In en, this message translates to:
+  /// **'Phone sign-ups are currently disabled.'**
+  String get err_phoneProviderDisabled;
+
+  /// No description provided for @err_providerDisabled.
+  ///
+  /// In en, this message translates to:
+  /// **'This authentication provider is disabled.'**
+  String get err_providerDisabled;
+
+  /// No description provided for @err_providerEmailNeedsVerification.
+  ///
+  /// In en, this message translates to:
+  /// **'Email verification required from OAuth provider.'**
+  String get err_providerEmailNeedsVerification;
+
+  /// No description provided for @err_reauthenticationNeeded.
+  ///
+  /// In en, this message translates to:
+  /// **'Please reauthenticate to continue.'**
+  String get err_reauthenticationNeeded;
+
+  /// No description provided for @err_reauthenticationNotValid.
+  ///
+  /// In en, this message translates to:
+  /// **'Reauthentication failed. Please try again.'**
+  String get err_reauthenticationNotValid;
+
+  /// No description provided for @err_refreshTokenAlreadyUsed.
+  ///
+  /// In en, this message translates to:
+  /// **'Session expired. Please sign in again.'**
+  String get err_refreshTokenAlreadyUsed;
+
+  /// No description provided for @err_refreshTokenNotFound.
+  ///
+  /// In en, this message translates to:
+  /// **'Session not found. Please sign in again.'**
+  String get err_refreshTokenNotFound;
+
+  /// No description provided for @err_requestTimeout.
+  ///
+  /// In en, this message translates to:
+  /// **'Request timed out. Please try again.'**
+  String get err_requestTimeout;
+
+  /// No description provided for @err_samePassword.
+  ///
+  /// In en, this message translates to:
+  /// **'New password must be different from current password.'**
+  String get err_samePassword;
+
+  /// No description provided for @err_samlAssertionNoEmail.
+  ///
+  /// In en, this message translates to:
+  /// **'No email found in SAML response.'**
+  String get err_samlAssertionNoEmail;
+
+  /// No description provided for @err_samlAssertionNoUserId.
+  ///
+  /// In en, this message translates to:
+  /// **'No user ID found in SAML response.'**
+  String get err_samlAssertionNoUserId;
+
+  /// No description provided for @err_samlEntityIdMismatch.
+  ///
+  /// In en, this message translates to:
+  /// **'SAML entity ID mismatch.'**
+  String get err_samlEntityIdMismatch;
+
+  /// No description provided for @err_samlIdpAlreadyExists.
+  ///
+  /// In en, this message translates to:
+  /// **'SAML identity provider already exists.'**
+  String get err_samlIdpAlreadyExists;
+
+  /// No description provided for @err_samlIdpNotFound.
+  ///
+  /// In en, this message translates to:
+  /// **'SAML identity provider not found.'**
+  String get err_samlIdpNotFound;
+
+  /// No description provided for @err_samlMetadataFetchFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to fetch SAML metadata.'**
+  String get err_samlMetadataFetchFailed;
+
+  /// No description provided for @err_samlProviderDisabled.
+  ///
+  /// In en, this message translates to:
+  /// **'SAML authentication is disabled.'**
+  String get err_samlProviderDisabled;
+
+  /// No description provided for @err_samlRelayStateExpired.
+  ///
+  /// In en, this message translates to:
+  /// **'SAML authentication expired. Please sign in again.'**
+  String get err_samlRelayStateExpired;
+
+  /// No description provided for @err_samlRelayStateNotFound.
+  ///
+  /// In en, this message translates to:
+  /// **'SAML authentication session not found. Please sign in again.'**
+  String get err_samlRelayStateNotFound;
+
+  /// No description provided for @err_sessionExpired.
+  ///
+  /// In en, this message translates to:
+  /// **'Session expired. Please sign in again.'**
+  String get err_sessionExpired;
+
+  /// No description provided for @err_sessionNotFound.
+  ///
+  /// In en, this message translates to:
+  /// **'Session not found. Please sign in again.'**
+  String get err_sessionNotFound;
+
+  /// No description provided for @err_signupDisabled.
+  ///
+  /// In en, this message translates to:
+  /// **'Sign-ups are currently disabled.'**
+  String get err_signupDisabled;
+
+  /// No description provided for @err_singleIdentityNotDeletable.
+  ///
+  /// In en, this message translates to:
+  /// **'Cannot delete your only authentication method.'**
+  String get err_singleIdentityNotDeletable;
+
+  /// No description provided for @err_smsSendFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to send SMS. Please try again.'**
+  String get err_smsSendFailed;
+
+  /// No description provided for @err_ssoDomainAlreadyExists.
+  ///
+  /// In en, this message translates to:
+  /// **'SSO domain already exists.'**
+  String get err_ssoDomainAlreadyExists;
+
+  /// No description provided for @err_ssoProviderNotFound.
+  ///
+  /// In en, this message translates to:
+  /// **'SSO provider not found.'**
+  String get err_ssoProviderNotFound;
+
+  /// No description provided for @err_tooManyEnrolledMfaFactors.
+  ///
+  /// In en, this message translates to:
+  /// **'Too many MFA factors enrolled.'**
+  String get err_tooManyEnrolledMfaFactors;
+
+  /// No description provided for @err_unexpectedAudience.
+  ///
+  /// In en, this message translates to:
+  /// **'Unexpected token audience.'**
+  String get err_unexpectedAudience;
+
+  /// No description provided for @err_unexpectedFailure.
+  ///
+  /// In en, this message translates to:
+  /// **'An unexpected error occurred. Please try again.'**
+  String get err_unexpectedFailure;
+
+  /// No description provided for @err_userAlreadyExists.
+  ///
+  /// In en, this message translates to:
+  /// **'User already exists.'**
+  String get err_userAlreadyExists;
+
+  /// No description provided for @err_userBanned.
+  ///
+  /// In en, this message translates to:
+  /// **'User account is temporarily banned.'**
+  String get err_userBanned;
+
+  /// No description provided for @err_userNotFound.
+  ///
+  /// In en, this message translates to:
+  /// **'User not found.'**
+  String get err_userNotFound;
+
+  /// No description provided for @err_userSsoManaged.
+  ///
+  /// In en, this message translates to:
+  /// **'User is managed by SSO.'**
+  String get err_userSsoManaged;
+
+  /// No description provided for @err_validationFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Validation failed. Please check your input.'**
+  String get err_validationFailed;
+
+  /// No description provided for @err_weakPassword.
+  ///
+  /// In en, this message translates to:
+  /// **'Password is too weak. Please use a stronger password.'**
+  String get err_weakPassword;
+
+  /// No description provided for @err_unknown.
+  ///
+  /// In en, this message translates to:
+  /// **'An error has occurred.'**
+  String get err_unknown;
+
+  /// No description provided for @loginSuccessful.
+  ///
+  /// In en, this message translates to:
+  /// **'Login Successful'**
+  String get loginSuccessful;
+
+  /// No description provided for @signUpSuccessful.
+  ///
+  /// In en, this message translates to:
+  /// **'Sign Up Successful'**
+  String get signUpSuccessful;
+
+  /// No description provided for @createAccount.
+  ///
+  /// In en, this message translates to:
+  /// **'Create Account'**
+  String get createAccount;
+
+  /// No description provided for @emailRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter your email'**
+  String get emailRequired;
+
+  /// No description provided for @emailInvalid.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter a valid email'**
+  String get emailInvalid;
+
+  /// No description provided for @passwordRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter your password'**
+  String get passwordRequired;
+
+  /// No description provided for @passwordTooShort.
+  ///
+  /// In en, this message translates to:
+  /// **'Password must be at least 6 characters'**
+  String get passwordTooShort;
+
+  /// No description provided for @alreadyHaveAccount.
+  ///
+  /// In en, this message translates to:
+  /// **'Already have an account?'**
+  String get alreadyHaveAccount;
+
+  /// No description provided for @firstNameRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter your first name'**
+  String get firstNameRequired;
+
+  /// No description provided for @lastNameRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter your last name'**
+  String get lastNameRequired;
+
+  /// No description provided for @logIn.
+  ///
+  /// In en, this message translates to:
+  /// **'Log In'**
+  String get logIn;
+
+  /// No description provided for @errorPrefix.
+  ///
+  /// In en, this message translates to:
+  /// **'Error: '**
+  String get errorPrefix;
+
+  /// No description provided for @failedToPickImage.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to pick image: '**
+  String get failedToPickImage;
+
+  /// No description provided for @onboardingWelcome.
+  ///
+  /// In en, this message translates to:
+  /// **'Welcome, Friend!'**
+  String get onboardingWelcome;
+
+  /// No description provided for @onboardingQuestion.
+  ///
+  /// In en, this message translates to:
+  /// **'How can we best support you?'**
+  String get onboardingQuestion;
+
+  /// No description provided for @onboardingSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Select your primary need so we can personalize your experience and show relevant resources.'**
+  String get onboardingSubtitle;
+
+  /// No description provided for @continueButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Continue'**
+  String get continueButton;
+
+  /// No description provided for @changeAnytime.
+  ///
+  /// In en, this message translates to:
+  /// **'You can change this anytime in settings'**
+  String get changeAnytime;
+
+  /// No description provided for @visualLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Visual'**
+  String get visualLabel;
+
+  /// No description provided for @visualDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Blindness, low vision, or color blindness'**
+  String get visualDesc;
+
+  /// No description provided for @hearingLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Hearing'**
+  String get hearingLabel;
+
+  /// No description provided for @hearingDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Deafness or hard of hearing'**
+  String get hearingDesc;
+
+  /// No description provided for @mobilityLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Mobility'**
+  String get mobilityLabel;
+
+  /// No description provided for @mobilityDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Difficulty with movement or physical tasks'**
+  String get mobilityDesc;
+
+  /// No description provided for @cognitiveLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Cognitive'**
+  String get cognitiveLabel;
+
+  /// No description provided for @cognitiveDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Learning, memory, or concentration challenges'**
+  String get cognitiveDesc;
+
+  /// No description provided for @chronicLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Chronic Illness'**
+  String get chronicLabel;
+
+  /// No description provided for @chronicDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Long-term health conditions'**
+  String get chronicDesc;
+
+  /// No description provided for @otherLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Other'**
+  String get otherLabel;
+
+  /// No description provided for @otherDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Another type of disability or multiple'**
+  String get otherDesc;
+
+  /// No description provided for @signUp.
+  ///
+  /// In en, this message translates to:
+  /// **'Sign Up'**
+  String get signUp;
 }
 
 class _AppLocalizationsDelegate

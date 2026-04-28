@@ -1,3 +1,5 @@
+import 'package:sanad/core/constants/codes.dart';
+
 class OnboardingOption {
   final String id;
   final String label;
@@ -15,19 +17,23 @@ class OnboardingOption {
 class OnboardingState {
   final String? selectedDisabilityId;
   final bool isLoading;
+  final Codes? error;
 
   OnboardingState({
     this.selectedDisabilityId,
     this.isLoading = false,
+    this.error,
   });
 
   OnboardingState copyWith({
     String? selectedDisabilityId,
     bool? isLoading,
+    Codes? error,
   }) {
     return OnboardingState(
       selectedDisabilityId: selectedDisabilityId ?? this.selectedDisabilityId,
       isLoading: isLoading ?? this.isLoading,
+      error: error,
     );
   }
 }

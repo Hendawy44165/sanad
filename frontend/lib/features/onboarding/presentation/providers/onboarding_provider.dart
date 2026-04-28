@@ -1,8 +1,13 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:sanad/features/onboarding/logic/repositories/onboarding_repository.dart';
+import 'package:sanad/core/constants/codes.dart';
 import 'onboarding_state.dart';
 
 class OnboardingNotifier extends AsyncNotifier<OnboardingState> {
+  final OnboardingRepository _repository;
+
+  OnboardingNotifier(this._repository);
+
   @override
   Future<OnboardingState> build() async {
     return OnboardingState();
@@ -14,22 +19,23 @@ class OnboardingNotifier extends AsyncNotifier<OnboardingState> {
   }
 
   Future<void> saveSelection() async {
-    if (state.value == null || state.value!.selectedDisabilityId == null) return;
-    
-    state = const AsyncLoading();
-    try {
-      final user = Supabase.instance.client.auth.currentUser;
-      if (user == null) throw Exception('User not logged in');
+    final oldState = state.value;
+    if (oldState == null || oldState.selectedDisabilityId == null) return;
 
-      await Supabase.instance.client
-          .from('profiles')
-          .update({'disability_type': state.value!.selectedDisabilityId})
-          .eq('id', user.id);
-      
-      state = AsyncValue.data(state.value!.copyWith(isLoading: false));
-    } catch (e, stack) {
-      state = AsyncValue.error(e, stack);
+    state = const AsyncLoading();
+
+    final response = await _repository.updateDisabilityType(oldState.selectedDisabilityId!);
+
+    if (response.isSuccess) {
+      state = AsyncValue.data(oldState.copyWith(isLoading: false));
+    } else {
+      state = AsyncValue.data(oldState.copyWith(isLoading: false, error: response.errorCode ?? Codes.unknown));
     }
+  }
+
+  void clearError() {
+    if (state.value == null) return;
+    state = AsyncValue.data(state.value!.copyWith(error: null));
   }
 }
 

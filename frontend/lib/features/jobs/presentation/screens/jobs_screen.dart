@@ -16,6 +16,7 @@ class JobsScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final jobsState = ref.watch(getIt<JobsProvider>());
     final jobsNotifier = ref.read(getIt<JobsProvider>().notifier);
+    final l10n = AppLocalizations.of(context)!;
 
     return Scaffold(
       backgroundColor: const Color(0xFFF8F5F2),
@@ -64,7 +65,7 @@ class JobsScreen extends ConsumerWidget {
             ],
           ),
           loading: () => const Center(child: CircularProgressIndicator()),
-          error: (err, stack) => Center(child: Text('Error: $err')),
+          error: (err, stack) => Center(child: Text('${l10n.errorPrefix}$err')),
         ),
       ),
     );

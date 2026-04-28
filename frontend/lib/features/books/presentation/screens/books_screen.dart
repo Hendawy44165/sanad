@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sanad/core/dependency_injection.dart';
+import '../../../../l10n/app_localizations.dart';
 import '../providers/books_provider.dart';
 import '../widgets/books_app_bar.dart';
 import '../widgets/books_search_section.dart';
@@ -15,6 +16,7 @@ class BooksScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final booksState = ref.watch(getIt<BooksProvider>());
     final booksNotifier = ref.read(getIt<BooksProvider>().notifier);
+    final l10n = AppLocalizations.of(context)!;
 
     return Scaffold(
       backgroundColor: const Color(0xFFF8F5F2),
@@ -50,7 +52,7 @@ class BooksScreen extends ConsumerWidget {
             ],
           ),
           loading: () => const Center(child: CircularProgressIndicator()),
-          error: (err, stack) => Center(child: Text('Error: $err')),
+          error: (err, stack) => Center(child: Text('${l10n.errorPrefix}$err')),
         ),
       ),
     );

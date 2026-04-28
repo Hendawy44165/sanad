@@ -1,3 +1,5 @@
+import 'package:sanad/core/constants/codes.dart';
+
 class ProfileState {
   final String name;
   final String? profilePicturePath;
@@ -5,6 +7,7 @@ class ProfileState {
   final bool notificationsEnabled;
   final String language;
   final bool cvUploaded;
+  final Codes? error;
 
   ProfileState({
     required this.name,
@@ -13,6 +16,7 @@ class ProfileState {
     required this.notificationsEnabled,
     required this.language,
     this.cvUploaded = false,
+    this.error,
   });
 
   ProfileState copyWith({
@@ -23,6 +27,7 @@ class ProfileState {
     String? language,
     bool? isLoading,
     bool? cvUploaded,
+    Codes? error,
   }) {
     return ProfileState(
       name: name ?? this.name,
@@ -31,6 +36,7 @@ class ProfileState {
       notificationsEnabled: notificationsEnabled ?? this.notificationsEnabled,
       language: language ?? this.language,
       cvUploaded: cvUploaded ?? this.cvUploaded,
+      error: error,
     );
   }
 }

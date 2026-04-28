@@ -1,27 +1,26 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sanad/core/constants/app_keys.dart';
-import 'package:sanad/core/dependency_injection.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class LocaleNotifier extends Notifier<Locale> {
+  final SharedPreferences _prefs;
+
+  LocaleNotifier(this._prefs);
+
   @override
   Locale build() {
-    final prefs = getIt<SharedPreferences>();
-    final languageCode = prefs.getString(AppKeys.locale);
+    final languageCode = _prefs.getString(AppKeys.locale);
 
     if (languageCode != null) {
       return Locale(languageCode);
     }
-    // Default to English
-    // TODO: should default to the user's device language if it's in the list or to English
     return const Locale('en');
   }
 
   void setLocale(Locale locale) {
     state = locale;
-    final prefs = getIt<SharedPreferences>();
-    prefs.setString(AppKeys.locale, locale.languageCode);
+    _prefs.setString(AppKeys.locale, locale.languageCode);
   }
 }
 

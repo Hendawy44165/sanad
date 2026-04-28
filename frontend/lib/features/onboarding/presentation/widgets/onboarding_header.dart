@@ -1,26 +1,29 @@
 import 'package:flutter/material.dart';
-import '../../../../core/theme/app_colors.dart';
+import 'package:sanad/core/theme/app_colors.dart';
+
+import '../../../../l10n/app_localizations.dart';
 
 class OnboardingHeader extends StatelessWidget {
   const OnboardingHeader({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Column(
       children: [
-        const Text(
-          'Welcome, Friend!',
-          style: TextStyle(
+        Text(
+          l10n.onboardingWelcome,
+          style: const TextStyle(
             color: AppColors.primary,
             fontWeight: FontWeight.w500,
             fontSize: 16,
           ),
         ),
         const SizedBox(height: 12),
-        const Text(
-          'How can we best support you?',
+        Text(
+          l10n.onboardingQuestion,
           textAlign: TextAlign.center,
-          style: TextStyle(
+          style: const TextStyle(
             fontSize: 28,
             fontWeight: FontWeight.bold,
             color: AppColors.text,
@@ -28,10 +31,10 @@ class OnboardingHeader extends StatelessWidget {
           ),
         ),
         const SizedBox(height: 16),
-        const Text(
-          'Select your primary need so we can personalize your experience and show relevant resources.',
+        Text(
+          l10n.onboardingSubtitle,
           textAlign: TextAlign.center,
-          style: TextStyle(
+          style: const TextStyle(
             fontSize: 16,
             color: AppColors.textLight,
             height: 1.5,
