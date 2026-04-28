@@ -23,30 +23,15 @@ void main() {
       getIt.registerSingleton<AuthRepository>(mockRepository);
     }
     if (!getIt.isRegistered<AuthProvider>()) {
-      getIt.registerLazySingleton<AuthProvider>(
-        () => AuthProvider(AuthNotifier.new),
-      );
+      getIt.registerLazySingleton<AuthProvider>(() => AuthProvider(AuthNotifier.new));
     }
   });
 
-  const tUser = UserEntity(
-    id: '1',
-    supabaseUserId: 'sub123',
-    email: 'test@example.com',
-    language: 'ar',
-    notificationsEnabled: true,
-    role: 'user',
-    profileCompletion: 10,
-    isActive: true,
-  );
+  const tUser = UserEntity(id: '1', supabaseUserId: 'sub123', email: 'test@example.com', language: 'ar', notificationsEnabled: true, role: 'user', profileCompletion: 10, isActive: true);
 
   setUp(() {
-    when(
-      () => mockRepository.restoreSession(),
-    ).thenAnswer((_) async => const ResponseModel.success(null));
-    when(
-      () => mockRepository.onAuthStateChange,
-    ).thenAnswer((_) => const Stream.empty());
+    when(() => mockRepository.restoreSession()).thenAnswer((_) async => const ResponseModel.success(null));
+    when(() => mockRepository.onAuthStateChange).thenAnswer((_) => const Stream.empty());
   });
 
   group('AuthNotifier', () {
@@ -58,7 +43,7 @@ void main() {
 
       expect(state.isLoading, isFalse);
       expect(state.user, isNull);
-      expect(state.errorMessage, isNull);
+      expect(state.error, isNull);
     });
 
     test('signIn should update state with user on success', () async {
@@ -66,9 +51,7 @@ void main() {
       final container = ProviderContainer();
       addTearDown(container.dispose);
 
-      when(
-        () => mockRepository.signIn(any(), any()),
-      ).thenAnswer((_) async => const ResponseModel.success(tUser));
+      when(() => mockRepository.signIn(any(), any())).thenAnswer((_) async => const ResponseModel.success(tUser));
 
       final notifier = container.read(getIt<AuthProvider>().notifier);
       await container.read(getIt<AuthProvider>().future);
@@ -82,49 +65,35 @@ void main() {
       expect(state?.isLoading, isFalse);
     });
 
-    test(
-      'signIn should emit error then return to old state on failure',
-      () async {
-        // arrange
-        final container = ProviderContainer();
-        addTearDown(container.dispose);
+    test('signIn should emit error then return to old state on failure', () async {
+      // arrange
+      final container = ProviderContainer();
+      addTearDown(container.dispose);
 
-        when(() => mockRepository.signIn(any(), any())).thenAnswer(
-          (_) async => const ResponseModel.failure(Codes.invalidCredentials),
-        );
+      when(() => mockRepository.signIn(any(), any())).thenAnswer((_) async => const ResponseModel.failure(Codes.invalidCredentials));
 
-        final notifier = container.read(getIt<AuthProvider>().notifier);
-        await container.read(getIt<AuthProvider>().future);
+      final notifier = container.read(getIt<AuthProvider>().notifier);
+      await container.read(getIt<AuthProvider>().future);
 
-        final states = <AsyncValue<AuthState>>[];
-        container.listen(
-          getIt<AuthProvider>(),
-          (previous, next) => states.add(next),
-          fireImmediately: true,
-        );
+      final states = <AsyncValue<AuthState>>[];
+      container.listen(getIt<AuthProvider>(), (previous, next) => states.add(next), fireImmediately: true);
 
-        // act
-        await notifier.signIn('email', 'password');
+      // act
+      await notifier.signIn('email', 'password');
 
-        // assert
-        // States should be: data(initial), loading, error(Codes.invalidCredentials), data(initial)
-        expect(states.any((s) => s is AsyncLoading), isTrue);
-        expect(
-          states.any((s) => s.hasError && s.error == Codes.invalidCredentials),
-          isTrue,
-        );
-        expect(container.read(getIt<AuthProvider>()).value?.user, isNull);
-      },
-    );
+      // assert
+      // States should be: data(initial), loading, error(Codes.invalidCredentials), data(initial)
+      expect(states.any((s) => s is AsyncLoading), isTrue);
+      expect(states.any((s) => s.hasError && s.error == Codes.invalidCredentials), isTrue);
+      expect(container.read(getIt<AuthProvider>()).value?.user, isNull);
+    });
 
     test('signUp should update state with user on success', () async {
       // arrange
       final container = ProviderContainer();
       addTearDown(container.dispose);
 
-      when(
-        () => mockRepository.signUp(any(), any(), any(), any()),
-      ).thenAnswer((_) async => const ResponseModel.success(tUser));
+      when(() => mockRepository.signUp(any(), any(), any(), any())).thenAnswer((_) async => const ResponseModel.success(tUser));
 
       final notifier = container.read(getIt<AuthProvider>().notifier);
       await container.read(getIt<AuthProvider>().future);
@@ -142,9 +111,7 @@ void main() {
       final container = ProviderContainer();
       addTearDown(container.dispose);
 
-      when(
-        () => mockRepository.signOut(),
-      ).thenAnswer((_) async => const ResponseModel.success(null));
+      when(() => mockRepository.signOut()).thenAnswer((_) async => const ResponseModel.success(null));
 
       final notifier = container.read(getIt<AuthProvider>().notifier);
       await container.read(getIt<AuthProvider>().future);
