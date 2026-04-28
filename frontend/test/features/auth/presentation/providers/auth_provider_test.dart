@@ -23,7 +23,9 @@ void main() {
       getIt.registerSingleton<AuthRepository>(mockRepository);
     }
     if (!getIt.isRegistered<AuthProvider>()) {
-      getIt.registerLazySingleton<AuthProvider>(() => AuthProvider(AuthNotifier.new));
+      getIt.registerLazySingleton<AuthProvider>(
+        () => AuthProvider(() => AuthNotifier(getIt<AuthRepository>())),
+      );
     }
   });
 

@@ -60,7 +60,7 @@ Future<void> configureDependencies() async {
   );
 
   getIt.registerLazySingleton<AuthProvider>(
-    () => AuthProvider(AuthNotifier.new),
+    () => AuthProvider(() => AuthNotifier(getIt<AuthRepository>())),
   );
   //? Profile
   getIt.registerLazySingleton<ProfileProvider>(
