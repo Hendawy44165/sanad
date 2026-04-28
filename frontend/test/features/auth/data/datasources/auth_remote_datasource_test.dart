@@ -2,6 +2,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:dio/dio.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:sanad/features/auth/data/datasources/auth_remote_datasource.dart';
 import 'package:sanad/core/models/app_exception.dart';
 import 'package:sanad/core/constants/codes.dart';
@@ -23,8 +24,10 @@ void main() {
 
   setUpAll(() async {
     await getIt.reset();
+    dotenv.loadFromString(envString: 'API_BASE_URL=http://localhost:4000/api/v1');
     registerFallbackValue(FakeAuthState());
     registerFallbackValue(Options());
+    registerFallbackValue(SignOutScope.local);
   });
 
   setUp(() {
@@ -33,6 +36,7 @@ void main() {
     mockDio = MockDio();
 
     when(() => mockSupabase.auth).thenReturn(mockGoTrue);
+    when(() => mockGoTrue.signOut(scope: any(named: 'scope'))).thenAnswer((_) async => {});
 
     dataSource = AuthRemoteDataSource(mockSupabase, mockDio);
   });
@@ -40,266 +44,210 @@ void main() {
   const tEmail = 'test@example.com';
   const tPassword = 'password123';
   const tToken = 'token123';
-  const tUserJson = {
-    '_id': '1',
-    'supabase_user_id': 'sub123',
-    'email': tEmail,
-    'language': 'ar',
-    'notifications_enabled': true,
-    'role': 'user',
-    'profile_completion': 10,
-    'is_active': true,
-  };
+  const tUserJson = {'_id': '1', 'supabase_user_id': 'sub123', 'email': tEmail, 'language': 'ar', 'notifications_enabled': true, 'role': 'user', 'profile_completion': 10, 'is_active': true};
   const tResponseJson = {'success': true, 'data': tUserJson};
 
   group('AuthRemoteDataSource', () {
     group('signInWithPassword', () {
-      test(
-        'should return UserModel when sign in and sync are successful',
-        () async {
-          // arrange
-          final authResponse = AuthResponse(
-            session: Session(
-              accessToken: tToken,
-              tokenType: 'bearer',
-              user: User(
-                id: 'sub123',
-                appMetadata: {},
-                userMetadata: {},
-                aud: 'aud',
-                createdAt: '2023-01-01',
-              ),
-            ),
-          );
-          when(
-            () => mockGoTrue.signInWithPassword(
-              email: any(named: 'email'),
-              password: any(named: 'password'),
-            ),
-          ).thenAnswer((_) async => authResponse);
+      test('should return UserModel when sign in and sync are successful', () async {
+        // arrange
+        final authResponse = AuthResponse(
+          session: Session(
+            accessToken: tToken,
+            tokenType: 'bearer',
+            user: User(id: 'sub123', appMetadata: {}, userMetadata: {}, aud: 'aud', createdAt: '2023-01-01'),
+          ),
+        );
+        when(
+          () => mockGoTrue.signInWithPassword(
+            email: any(named: 'email'),
+            password: any(named: 'password'),
+          ),
+        ).thenAnswer((_) async => authResponse);
 
-          when(
-            () => mockDio.post(any(), options: any(named: 'options')),
-          ).thenAnswer(
-            (_) async => Response(
-              data: tResponseJson,
-              statusCode: 200,
-              requestOptions: RequestOptions(path: ''),
-            ),
-          );
+        when(() => mockDio.post(any(), options: any(named: 'options'))).thenAnswer(
+          (_) async => Response(
+            data: tResponseJson,
+            statusCode: 200,
+            requestOptions: RequestOptions(path: ''),
+          ),
+        );
 
-          // act
-          final result = await dataSource.signInWithPassword(tEmail, tPassword);
+        // act
+        final result = await dataSource.signInWithPassword(tEmail, tPassword);
 
-          // assert
-          expect(result.email, tEmail);
-          verify(
-            () => mockDio.post(any(), options: any(named: 'options')),
-          ).called(1);
-        },
-      );
+        // assert
+        expect(result.email, tEmail);
+        verify(() => mockDio.post(any(), options: any(named: 'options'))).called(1);
+      });
 
-      test(
-        'should throw AppException(unexpectedFailure) when session is null',
-        () async {
-          // arrange
-          final authResponse = AuthResponse();
-          when(
-            () => mockGoTrue.signInWithPassword(
-              email: any(named: 'email'),
-              password: any(named: 'password'),
-            ),
-          ).thenAnswer((_) async => authResponse);
+      test('should throw AppException(unexpectedFailure) when session is null', () async {
+        // arrange
+        final authResponse = AuthResponse();
+        when(
+          () => mockGoTrue.signInWithPassword(
+            email: any(named: 'email'),
+            password: any(named: 'password'),
+          ),
+        ).thenAnswer((_) async => authResponse);
 
-          // act & assert
-          await expectLater(
-            () => dataSource.signInWithPassword(tEmail, tPassword),
-            throwsA(
-              isA<AppException>().having(
-                (e) => e.code,
-                'code',
-                Codes.unexpectedFailure,
-              ),
-            ),
-          );
-        },
-      );
+        // act & assert
+        await expectLater(() => dataSource.signInWithPassword(tEmail, tPassword), throwsA(isA<AppException>().having((e) => e.code, 'code', Codes.unexpectedFailure)));
+      });
     });
 
     group('signUp', () {
-      test(
-        'should throw AuthException(email_not_confirmed) when session is null',
-        () async {
-          // arrange
-          final authResponse = AuthResponse();
-          when(
-            () => mockGoTrue.signUp(
-              email: any(named: 'email'),
-              password: any(named: 'password'),
-            ),
-          ).thenAnswer((_) async => authResponse);
+      test('should throw AuthException(email_not_confirmed) when session is null', () async {
+        // arrange
+        final authResponse = AuthResponse();
+        when(
+          () => mockGoTrue.signUp(
+            email: any(named: 'email'),
+            password: any(named: 'password'),
+          ),
+        ).thenAnswer((_) async => authResponse);
 
-          // act & assert
-          await expectLater(
-            () => dataSource.signUp(tEmail, tPassword),
-            throwsA(
-              isA<AppException>().having(
-                (e) => e.code,
-                'code',
-                Codes.emailNotConfirmed,
-              ),
-            ),
-          );
-        },
-      );
+        // act & assert
+        await expectLater(() => dataSource.signUp(tEmail, tPassword, 'first', 'last'), throwsA(isA<AppException>().having((e) => e.code, 'code', Codes.emailNotConfirmed)));
+      });
 
-      test(
-        'should call signOut and rethrow when sync profile fails during signUp',
-        () async {
-          // arrange
-          final authResponse = AuthResponse(
-            session: Session(
-              accessToken: tToken,
-              tokenType: 'bearer',
-              user: User(
-                id: 'sub123',
-                appMetadata: {},
-                userMetadata: {},
-                aud: 'aud',
-                createdAt: '2023-01-01',
-              ),
-            ),
-          );
-          when(
-            () => mockGoTrue.signUp(
-              email: any(named: 'email'),
-              password: any(named: 'password'),
-            ),
-          ).thenAnswer((_) async => authResponse);
+      test('should call signOut and rethrow when sync profile fails during signUp', () async {
+        // arrange
+        final authResponse = AuthResponse(
+          session: Session(
+            accessToken: tToken,
+            tokenType: 'bearer',
+            user: User(id: 'sub123', appMetadata: {}, userMetadata: {}, aud: 'aud', createdAt: '2023-01-01'),
+          ),
+        );
+        when(
+          () => mockGoTrue.signUp(
+            email: any(named: 'email'),
+            password: any(named: 'password'),
+          ),
+        ).thenAnswer((_) async => authResponse);
 
-          when(
-            () => mockDio.post(any(), options: any(named: 'options')),
-          ).thenThrow(
-            DioException(
-              requestOptions: RequestOptions(path: ''),
-              type: DioExceptionType.connectionTimeout,
-            ),
-          );
-          when(() => mockGoTrue.signOut()).thenAnswer((_) async => {});
+        when(() => mockDio.post(any(), options: any(named: 'options'))).thenThrow(
+          DioException(
+            requestOptions: RequestOptions(path: ''),
+            type: DioExceptionType.connectionTimeout,
+          ),
+        );
+        // act & assert
+        await expectLater(() => dataSource.signUp(tEmail, tPassword, 'first', 'last'), throwsA(isA<AppException>().having((e) => e.code, 'code', Codes.requestTimeout)));
+        // Verify signOut was called
+        verify(() => mockGoTrue.signOut(scope: any(named: 'scope'))).called(1);
+      });
 
-          // act & assert
-          await expectLater(
-            () => dataSource.signUp(tEmail, tPassword),
-            throwsA(
-              isA<AppException>().having(
-                (e) => e.code,
-                'code',
-                Codes.requestTimeout,
-              ),
-            ),
-          );
-          // Verify signOut was called
-          verify(() => mockGoTrue.signOut()).called(1);
-        },
-      );
+      test('should return UserModel and call patch for full_name on success', () async {
+        // arrange
+        final authResponse = AuthResponse(
+          session: Session(
+            accessToken: tToken,
+            tokenType: 'bearer',
+            user: User(id: 'sub123', appMetadata: {}, userMetadata: {}, aud: 'aud', createdAt: '2023-01-01'),
+          ),
+        );
+        when(
+          () => mockGoTrue.signUp(
+            email: any(named: 'email'),
+            password: any(named: 'password'),
+          ),
+        ).thenAnswer((_) async => authResponse);
+
+        when(() => mockDio.post(any(), options: any(named: 'options'))).thenAnswer(
+          (_) async => Response(
+            data: tResponseJson,
+            statusCode: 200,
+            requestOptions: RequestOptions(path: ''),
+          ),
+        );
+
+        when(
+          () => mockDio.patch(
+            any(),
+            data: any(named: 'data'),
+            options: any(named: 'options'),
+          ),
+        ).thenAnswer(
+          (_) async => Response(
+            data: {'success': true},
+            statusCode: 200,
+            requestOptions: RequestOptions(path: ''),
+          ),
+        );
+
+        // act
+        final result = await dataSource.signUp(tEmail, tPassword, 'first', 'last');
+
+        // assert
+        expect(result.fullName, 'first last');
+        verify(
+          () => mockDio.patch(
+            any(),
+            data: {'full_name': 'first last'},
+            options: any(named: 'options'),
+          ),
+        ).called(1);
+      });
     });
 
     group('syncProfile edge cases', () {
-      test(
-        'should throw AppException(unexpectedFailure) on 400 status',
-        () async {
-          // arrange
-          final authResponse = AuthResponse(
-            session: Session(
-              accessToken: tToken,
-              tokenType: 'bearer',
-              user: User(
-                id: 'sub123',
-                appMetadata: {},
-                userMetadata: {},
-                aud: 'aud',
-                createdAt: '2023-01-01',
-              ),
-            ),
-          );
-          when(
-            () => mockGoTrue.signInWithPassword(
-              email: any(named: 'email'),
-              password: any(named: 'password'),
-            ),
-          ).thenAnswer((_) async => authResponse);
+      test('should throw AppException(unexpectedFailure) on 400 status', () async {
+        // arrange
+        final authResponse = AuthResponse(
+          session: Session(
+            accessToken: tToken,
+            tokenType: 'bearer',
+            user: User(id: 'sub123', appMetadata: {}, userMetadata: {}, aud: 'aud', createdAt: '2023-01-01'),
+          ),
+        );
+        when(
+          () => mockGoTrue.signInWithPassword(
+            email: any(named: 'email'),
+            password: any(named: 'password'),
+          ),
+        ).thenAnswer((_) async => authResponse);
 
-          when(
-            () => mockDio.post(any(), options: any(named: 'options')),
-          ).thenAnswer(
-            (_) async => Response(
-              data: {'success': false},
-              statusCode: 400,
-              requestOptions: RequestOptions(path: ''),
-            ),
-          );
+        when(() => mockDio.post(any(), options: any(named: 'options'))).thenAnswer(
+          (_) async => Response(
+            data: {'success': false},
+            statusCode: 400,
+            requestOptions: RequestOptions(path: ''),
+          ),
+        );
 
-          // act & assert
-          await expectLater(
-            () => dataSource.signInWithPassword(tEmail, tPassword),
-            throwsA(
-              isA<AppException>().having(
-                (e) => e.code,
-                'code',
-                Codes.unexpectedFailure,
-              ),
-            ),
-          );
-        },
-      );
+        // act & assert
+        await expectLater(() => dataSource.signInWithPassword(tEmail, tPassword), throwsA(isA<AppException>().having((e) => e.code, 'code', Codes.unexpectedFailure)));
+      });
 
-      test(
-        'should throw AuthException(reauthentication_needed) on 401 status',
-        () async {
-          // arrange
-          final authResponse = AuthResponse(
-            session: Session(
-              accessToken: tToken,
-              tokenType: 'bearer',
-              user: User(
-                id: 'sub123',
-                appMetadata: {},
-                userMetadata: {},
-                aud: 'aud',
-                createdAt: '2023-01-01',
-              ),
-            ),
-          );
-          when(
-            () => mockGoTrue.signInWithPassword(
-              email: any(named: 'email'),
-              password: any(named: 'password'),
-            ),
-          ).thenAnswer((_) async => authResponse);
+      test('should throw AuthException(reauthentication_needed) on 401 status', () async {
+        // arrange
+        final authResponse = AuthResponse(
+          session: Session(
+            accessToken: tToken,
+            tokenType: 'bearer',
+            user: User(id: 'sub123', appMetadata: {}, userMetadata: {}, aud: 'aud', createdAt: '2023-01-01'),
+          ),
+        );
+        when(
+          () => mockGoTrue.signInWithPassword(
+            email: any(named: 'email'),
+            password: any(named: 'password'),
+          ),
+        ).thenAnswer((_) async => authResponse);
 
-          when(
-            () => mockDio.post(any(), options: any(named: 'options')),
-          ).thenAnswer(
-            (_) async => Response(
-              data: {'success': false},
-              statusCode: 401,
-              requestOptions: RequestOptions(path: ''),
-            ),
-          );
+        when(() => mockDio.post(any(), options: any(named: 'options'))).thenAnswer(
+          (_) async => Response(
+            data: {'success': false},
+            statusCode: 401,
+            requestOptions: RequestOptions(path: ''),
+          ),
+        );
 
-          // act & assert
-          await expectLater(
-            () => dataSource.signInWithPassword(tEmail, tPassword),
-            throwsA(
-              isA<AppException>().having(
-                (e) => e.code,
-                'code',
-                Codes.reauthenticationNeeded,
-              ),
-            ),
-          );
-        },
-      );
+        // act & assert
+        await expectLater(() => dataSource.signInWithPassword(tEmail, tPassword), throwsA(isA<AppException>().having((e) => e.code, 'code', Codes.reauthenticationNeeded)));
+      });
     });
 
     group('restoreSession', () {
@@ -309,55 +257,42 @@ void main() {
         expect(result, isNull);
       });
 
-      test(
-        'should call signOut and return null when reauthentication_needed is thrown',
-        () async {
-          final session = Session(
-            accessToken: tToken,
-            tokenType: 'bearer',
-            user: User(
-              id: 'sub123',
-              appMetadata: {},
-              userMetadata: {},
-              aud: 'aud',
-              createdAt: '2023-01-01',
-            ),
-          );
-          when(() => mockGoTrue.currentSession).thenReturn(session);
-          when(
-            () => mockDio.post(any(), options: any(named: 'options')),
-          ).thenAnswer(
-            (_) async => Response(
-              data: {'success': false},
-              statusCode: 401,
-              requestOptions: RequestOptions(path: ''),
-            ),
-          );
-          when(() => mockGoTrue.signOut()).thenAnswer((_) async => {});
+      test('should call signOut and return null when reauthentication_needed is thrown', () async {
+        final session = Session(
+          accessToken: tToken,
+          tokenType: 'bearer',
+          user: User(id: 'sub123', appMetadata: {}, userMetadata: {}, aud: 'aud', createdAt: '2023-01-01'),
+        );
+        when(() => mockGoTrue.currentSession).thenReturn(session);
+        when(() => mockDio.post(any(), options: any(named: 'options'))).thenAnswer(
+          (_) async => Response(
+            data: {'success': false},
+            statusCode: 401,
+            requestOptions: RequestOptions(path: ''),
+          ),
+        );
+        when(() => mockDio.post(any(), options: any(named: 'options'))).thenAnswer(
+          (_) async => Response(
+            data: {'success': false},
+            statusCode: 401,
+            requestOptions: RequestOptions(path: ''),
+          ),
+        );
 
-          final result = await dataSource.restoreSession();
+        final result = await dataSource.restoreSession();
 
-          expect(result, isNull);
-          verify(() => mockGoTrue.signOut()).called(1);
-        },
-      );
+        expect(result, isNull);
+        verify(() => mockGoTrue.signOut(scope: any(named: 'scope'))).called(1);
+      });
 
       test('should return null but NOT sign out on network error', () async {
         final session = Session(
           accessToken: tToken,
           tokenType: 'bearer',
-          user: User(
-            id: 'sub123',
-            appMetadata: {},
-            userMetadata: {},
-            aud: 'aud',
-            createdAt: '2023-01-01',
-          ),
+          user: User(id: 'sub123', appMetadata: {}, userMetadata: {}, aud: 'aud', createdAt: '2023-01-01'),
         );
         when(() => mockGoTrue.currentSession).thenReturn(session);
-        when(
-          () => mockDio.post(any(), options: any(named: 'options')),
-        ).thenThrow(
+        when(() => mockDio.post(any(), options: any(named: 'options'))).thenThrow(
           DioException(
             requestOptions: RequestOptions(path: ''),
             type: DioExceptionType.connectionTimeout,
@@ -367,7 +302,7 @@ void main() {
         final result = await dataSource.restoreSession();
 
         expect(result, isNull);
-        verifyNever(() => mockGoTrue.signOut());
+        verifyNever(() => mockGoTrue.signOut(scope: any(named: 'scope')));
       });
     });
   });

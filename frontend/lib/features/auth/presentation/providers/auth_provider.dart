@@ -69,6 +69,8 @@ class AuthNotifier extends AsyncNotifier<sanad_auth.AuthState> {
   Future<void> signUp(
     String email,
     String password,
+    String firstName,
+    String lastName,
     AppLocalizations l10n,
   ) async {
     if (state.isLoading) return;
@@ -78,7 +80,12 @@ class AuthNotifier extends AsyncNotifier<sanad_auth.AuthState> {
 
     state = const AsyncLoading();
 
-    final response = await _repository.signUp(email, password);
+    final response = await _repository.signUp(
+      email,
+      password,
+      firstName,
+      lastName,
+    );
 
     if (response.isSuccess) {
       state = AsyncValue.data(oldState.copyWith(user: response.data));

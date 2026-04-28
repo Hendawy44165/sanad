@@ -120,6 +120,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get password => 'Password';
 
   @override
+  String get firstName => 'First Name';
+
+  @override
+  String get lastName => 'Last Name';
+
+  @override
   String get passwordHint => 'Enter your password';
 
   @override
@@ -719,6 +725,12 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get alreadyHaveAccount => 'Already have an account?';
+
+  @override
+  String get firstNameRequired => 'Please enter your first name';
+
+  @override
+  String get lastNameRequired => 'Please enter your last name';
 
   @override
   String get logIn => 'Log In';

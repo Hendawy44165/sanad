@@ -19,6 +19,8 @@ class _WelcomeScreenState extends ConsumerState<WelcomeScreen> with SingleTicker
   final _formKey = GlobalKey<FormState>();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
+  final _firstNameController = TextEditingController();
+  final _lastNameController = TextEditingController();
   bool _isLogin = true;
 
   late AnimationController _animationController;
@@ -41,6 +43,8 @@ class _WelcomeScreenState extends ConsumerState<WelcomeScreen> with SingleTicker
   void dispose() {
     _emailController.dispose();
     _passwordController.dispose();
+    _firstNameController.dispose();
+    _lastNameController.dispose();
     _animationController.dispose();
     super.dispose();
   }
@@ -67,7 +71,13 @@ class _WelcomeScreenState extends ConsumerState<WelcomeScreen> with SingleTicker
       if (_isLogin) {
         authNotifier.signIn(email, password, l10n);
       } else {
-        authNotifier.signUp(email, password, l10n);
+        authNotifier.signUp(
+          email,
+          password,
+          _firstNameController.text.trim(),
+          _lastNameController.text.trim(),
+          l10n,
+        );
       }
     }
   }
@@ -140,12 +150,46 @@ class _WelcomeScreenState extends ConsumerState<WelcomeScreen> with SingleTicker
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.stretch,
                           children: [
-                            Text(
-                              _isLogin ? l10n.welcomeBack : l10n.createAccount,
-                              style: const TextStyle(fontSize: 28, fontWeight: FontWeight.bold, color: AppColors.text, fontFamily: 'Pacifico'),
-                              textAlign: TextAlign.center,
-                            ),
-                            const SizedBox(height: 32),
+                              Text(
+                                _isLogin ? l10n.welcomeBack : l10n.createAccount,
+                                style: const TextStyle(fontSize: 28, fontWeight: FontWeight.bold, color: AppColors.text, fontFamily: 'Pacifico'),
+                                textAlign: TextAlign.center,
+                              ),
+                              const SizedBox(height: 32),
+                              if (!_isLogin) ...[
+                                Row(
+                                  children: [
+                                    Expanded(
+                                      child: AnimatedInputField(
+                                        label: l10n.firstName,
+                                        icon: Icons.person_outline,
+                                        controller: _firstNameController,
+                                        validator: (value) {
+                                          if (!_isLogin && (value == null || value.isEmpty)) {
+                                            return l10n.firstNameRequired;
+                                          }
+                                          return null;
+                                        },
+                                      ),
+                                    ),
+                                    const SizedBox(width: 16),
+                                    Expanded(
+                                      child: AnimatedInputField(
+                                        label: l10n.lastName,
+                                        icon: Icons.person_outline,
+                                        controller: _lastNameController,
+                                        validator: (value) {
+                                          if (!_isLogin && (value == null || value.isEmpty)) {
+                                            return l10n.lastNameRequired;
+                                          }
+                                          return null;
+                                        },
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                const SizedBox(height: 20),
+                              ],
                             AnimatedInputField(
                               label: l10n.emailAddress,
                               icon: Icons.email_outlined,

@@ -47,9 +47,16 @@ class AuthRepository {
   Future<ResponseModel<UserEntity>> signUp(
     String email,
     String password,
+    String firstName,
+    String lastName,
   ) async {
     try {
-      final userModel = await _remoteDataSource.signUp(email, password);
+      final userModel = await _remoteDataSource.signUp(
+        email,
+        password,
+        firstName,
+        lastName,
+      );
 
       return ResponseModel.success(userModel);
     } on AppException catch (e) {

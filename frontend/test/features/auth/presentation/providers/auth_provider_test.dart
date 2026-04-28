@@ -134,14 +134,14 @@ void main() {
       addTearDown(container.dispose);
 
       when(
-        () => mockRepository.signUp(any(), any()),
+        () => mockRepository.signUp(any(), any(), any(), any()),
       ).thenAnswer((_) async => const ResponseModel.success(tUser));
 
       final notifier = container.read(getIt<AuthProvider>().notifier);
       await container.read(getIt<AuthProvider>().future);
 
       // act
-      await notifier.signUp('email', 'password', mockL10n);
+      await notifier.signUp('email', 'password', 'first', 'last', mockL10n);
 
       // assert
       final state = container.read(getIt<AuthProvider>()).value;

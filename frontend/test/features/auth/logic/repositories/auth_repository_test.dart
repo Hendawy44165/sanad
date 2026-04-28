@@ -20,23 +20,13 @@ void main() {
 
   const tEmail = 'test@example.com';
   const tPassword = 'password123';
-  const tUser = UserModel(
-    id: '1',
-    supabaseUserId: 'sub123',
-    email: tEmail,
-    language: 'ar',
-    notificationsEnabled: true,
-    role: 'user',
-    profileCompletion: 10,
-    isActive: true,
-  );
+  const tUser = UserModel(id: '1', supabaseUserId: 'sub123', email: tEmail, language: 'ar', notificationsEnabled: true, role: 'user', profileCompletion: 10, isActive: true);
 
   group('AuthRepository', () {
     group('signIn', () {
       test('should return success response when data source is successful', () async {
         // arrange
-        when(() => mockDataSource.signInWithPassword(any(), any()))
-            .thenAnswer((_) async => tUser);
+        when(() => mockDataSource.signInWithPassword(any(), any())).thenAnswer((_) async => tUser);
 
         // act
         final result = await repository.signIn(tEmail, tPassword);
@@ -49,8 +39,7 @@ void main() {
 
       test('should return failure response when data source throws AuthException', () async {
         // arrange
-        when(() => mockDataSource.signInWithPassword(any(), any()))
-            .thenThrow(const AuthException('invalid_credentials'));
+        when(() => mockDataSource.signInWithPassword(any(), any())).thenThrow(const AuthException('invalid_credentials'));
 
         // act
         final result = await repository.signIn(tEmail, tPassword);
@@ -62,8 +51,7 @@ void main() {
 
       test('should return failure response when data source throws AppException', () async {
         // arrange
-        when(() => mockDataSource.signInWithPassword(any(), any()))
-            .thenThrow(const AppException(Codes.requestTimeout));
+        when(() => mockDataSource.signInWithPassword(any(), any())).thenThrow(const AppException(Codes.requestTimeout));
 
         // act
         final result = await repository.signIn(tEmail, tPassword);
@@ -75,8 +63,7 @@ void main() {
 
       test('should return failure response when data source throws generic Exception', () async {
         // arrange
-        when(() => mockDataSource.signInWithPassword(any(), any()))
-            .thenThrow(Exception('Generic error'));
+        when(() => mockDataSource.signInWithPassword(any(), any())).thenThrow(Exception('Generic error'));
 
         // act
         final result = await repository.signIn(tEmail, tPassword);
@@ -90,25 +77,23 @@ void main() {
     group('signUp', () {
       test('should return success response when data source is successful', () async {
         // arrange
-        when(() => mockDataSource.signUp(any(), any()))
-            .thenAnswer((_) async => tUser);
+        when(() => mockDataSource.signUp(any(), any(), any(), any())).thenAnswer((_) async => tUser);
 
         // act
-        final result = await repository.signUp(tEmail, tPassword);
+        final result = await repository.signUp(tEmail, tPassword, 'first', 'last');
 
         // assert
         expect(result.isSuccess, isTrue);
         expect(result.data, tUser);
-        verify(() => mockDataSource.signUp(tEmail, tPassword)).called(1);
+        verify(() => mockDataSource.signUp(tEmail, tPassword, 'first', 'last')).called(1);
       });
 
       test('should return failure response when data source throws AuthException', () async {
         // arrange
-        when(() => mockDataSource.signUp(any(), any()))
-            .thenThrow(const AuthException('email_exists'));
+        when(() => mockDataSource.signUp(any(), any(), any(), any())).thenThrow(const AuthException('email_exists'));
 
         // act
-        final result = await repository.signUp(tEmail, tPassword);
+        final result = await repository.signUp(tEmail, tPassword, 'first', 'last');
 
         // assert
         expect(result.isFailure, isTrue);
@@ -117,11 +102,10 @@ void main() {
 
       test('should return failure response when data source throws AppException', () async {
         // arrange
-        when(() => mockDataSource.signUp(any(), any()))
-            .thenThrow(const AppException(Codes.unexpectedFailure));
+        when(() => mockDataSource.signUp(any(), any(), any(), any())).thenThrow(const AppException(Codes.unexpectedFailure));
 
         // act
-        final result = await repository.signUp(tEmail, tPassword);
+        final result = await repository.signUp(tEmail, tPassword, 'first', 'last');
 
         // assert
         expect(result.isFailure, isTrue);

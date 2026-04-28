@@ -52,4 +52,34 @@ class UserModel extends UserEntity {
       'is_active': isActive,
     };
   }
+
+  UserModel copyWith({
+    String? id,
+    String? supabaseUserId,
+    String? email,
+    String? fullName,
+    String? phone,
+    String? avatarUrl,
+    DisabilityType? disabilityType,
+    String? language,
+    bool? notificationsEnabled,
+    String? role,
+    int? profileCompletion,
+    bool? isActive,
+  }) {
+    return UserModel(
+      id: id ?? this.id,
+      supabaseUserId: supabaseUserId ?? this.supabaseUserId,
+      email: email ?? this.email,
+      fullName: fullName ?? this.fullName,
+      phone: phone ?? this.phone,
+      avatarUrl: avatarUrl ?? this.avatarUrl,
+      disabilityType: disabilityType ?? this.disabilityType,
+      language: language ?? this.language,
+      notificationsEnabled: notificationsEnabled ?? this.notificationsEnabled,
+      role: role ?? this.role,
+      profileCompletion: profileCompletion ?? this.profileCompletion,
+      isActive: isActive ?? this.isActive,
+    );
+  }
 }

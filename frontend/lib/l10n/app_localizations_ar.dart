@@ -120,6 +120,12 @@ class AppLocalizationsAr extends AppLocalizations {
   String get password => 'كلمة المرور';
 
   @override
+  String get firstName => 'الاسم الأول';
+
+  @override
+  String get lastName => 'اسم العائلة';
+
+  @override
   String get passwordHint => 'أدخل كلمة المرور الخاصة بك';
 
   @override
@@ -720,6 +726,12 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get alreadyHaveAccount => 'لديك حساب بالفعل؟';
+
+  @override
+  String get firstNameRequired => 'يرجى إدخال اسمك الأول';
+
+  @override
+  String get lastNameRequired => 'يرجى إدخال اسم العائلة';
 
   @override
   String get logIn => 'تسجيل الدخول';
