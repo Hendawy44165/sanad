@@ -1,4 +1,4 @@
-// TODO: make this align with the database
+import 'package:sanad/core/constants/disabilities.dart';
 
 class UserEntity {
   final String id;
@@ -7,7 +7,7 @@ class UserEntity {
   final String? fullName;
   final String? phone;
   final String? avatarUrl;
-  final String? disabilityType;
+  final DisabilityType? disabilityType;
   final String language;
   final bool notificationsEnabled;
   final String role;

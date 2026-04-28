@@ -20,7 +20,6 @@ final routerProvider = Provider<GoRouter>((ref) {
       final isLoggingIn = state.uri.path == '/login';
 
       if (session == null && !isLoggingIn) return '/login';
-      if (session != null && isLoggingIn) return '/';
 
       return null;
     },

@@ -1,3 +1,4 @@
+import 'package:sanad/core/constants/disabilities.dart';
 import 'package:sanad/features/auth/logic/entities/user_entity.dart';
 
 // TODO: this needs fixing to align with the database
@@ -26,7 +27,7 @@ class UserModel extends UserEntity {
       fullName: json['full_name'] as String?,
       phone: json['phone'] as String?,
       avatarUrl: json['avatar_url'] as String?,
-      disabilityType: json['disability_type'] as String?,
+      disabilityType: json['disability_type'] as DisabilityType?,
       language: json['language'] as String? ?? 'ar',
       notificationsEnabled: json['notifications_enabled'] as bool? ?? true,
       role: json['role'] as String? ?? 'user',

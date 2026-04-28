@@ -53,6 +53,7 @@ class AuthRemoteDataSource {
       if (authResponse.session == null) {
         // If email confirmation is required, session might be null.
         // For now, assume it returns a session or we can't sync.
+        // TODO: handle email confirmation. what if the reason wasn't email not confirmed
         throw const AppException(Codes.emailNotConfirmed);
       }
 
@@ -69,10 +70,7 @@ class AuthRemoteDataSource {
       throw const AppException(Codes.requestTimeout);
     } on TimeoutException {
       throw const AppException(Codes.requestTimeout);
-    } catch (e, st) {
-      print('=== SIGNUP FATAL ERROR ===');
-      print(e);
-      print(st);
+    } catch (e) {
       if (e is AuthException || e is AppException) rethrow;
       throw const AppException(Codes.unexpectedFailure);
     }
@@ -118,23 +116,30 @@ class AuthRemoteDataSource {
         if (decoded['success'] == true) {
           return UserModel.fromJson(decoded['data']);
         } else {
+          signOut();
           throw const AppException(Codes.unexpectedFailure);
         }
       } else if (response.statusCode == 401 || response.statusCode == 403) {
+        signOut();
         throw const AppException(Codes.reauthenticationNeeded);
       } else {
+        signOut();
         throw const AppException(Codes.unexpectedFailure);
       }
     } on DioException catch (e) {
+      signOut();
       if (e.type == DioExceptionType.connectionTimeout ||
           e.type == DioExceptionType.receiveTimeout) {
         throw const AppException(Codes.requestTimeout);
       }
       if (e.response?.statusCode == 401 || e.response?.statusCode == 403) {
+        signOut();
         throw const AppException(Codes.reauthenticationNeeded);
       }
+      signOut();
       throw const AppException(Codes.unexpectedFailure);
     } catch (e) {
+      signOut();
       if (e is AppException) rethrow;
       throw const AppException(Codes.unexpectedFailure);
     }

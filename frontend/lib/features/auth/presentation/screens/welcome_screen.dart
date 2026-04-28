@@ -15,8 +15,7 @@ class WelcomeScreen extends ConsumerStatefulWidget {
   ConsumerState<WelcomeScreen> createState() => _WelcomeScreenState();
 }
 
-class _WelcomeScreenState extends ConsumerState<WelcomeScreen>
-    with SingleTickerProviderStateMixin {
+class _WelcomeScreenState extends ConsumerState<WelcomeScreen> with SingleTickerProviderStateMixin {
   final _formKey = GlobalKey<FormState>();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
@@ -34,17 +33,15 @@ class _WelcomeScreenState extends ConsumerState<WelcomeScreen>
       duration: const Duration(milliseconds: 800),
     );
 
-    _fadeAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
-      CurvedAnimation(parent: _animationController, curve: Curves.easeIn),
-    );
+    _fadeAnimation = Tween<double>(
+      begin: 0.0,
+      end: 1.0,
+    ).animate(CurvedAnimation(parent: _animationController, curve: Curves.easeIn));
 
-    _slideAnimation =
-        Tween<Offset>(begin: const Offset(0, 0.2), end: Offset.zero).animate(
-          CurvedAnimation(
-            parent: _animationController,
-            curve: Curves.easeOutQuart,
-          ),
-        );
+    _slideAnimation = Tween<Offset>(
+      begin: const Offset(0, 0.2),
+      end: Offset.zero,
+    ).animate(CurvedAnimation(parent: _animationController, curve: Curves.easeOutQuart));
 
     _animationController.forward();
   }
@@ -92,12 +89,13 @@ class _WelcomeScreenState extends ConsumerState<WelcomeScreen>
     ref.listen(getIt<AuthProvider>(), (previous, next) {
       if (next.hasError) {
         _showSnackBar(next.error.toString(), isError: true);
-      } else if (next.hasValue &&
-          next.value?.user != null &&
-          (previous?.value?.user == null)) {
+      } else if (next.hasValue && next.value?.user != null && (previous?.value?.user == null)) {
         _showSnackBar(_isLogin ? l10n.loginSuccessful : l10n.signUpSuccessful);
         if (mounted) {
-          context.go('/');
+          if (next.value?.user!.disabilityType == null)
+            context.go('/select_disability');
+          else
+            context.go('/');
         }
       }
     });
@@ -107,10 +105,7 @@ class _WelcomeScreenState extends ConsumerState<WelcomeScreen>
       body: SafeArea(
         child: Center(
           child: SingleChildScrollView(
-            padding: const EdgeInsets.symmetric(
-              horizontal: 24.0,
-              vertical: 40.0,
-            ),
+            padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 40.0),
             child: FadeTransition(
               opacity: _fadeAnimation,
               child: SlideTransition(
@@ -165,9 +160,7 @@ class _WelcomeScreenState extends ConsumerState<WelcomeScreen>
                           crossAxisAlignment: CrossAxisAlignment.stretch,
                           children: [
                             Text(
-                              _isLogin
-                                  ? l10n.welcomeBack
-                                  : l10n.createAccount,
+                              _isLogin ? l10n.welcomeBack : l10n.createAccount,
                               style: const TextStyle(
                                 fontSize: 28,
                                 fontWeight: FontWeight.bold,
@@ -214,9 +207,7 @@ class _WelcomeScreenState extends ConsumerState<WelcomeScreen>
                                 style: ElevatedButton.styleFrom(
                                   backgroundColor: AppColors.primary,
                                   foregroundColor: Colors.white,
-                                  padding: const EdgeInsets.symmetric(
-                                    vertical: 18,
-                                  ),
+                                  padding: const EdgeInsets.symmetric(vertical: 18),
                                   shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(20),
                                   ),
@@ -238,9 +229,7 @@ class _WelcomeScreenState extends ConsumerState<WelcomeScreen>
                                 ),
                               ),
                               loading: () => const Center(
-                                child: CircularProgressIndicator(
-                                  color: AppColors.primary,
-                                ),
+                                child: CircularProgressIndicator(color: AppColors.primary),
                               ),
                               orElse: () => const SizedBox.shrink(),
                             ),
@@ -249,14 +238,8 @@ class _WelcomeScreenState extends ConsumerState<WelcomeScreen>
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 Text(
-                                  _isLogin
-                                      ? l10n.noAccount
-                                      : l10n.alreadyHaveAccount,
-                                  style: TextStyle(
-                                    color: AppColors.text.withValues(
-                                      alpha: 0.6,
-                                    ),
-                                  ),
+                                  _isLogin ? l10n.noAccount : l10n.alreadyHaveAccount,
+                                  style: TextStyle(color: AppColors.text.withValues(alpha: 0.6)),
                                 ),
                                 TextButton(
                                   onPressed: () {
@@ -283,11 +266,7 @@ class _WelcomeScreenState extends ConsumerState<WelcomeScreen>
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        const Icon(
-                          Icons.lock_outline,
-                          size: 16,
-                          color: AppColors.textLight,
-                        ),
+                        const Icon(Icons.lock_outline, size: 16, color: AppColors.textLight),
                         const SizedBox(width: 8),
                         Text(
                           'Your data is secure and private',
