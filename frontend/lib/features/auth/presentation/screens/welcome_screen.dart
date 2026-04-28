@@ -4,7 +4,6 @@ import 'package:sanad/core/dependency_injection.dart';
 import 'package:sanad/core/theme/app_colors.dart';
 import 'package:sanad/l10n/app_localizations.dart';
 import 'package:sanad/features/auth/presentation/providers/auth_provider.dart';
-import 'package:sanad/core/constants/codes.dart';
 import 'package:sanad/core/services/error_handling_service.dart';
 import 'package:sanad/features/auth/presentation/widgets/auth_logo.dart';
 import 'package:sanad/features/auth/presentation/widgets/animated_input_field.dart';
@@ -83,10 +82,11 @@ class _WelcomeScreenState extends ConsumerState<WelcomeScreen> with SingleTicker
     final l10n = AppLocalizations.of(context)!;
 
     ref.listen(getIt<AuthProvider>(), (previous, next) {
-      if (next.hasError) {
-        final errorCode = next.error as Codes;
-        final errorMessage = ErrorHandlingService.getMessage(errorCode, l10n);
+      final error = next.value?.error;
+      if (error != null) {
+        final errorMessage = ErrorHandlingService.getMessage(error, l10n);
         _showSnackBar(errorMessage, isError: true);
+        ref.read(getIt<AuthProvider>().notifier).clearError();
       } else if (next.hasValue && next.value?.user != null && (previous?.value?.user == null)) {
         _showSnackBar(_isLogin ? l10n.loginSuccessful : l10n.signUpSuccessful);
         if (mounted) {

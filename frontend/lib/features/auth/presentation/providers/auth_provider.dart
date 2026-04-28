@@ -54,11 +54,9 @@ class AuthNotifier extends AsyncNotifier<sanad_auth.AuthState> {
     if (response.isSuccess) {
       state = AsyncValue.data(oldState.copyWith(user: response.data));
     } else {
-      state = AsyncValue.error(
-        response.errorCode ?? Codes.unknown,
-        StackTrace.current,
+      state = AsyncValue.data(
+        oldState.copyWith(error: response.errorCode ?? Codes.unknown),
       );
-      state = AsyncValue.data(oldState);
     }
   }
 
@@ -85,11 +83,9 @@ class AuthNotifier extends AsyncNotifier<sanad_auth.AuthState> {
     if (response.isSuccess) {
       state = AsyncValue.data(oldState.copyWith(user: response.data));
     } else {
-      state = AsyncValue.error(
-        response.errorCode ?? Codes.unknown,
-        StackTrace.current,
+      state = AsyncValue.data(
+        oldState.copyWith(error: response.errorCode ?? Codes.unknown),
       );
-      state = AsyncValue.data(oldState);
     }
   }
 
@@ -105,12 +101,15 @@ class AuthNotifier extends AsyncNotifier<sanad_auth.AuthState> {
     if (response.isSuccess) {
       state = AsyncValue.data(sanad_auth.AuthState());
     } else {
-      state = AsyncValue.error(
-        response.errorCode ?? Codes.unknown,
-        StackTrace.current,
+      state = AsyncValue.data(
+        oldState.copyWith(error: response.errorCode ?? Codes.unknown),
       );
-      state = AsyncValue.data(oldState);
     }
+  }
+
+  void clearError() {
+    if (state.value == null) return;
+    state = AsyncValue.data(state.value!.copyWith(error: null));
   }
 }
 
