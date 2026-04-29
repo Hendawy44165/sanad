@@ -259,5 +259,8 @@
   },
   "uploading": "جاري الرفع...",
   "updateCV": "تحديث السيرة الذاتية",
-  "retry": "إعادة المحاولة"
+  "retry": "إعادة المحاولة",
+  "err_fileNotFound": "الملف غير موجود.",
+  "err_invalidFileType": "نوع الملف غير مدعوم. يرجى استخدام PDF أو DOC أو DOCX.",
+  "err_permissionDenied": "لا يوجد إذن للوصول إلى الملف."
 }

@@ -82,7 +82,7 @@ class _JobsScreenState extends ConsumerState<JobsScreen> {
                   ),
                 if (state.jobs.isNotEmpty) ...[
                   _buildSectionHeader(context, state.jobs.length),
-                  _buildJobsList(state.jobs, state.cvPath != null),
+                  _buildJobsList(state.jobs, state.cvUrl != null),
                   if (state.isFetchingMore)
                     const SliverToBoxAdapter(
                       child: Padding(

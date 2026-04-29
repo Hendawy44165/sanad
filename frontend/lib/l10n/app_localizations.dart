@@ -1615,6 +1615,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Retry'**
   String get retry;
+
+  /// No description provided for @err_fileNotFound.
+  ///
+  /// In en, this message translates to:
+  /// **'File not found.'**
+  String get err_fileNotFound;
+
+  /// No description provided for @err_invalidFileType.
+  ///
+  /// In en, this message translates to:
+  /// **'Invalid file type. Please use PDF, DOC, or DOCX.'**
+  String get err_invalidFileType;
+
+  /// No description provided for @err_permissionDenied.
+  ///
+  /// In en, this message translates to:
+  /// **'Permission denied to access the file.'**
+  String get err_permissionDenied;
 }
 
 class _AppLocalizationsDelegate

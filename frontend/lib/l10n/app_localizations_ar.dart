@@ -829,4 +829,14 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get retry => 'إعادة المحاولة';
+
+  @override
+  String get err_fileNotFound => 'الملف غير موجود.';
+
+  @override
+  String get err_invalidFileType =>
+      'نوع الملف غير مدعوم. يرجى استخدام PDF أو DOC أو DOCX.';
+
+  @override
+  String get err_permissionDenied => 'لا يوجد إذن للوصول إلى الملف.';
 }
