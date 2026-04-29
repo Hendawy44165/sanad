@@ -796,4 +796,37 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get signUp => 'تسجيل حساب';
+
+  @override
+  String get internship => 'تدريب';
+
+  @override
+  String get temporary => 'مؤقت';
+
+  @override
+  String get applicationLinkUnavailable => 'رابط التقديم غير متوفر';
+
+  @override
+  String get couldNotOpenLink => 'تعذر فتح رابط التقديم';
+
+  @override
+  String get noResultsFound => 'لم يتم العثور على نتائج';
+
+  @override
+  String get noJobsFoundMatchingCriteria =>
+      'لم يتم العثور على وظائف تطابق معاييرك.';
+
+  @override
+  String errorPickingFile(String error) {
+    return 'خطأ في اختيار الملف: $error';
+  }
+
+  @override
+  String get uploading => 'جاري الرفع...';
+
+  @override
+  String get updateCV => 'تحديث السيرة الذاتية';
+
+  @override
+  String get retry => 'إعادة المحاولة';
 }

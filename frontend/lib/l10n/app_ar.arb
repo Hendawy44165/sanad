@@ -242,5 +242,22 @@
   "chronicDesc": "ظروف صحية طويلة الأمد",
   "otherLabel": "آخر",
   "otherDesc": "نوع آخر من الإعاقة أو إعاقات متعددة",
-  "signUp": "تسجيل حساب"
+  "signUp": "تسجيل حساب",
+  "internship": "تدريب",
+  "temporary": "مؤقت",
+  "applicationLinkUnavailable": "رابط التقديم غير متوفر",
+  "couldNotOpenLink": "تعذر فتح رابط التقديم",
+  "noResultsFound": "لم يتم العثور على نتائج",
+  "noJobsFoundMatchingCriteria": "لم يتم العثور على وظائف تطابق معاييرك.",
+  "errorPickingFile": "خطأ في اختيار الملف: {error}",
+  "@errorPickingFile": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "uploading": "جاري الرفع...",
+  "updateCV": "تحديث السيرة الذاتية",
+  "retry": "إعادة المحاولة"
 }

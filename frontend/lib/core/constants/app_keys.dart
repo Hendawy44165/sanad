@@ -3,6 +3,7 @@ class AppKeys {
   static const String notificationsEnabled = 'notifications_enabled';
   static const String username = 'username';
   static const String profilePicturePath = 'profile_picture_path';
+  static const String cvPath = 'cv_path';
 
   AppKeys._();
 }

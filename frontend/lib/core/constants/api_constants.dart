@@ -4,10 +4,12 @@ class ApiConfig {
   final String baseUrl;
   final AuthEndpoints auth;
   final ProfileEndpoints profile;
+  final JobsEndpoints jobs;
 
   ApiConfig(this.baseUrl)
       : auth = AuthEndpoints(baseUrl),
-        profile = ProfileEndpoints(baseUrl);
+        profile = ProfileEndpoints(baseUrl),
+        jobs = JobsEndpoints(baseUrl);
 
   factory ApiConfig.fromDotEnv() {
     return ApiConfig(dotenv.env['API_BASE_URL']!);
@@ -24,4 +26,13 @@ class ProfileEndpoints {
   final String me;
 
   ProfileEndpoints(String baseUrl) : me = '$baseUrl/profile/me';
+}
+
+class JobsEndpoints {
+  final String list;
+  final String uploadCv;
+
+  JobsEndpoints(String baseUrl)
+      : list = '$baseUrl/jobs',
+        uploadCv = '$baseUrl/uploads/cv';
 }

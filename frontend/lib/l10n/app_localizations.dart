@@ -1555,6 +1555,66 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Sign Up'**
   String get signUp;
+
+  /// No description provided for @internship.
+  ///
+  /// In en, this message translates to:
+  /// **'Internship'**
+  String get internship;
+
+  /// No description provided for @temporary.
+  ///
+  /// In en, this message translates to:
+  /// **'Temporary'**
+  String get temporary;
+
+  /// No description provided for @applicationLinkUnavailable.
+  ///
+  /// In en, this message translates to:
+  /// **'Application link not available'**
+  String get applicationLinkUnavailable;
+
+  /// No description provided for @couldNotOpenLink.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not open application link'**
+  String get couldNotOpenLink;
+
+  /// No description provided for @noResultsFound.
+  ///
+  /// In en, this message translates to:
+  /// **'No results found'**
+  String get noResultsFound;
+
+  /// No description provided for @noJobsFoundMatchingCriteria.
+  ///
+  /// In en, this message translates to:
+  /// **'No jobs found matching your criteria.'**
+  String get noJobsFoundMatchingCriteria;
+
+  /// No description provided for @errorPickingFile.
+  ///
+  /// In en, this message translates to:
+  /// **'Error picking file: {error}'**
+  String errorPickingFile(String error);
+
+  /// No description provided for @uploading.
+  ///
+  /// In en, this message translates to:
+  /// **'Uploading...'**
+  String get uploading;
+
+  /// No description provided for @updateCV.
+  ///
+  /// In en, this message translates to:
+  /// **'Update CV'**
+  String get updateCV;
+
+  /// No description provided for @retry.
+  ///
+  /// In en, this message translates to:
+  /// **'Retry'**
+  String get retry;
 }
 
 class _AppLocalizationsDelegate

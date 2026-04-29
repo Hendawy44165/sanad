@@ -263,5 +263,22 @@
   "chronicDesc": "Long-term health conditions",
   "otherLabel": "Other",
   "otherDesc": "Another type of disability or multiple",
-  "signUp": "Sign Up"
+  "signUp": "Sign Up",
+  "internship": "Internship",
+  "temporary": "Temporary",
+  "applicationLinkUnavailable": "Application link not available",
+  "couldNotOpenLink": "Could not open application link",
+  "noResultsFound": "No results found",
+  "noJobsFoundMatchingCriteria": "No jobs found matching your criteria.",
+  "errorPickingFile": "Error picking file: {error}",
+  "@errorPickingFile": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "uploading": "Uploading...",
+  "updateCV": "Update CV",
+  "retry": "Retry"
 }

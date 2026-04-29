@@ -795,4 +795,37 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get signUp => 'Sign Up';
+
+  @override
+  String get internship => 'Internship';
+
+  @override
+  String get temporary => 'Temporary';
+
+  @override
+  String get applicationLinkUnavailable => 'Application link not available';
+
+  @override
+  String get couldNotOpenLink => 'Could not open application link';
+
+  @override
+  String get noResultsFound => 'No results found';
+
+  @override
+  String get noJobsFoundMatchingCriteria =>
+      'No jobs found matching your criteria.';
+
+  @override
+  String errorPickingFile(String error) {
+    return 'Error picking file: $error';
+  }
+
+  @override
+  String get uploading => 'Uploading...';
+
+  @override
+  String get updateCV => 'Update CV';
+
+  @override
+  String get retry => 'Retry';
 }

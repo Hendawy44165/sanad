@@ -1,10 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:lucide_icons/lucide_icons.dart';
+import 'package:sanad/core/theme/app_colors.dart';
 import '../../../../l10n/app_localizations.dart';
 
+/// A search input field section for the Jobs feature.
+/// 
+/// This widget provides a stylized text field that triggers the [onChanged]
+/// callback. It uses the app's standard shadow and border styles.
 class JobsSearchSection extends StatelessWidget {
+  /// Callback triggered whenever the search text changes.
   final Function(String)? onChanged;
 
+  /// Creates a [JobsSearchSection] instance.
+  /// 
+  /// Variables: [onChanged] The handler for query updates.
   const JobsSearchSection({super.key, this.onChanged});
 
   @override
@@ -15,7 +24,7 @@ class JobsSearchSection extends StatelessWidget {
         child: Container(
           padding: const EdgeInsets.symmetric(horizontal: 16),
           decoration: BoxDecoration(
-            color: Colors.white,
+            color: AppColors.surface,
             borderRadius: BorderRadius.circular(16),
             boxShadow: [
               BoxShadow(
@@ -27,11 +36,12 @@ class JobsSearchSection extends StatelessWidget {
           ),
           child: TextField(
             onChanged: onChanged,
+            style: const TextStyle(color: AppColors.text),
             decoration: InputDecoration(
               hintText: AppLocalizations.of(context)!.searchJobs,
               border: InputBorder.none,
-              icon: const Icon(LucideIcons.search, color: Color(0xFF64748B)),
-              hintStyle: const TextStyle(color: Color(0xFF64748B)),
+              icon: const Icon(LucideIcons.search, color: AppColors.textLight),
+              hintStyle: const TextStyle(color: AppColors.textLight),
             ),
           ),
         ),

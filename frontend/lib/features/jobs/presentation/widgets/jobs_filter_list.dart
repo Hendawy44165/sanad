@@ -1,69 +1,85 @@
 import 'package:flutter/material.dart';
+import 'package:sanad/core/theme/app_colors.dart';
 import '../../../../l10n/app_localizations.dart';
+import '../../logic/entities/job_entity.dart';
 
+/// A horizontal scrollable list of filter chips for job types.
+/// 
+/// This widget allows users to quickly toggle between different employment
+/// types (Full-Time, Contract, etc.). It updates the UI instantly via
+/// client-side filtering.
 class JobsFilterList extends StatelessWidget {
-  final String selectedFilter;
-  final Function(String) onFilterSelected;
+  /// The currently active filter type.
+  final JobType? selectedType;
+  
+  /// Callback triggered when a new filter is selected.
+  final Function(JobType?) onTypeSelected;
 
+  /// Creates a [JobsFilterList] instance.
+  /// 
+  /// Side Effects: None.
+  /// Variables: [selectedType] Current active state. [onTypeSelected] Change handler.
   const JobsFilterList({
     super.key,
-    required this.selectedFilter,
-    required this.onFilterSelected,
+    required this.selectedType,
+    required this.onTypeSelected,
   });
 
   @override
   Widget build(BuildContext context) {
-    final filters = [
-      AppLocalizations.of(context)!.allJobs,
-      AppLocalizations.of(context)!.remote,
-      AppLocalizations.of(context)!.fullTime,
-      AppLocalizations.of(context)!.hybrid,
-      AppLocalizations.of(context)!.contract,
+    final l10n = AppLocalizations.of(context)!;
+    
+    // Define the available filter options
+    final filterItems = [
+      _FilterItem(label: l10n.allJobs, type: null),
+      _FilterItem(label: l10n.fullTime, type: JobType.fullTime),
+      _FilterItem(label: l10n.contract, type: JobType.contract),
+      _FilterItem(label: l10n.partTime, type: JobType.partTime),
     ];
 
-    return SliverPadding(
-      padding: const EdgeInsets.symmetric(vertical: 24),
-      sliver: SliverToBoxAdapter(
-        child: SizedBox(
-          height: 40,
-          child: ListView.builder(
-            scrollDirection: Axis.horizontal,
-            padding: const EdgeInsets.symmetric(horizontal: 24),
-            itemCount: filters.length,
-            itemBuilder: (context, index) {
-              final filter = filters[index];
-              final isSelected = filter == selectedFilter || (index == 0 && selectedFilter == 'All Jobs');
-              
-              return Container(
-                margin: const EdgeInsetsDirectional.only(end: 8),
-                child: GestureDetector(
-                  onTap: () => onFilterSelected(filter),
-                  child: Chip(
-                    label: Text(
-                      filter,
-                      style: TextStyle(
-                        color: isSelected ? Colors.white : const Color(0xFF1E293B),
-                        fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
-                      ),
-                    ),
-                    backgroundColor: isSelected
-                        ? const Color(0xFF004D40)
-                        : Colors.white,
-                    side: BorderSide(
-                      color: isSelected
-                          ? const Color(0xFF004D40)
-                          : const Color(0xFFE2E8F0),
-                    ),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(20),
-                    ),
+    return SliverToBoxAdapter(
+      child: Container(
+        height: 40,
+        margin: const EdgeInsets.symmetric(vertical: 24),
+        child: ListView.builder(
+          scrollDirection: Axis.horizontal,
+          padding: const EdgeInsets.symmetric(horizontal: 24),
+          itemCount: filterItems.length,
+          itemBuilder: (context, index) {
+            final item = filterItems[index];
+            final isSelected = item.type == selectedType;
+            
+            return Padding(
+              padding: const EdgeInsetsDirectional.only(end: 8),
+              child: ChoiceChip(
+                label: Text(item.label),
+                selected: isSelected,
+                onSelected: (_) => onTypeSelected(item.type),
+                selectedColor: AppColors.primary,
+                backgroundColor: AppColors.surface,
+                labelStyle: TextStyle(
+                  color: isSelected ? AppColors.onPrimary : AppColors.text,
+                  fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+                ),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(20),
+                  side: BorderSide(
+                    color: isSelected ? AppColors.primary : AppColors.border,
                   ),
                 ),
-              );
-            },
-          ),
+              ),
+            );
+          },
         ),
       ),
     );
   }
+}
+
+/// Private helper class to represent a filter option.
+class _FilterItem {
+  final String label;
+  final JobType? type;
+
+  _FilterItem({required this.label, this.type});
 }

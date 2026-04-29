@@ -15,6 +15,8 @@ import 'package:sanad/features/profile/logic/repositories/profile_repository.dar
 import 'package:sanad/features/translator/presentation/providers/translator_provider.dart';
 import 'package:sanad/features/onboarding/data/datasources/onboarding_datasource.dart';
 import 'package:sanad/features/onboarding/logic/repositories/onboarding_repository.dart';
+import 'package:sanad/features/jobs/data/datasources/jobs_remote_data_source.dart';
+import 'package:sanad/features/jobs/logic/repositories/jobs_repository.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:dio/dio.dart';
 
@@ -41,16 +43,25 @@ Future<void> configureDependencies() async {
     () => OnboardingRemoteDataSource(Supabase.instance.client, getIt<Dio>(), getIt<ApiConfig>()),
   );
 
+  //? Jobs
+  getIt.registerLazySingleton<JobsRemoteDataSource>(
+    () => JobsRemoteDataSource(Supabase.instance.client, getIt<Dio>(), getIt<ApiConfig>()),
+  );
+
   //! Repositories
   getIt.registerLazySingleton<AuthRepository>(
     () => AuthRepository(getIt<AuthRemoteDataSource>()),
   );
   getIt.registerLazySingleton<ProfileRepository>(
-    () => ProfileRepository(getIt<AuthRemoteDataSource>()),
+    () => ProfileRepository(getIt<AuthRemoteDataSource>(), getIt<JobsRemoteDataSource>()),
   );
 
   getIt.registerLazySingleton<OnboardingRepository>(
     () => OnboardingRepository(getIt<OnboardingRemoteDataSource>()),
+  );
+
+  getIt.registerLazySingleton<JobsRepository>(
+    () => JobsRepository(getIt<JobsRemoteDataSource>()),
   );
 
   //! Providers
@@ -86,7 +97,7 @@ Future<void> configureDependencies() async {
   );
   //? Jobs
   getIt.registerLazySingleton<JobsProvider>(
-    () => JobsProvider(JobsNotifier.new),
+    () => JobsProvider(() => JobsNotifier(getIt<JobsRepository>())),
   );
   //? Translator
   getIt.registerLazySingleton<TranslatorProvider>(
