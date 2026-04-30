@@ -828,4 +828,14 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get retry => 'Retry';
+
+  @override
+  String get err_fileNotFound => 'File not found.';
+
+  @override
+  String get err_invalidFileType =>
+      'Invalid file type. Please use PDF, DOC, or DOCX.';
+
+  @override
+  String get err_permissionDenied => 'Permission denied to access the file.';
 }

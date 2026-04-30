@@ -8,7 +8,7 @@ import 'package:sanad/core/models/app_exception.dart';
 import '../models/job_model.dart';
 
 /// Low-level data source for Jobs API interactions.
-/// 
+///
 /// This class handles direct HTTP communication with the dedicated Sanad backend.
 /// It uses [Dio] for networking and [SupabaseClient] for authentication session management.
 class JobsRemoteDataSource {
@@ -17,34 +17,21 @@ class JobsRemoteDataSource {
   final ApiConfig _apiConfig;
 
   /// Creates a [JobsRemoteDataSource] with necessary dependencies.
-  /// 
+  ///
   /// Variables: [_supabaseClient] for sessions. [_dio] for HTTP. [_apiConfig] for endpoints.
   JobsRemoteDataSource(this._supabaseClient, this._dio, this._apiConfig);
 
   /// Fetches a paginated list of jobs from the server.
-  /// 
+  ///
   /// Description: Executes a GET request to the jobs list endpoint with optional filters.
   /// Side Effects: Network I/O.
   /// Variables: [query] search text. [isRemote] filter. [page] pagination. [limit] results per page.
   /// Assumptions: [url] is properly formatted in [ApiConfig].
-  Future<JobsResponse> getJobs({
-    String? query, 
-    bool? isRemote, 
-    int page = 1, 
-    int limit = 20,
-  }) async {
+  Future<JobsResponse> getJobs({String? query, bool? isRemote, int page = 1, int limit = 20}) async {
     final url = _apiConfig.jobs.list;
 
     try {
-      final response = await _dio.get(
-        url, 
-        queryParameters: {
-          if (query != null && query.isNotEmpty) 'q': query, 
-          if (isRemote != null) 'is_remote': isRemote, 
-          'page': page, 
-          'limit': limit,
-        },
-      );
+      final response = await _dio.get(url, queryParameters: {if (query != null && query.isNotEmpty) 'q': query, if (isRemote != null) 'is_remote': isRemote, 'page': page, 'limit': limit});
 
       final decoded = response.data;
 
@@ -73,9 +60,9 @@ class JobsRemoteDataSource {
   }
 
   /// Uploads a file as a CV to the backend.
-  /// 
+  ///
   /// Description: Performs a multipart POST request with the user's Bearer token.
-  /// Side Effects: Uploads file to server, updates user profile metadata on backend.
+  /// Side Effects: Uploads file to server; the backend automatically updates the user's CV record.
   /// Variables: [filePath] path to the file.
   /// Assumptions: User is logged in to Supabase. Backend accepts multipart/form-data.
   Future<String> uploadCv(String filePath) async {
@@ -88,9 +75,7 @@ class JobsRemoteDataSource {
     }
 
     try {
-      final formData = FormData.fromMap({
-        'cv': await MultipartFile.fromFile(filePath),
-      });
+      final formData = FormData.fromMap({'cv': await MultipartFile.fromFile(filePath)});
 
       final response = await _dio.post(
         url,

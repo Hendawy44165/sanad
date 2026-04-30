@@ -22,6 +22,7 @@
         "image_picker",
         "intl",
         "lucide_icons",
+        "path",
         "shared_preferences",
         "supabase_flutter",
         "timezone",
@@ -110,6 +111,11 @@
         "test_api",
         "vector_math"
       ]
+    },
+    {
+      "name": "path",
+      "version": "1.9.1",
+      "dependencies": []
     },
     {
       "name": "url_launcher",
@@ -327,11 +333,6 @@
         "source_span",
         "string_scanner"
       ]
-    },
-    {
-      "name": "path",
-      "version": "1.9.1",
-      "dependencies": []
     },
     {
       "name": "json_annotation",

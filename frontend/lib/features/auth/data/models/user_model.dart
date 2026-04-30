@@ -1,24 +1,35 @@
-import 'package:sanad/core/constants/disabilities.dart';
-import 'package:sanad/features/auth/logic/entities/user_entity.dart';
+/// Data model representing the user in the data layer.
+/// This class is strictly decoupled from the logic layer and mirrors the backend schema.
+class UserModel {
+  final String id;
+  final String supabaseUserId;
+  final String email;
+  final String? fullName;
+  final String? phone;
+  final String? avatarUrl;
+  final String? disabilityType;
+  final String language;
+  final bool notificationsEnabled;
+  final String role;
+  final int profileCompletion;
+  final bool isActive;
 
-// TODO: this needs fixing to align with the database
-
-class UserModel extends UserEntity {
   const UserModel({
-    required super.id,
-    required super.supabaseUserId,
-    required super.email,
-    super.fullName,
-    super.phone,
-    super.avatarUrl,
-    super.disabilityType,
-    required super.language,
-    required super.notificationsEnabled,
-    required super.role,
-    required super.profileCompletion,
-    required super.isActive,
+    required this.id,
+    required this.supabaseUserId,
+    required this.email,
+    this.fullName,
+    this.phone,
+    this.avatarUrl,
+    this.disabilityType,
+    required this.language,
+    required this.notificationsEnabled,
+    required this.role,
+    required this.profileCompletion,
+    required this.isActive,
   });
 
+  /// Factory to create a [UserModel] from backend JSON.
   factory UserModel.fromJson(Map<String, dynamic> json) {
     return UserModel(
       id: json['_id'] as String? ?? '',
@@ -27,7 +38,7 @@ class UserModel extends UserEntity {
       fullName: json['full_name'] as String?,
       phone: json['phone'] as String?,
       avatarUrl: json['avatar_url'] as String?,
-      disabilityType: json['disability_type'] as DisabilityType?,
+      disabilityType: json['disability_type'] as String?,
       language: json['language'] as String? ?? 'ar',
       notificationsEnabled: json['notifications_enabled'] as bool? ?? true,
       role: json['role'] as String? ?? 'user',
@@ -36,6 +47,7 @@ class UserModel extends UserEntity {
     );
   }
 
+  /// Converts the model back to JSON for API requests.
   Map<String, dynamic> toJson() {
     return {
       '_id': id,
@@ -53,6 +65,7 @@ class UserModel extends UserEntity {
     };
   }
 
+  /// Returns a copy of the model with updated fields.
   UserModel copyWith({
     String? id,
     String? supabaseUserId,
@@ -60,7 +73,7 @@ class UserModel extends UserEntity {
     String? fullName,
     String? phone,
     String? avatarUrl,
-    DisabilityType? disabilityType,
+    String? disabilityType,
     String? language,
     bool? notificationsEnabled,
     String? role,

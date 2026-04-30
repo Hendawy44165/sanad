@@ -1,5 +1,3 @@
-import 'package:sanad/features/jobs/logic/entities/job_entity.dart';
-
 /// Data model for Jobs as received from the API.
 class JobModel {
   final String id;
@@ -46,39 +44,6 @@ class JobModel {
       createdAt: DateTime.parse(json['created_at'] as String),
       accessibilityMatch: json['accessibility_match'] as String? ?? 'unknown',
     );
-  }
-
-  /// Converts this data model into a clean logic [JobEntity].
-  JobEntity toEntity() {
-    return JobEntity(
-      id: id,
-      title: title,
-      company: company,
-      location: location,
-      description: description,
-      type: _mapEmploymentType(employmentType),
-      isRemote: isRemote,
-      applyUrl: sourceUrl,
-      postedAt: publishedAt ?? createdAt,
-    );
-  }
-
-  /// Maps backend string enums to logic layer JobType enums.
-  JobType _mapEmploymentType(String? type) {
-    switch (type) {
-      case 'full_time':
-        return JobType.fullTime;
-      case 'part_time':
-        return JobType.partTime;
-      case 'contract':
-        return JobType.contract;
-      case 'internship':
-        return JobType.internship;
-      case 'temporary':
-        return JobType.temporary;
-      default:
-        return JobType.fullTime;
-    }
   }
 }
 

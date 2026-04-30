@@ -280,5 +280,8 @@
   },
   "uploading": "Uploading...",
   "updateCV": "Update CV",
-  "retry": "Retry"
+  "retry": "Retry",
+  "err_fileNotFound": "File not found.",
+  "err_invalidFileType": "Invalid file type. Please use PDF, DOC, or DOCX.",
+  "err_permissionDenied": "Permission denied to access the file."
 }

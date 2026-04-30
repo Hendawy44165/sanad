@@ -45,7 +45,7 @@ class JobsUploadCvBanner extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final jobsState = ref.watch(getIt<JobsProvider>());
     final l10n = AppLocalizations.of(context)!;
-    final isUploaded = jobsState.value?.cvPath != null;
+    final isUploaded = jobsState.value?.cvUrl != null;
     final isLoading = jobsState.value?.isActionLoading == true;
 
     return SliverPadding(

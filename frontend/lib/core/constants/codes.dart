@@ -89,5 +89,8 @@ enum Codes {
   userSsoManaged,
   validationFailed,
   weakPassword,
+  fileNotFound,
+  invalidFileType,
+  permissionDenied,
   unknown,
 }
