@@ -60,6 +60,29 @@
   "contract": "عقد",
   "partTime": "دوام جزئي",
   "availableJobsCount": "{count} وظائف متاحة",
+  "@availableJobsCount": {
+    "placeholders": {
+      "count": {
+        "type": "num"
+      }
+    }
+  },
+  "availableDoctorsCount": "{count} أطباء متاحين",
+  "@availableDoctorsCount": {
+    "placeholders": {
+      "count": {
+        "type": "num"
+      }
+    }
+  },
+  "availableBooksCount": "{count} كتب متاحة",
+  "@availableBooksCount": {
+    "placeholders": {
+      "count": {
+        "type": "num"
+      }
+    }
+  },
   "verified": "موثق",
   "applyNow": "قدم الآن",
   "searchSpecialists": "البحث عن متخصصين...",
@@ -249,6 +272,9 @@
   "couldNotOpenLink": "تعذر فتح رابط التقديم",
   "noResultsFound": "لم يتم العثور على نتائج",
   "noJobsFoundMatchingCriteria": "لم يتم العثور على وظائف تطابق معاييرك.",
+  "noDoctorsFoundMatchingCriteria": "لم يتم العثور على أطباء يطابقون بحثك.",
+  "noBooksFoundMatchingCriteria": "لم يتم العثور على كتب تطابق بحثك.",
+  "bookRequestSuccess": "سنقوم بتجهيز طلبك ومراسلتك عبر البريد الإلكتروني بتفاصيل الشحن.",
   "errorPickingFile": "خطأ في اختيار الملف: {error}",
   "@errorPickingFile": {
     "placeholders": {

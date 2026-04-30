@@ -92,7 +92,7 @@ class JobsNotifier extends AsyncNotifier<JobsState> {
 
     final filteredJobs = _applyLocalFilters(oldState.allJobs, type);
 
-    state = AsyncValue.data(oldState.copyWith(jobs: filteredJobs, selectedType: type));
+    state = AsyncValue.data(oldState.copyWith(jobs: filteredJobs, selectedType: type, clearType: type == null));
   }
 
   /// Helper to filter a list of jobs based on type.

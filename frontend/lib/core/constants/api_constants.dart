@@ -5,11 +5,15 @@ class ApiConfig {
   final AuthEndpoints auth;
   final ProfileEndpoints profile;
   final JobsEndpoints jobs;
+  final DoctorsEndpoints doctors;
+  final StoreEndpoints store;
 
   ApiConfig(this.baseUrl)
       : auth = AuthEndpoints(baseUrl),
         profile = ProfileEndpoints(baseUrl),
-        jobs = JobsEndpoints(baseUrl);
+        jobs = JobsEndpoints(baseUrl),
+        doctors = DoctorsEndpoints(baseUrl),
+        store = StoreEndpoints(baseUrl);
 
   factory ApiConfig.fromDotEnv() {
     return ApiConfig(dotenv.env['API_BASE_URL']!);
@@ -35,4 +39,16 @@ class JobsEndpoints {
   JobsEndpoints(String baseUrl)
       : list = '$baseUrl/jobs',
         uploadCv = '$baseUrl/uploads/cv';
+}
+
+class DoctorsEndpoints {
+  final String list;
+
+  DoctorsEndpoints(String baseUrl) : list = '$baseUrl/doctors';
+}
+
+class StoreEndpoints {
+  final String products;
+
+  StoreEndpoints(String baseUrl) : products = '$baseUrl/store/products';
 }

@@ -41,7 +41,32 @@ class JobsState {
   JobsState({this.allJobs = const [], this.jobs = const [], this.searchQuery = '', this.selectedType, this.cvUrl, this.error, this.currentPage = 1, this.hasNextPage = true, this.isActionLoading = false, this.isSearching = false, this.isFetchingMore = false});
 
   /// Returns a copy of the state with updated fields.
-  JobsState copyWith({List<JobEntity>? allJobs, List<JobEntity>? jobs, String? searchQuery, JobType? selectedType, String? cvUrl, Codes? error, int? currentPage, bool? hasNextPage, bool? isActionLoading, bool? isSearching, bool? isFetchingMore}) {
-    return JobsState(allJobs: allJobs ?? this.allJobs, jobs: jobs ?? this.jobs, searchQuery: searchQuery ?? this.searchQuery, selectedType: selectedType == null && this.selectedType != null ? null : (selectedType ?? this.selectedType), cvUrl: cvUrl ?? this.cvUrl, error: error, currentPage: currentPage ?? this.currentPage, hasNextPage: hasNextPage ?? this.hasNextPage, isActionLoading: isActionLoading ?? this.isActionLoading, isSearching: isSearching ?? this.isSearching, isFetchingMore: isFetchingMore ?? this.isFetchingMore);
+  JobsState copyWith({
+    List<JobEntity>? allJobs,
+    List<JobEntity>? jobs,
+    String? searchQuery,
+    JobType? selectedType,
+    bool clearType = false,
+    String? cvUrl,
+    Codes? error,
+    int? currentPage,
+    bool? hasNextPage,
+    bool? isActionLoading,
+    bool? isSearching,
+    bool? isFetchingMore,
+  }) {
+    return JobsState(
+      allJobs: allJobs ?? this.allJobs,
+      jobs: jobs ?? this.jobs,
+      searchQuery: searchQuery ?? this.searchQuery,
+      selectedType: clearType ? null : (selectedType ?? this.selectedType),
+      cvUrl: cvUrl ?? this.cvUrl,
+      error: error,
+      currentPage: currentPage ?? this.currentPage,
+      hasNextPage: hasNextPage ?? this.hasNextPage,
+      isActionLoading: isActionLoading ?? this.isActionLoading,
+      isSearching: isSearching ?? this.isSearching,
+      isFetchingMore: isFetchingMore ?? this.isFetchingMore,
+    );
   }
 }

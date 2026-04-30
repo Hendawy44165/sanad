@@ -74,6 +74,22 @@
       }
     }
   },
+  "availableDoctorsCount": "{count} Available Doctors",
+  "@availableDoctorsCount": {
+    "placeholders": {
+      "count": {
+        "type": "num"
+      }
+    }
+  },
+  "availableBooksCount": "{count} Available Books",
+  "@availableBooksCount": {
+    "placeholders": {
+      "count": {
+        "type": "num"
+      }
+    }
+  },
   "verified": "Verified",
   "applyNow": "Apply Now",
   "searchSpecialists": "Search specialists...",
@@ -270,6 +286,9 @@
   "couldNotOpenLink": "Could not open application link",
   "noResultsFound": "No results found",
   "noJobsFoundMatchingCriteria": "No jobs found matching your criteria.",
+  "noDoctorsFoundMatchingCriteria": "No doctors found matching your criteria.",
+  "noBooksFoundMatchingCriteria": "No books found matching your criteria.",
+  "bookRequestSuccess": "We will prepare your order and email you with the shipping details.",
   "errorPickingFile": "Error picking file: {error}",
   "@errorPickingFile": {
     "placeholders": {

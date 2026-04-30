@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:lucide_icons/lucide_icons.dart';
+import 'package:sanad/core/theme/app_colors.dart';
 import '../../../../l10n/app_localizations.dart';
 
 class BooksSearchSection extends StatelessWidget {
@@ -15,7 +16,7 @@ class BooksSearchSection extends StatelessWidget {
         child: Container(
           padding: const EdgeInsets.symmetric(horizontal: 16),
           decoration: BoxDecoration(
-            color: Colors.white,
+            color: AppColors.surface,
             borderRadius: BorderRadius.circular(16),
             boxShadow: [
               BoxShadow(
@@ -27,11 +28,12 @@ class BooksSearchSection extends StatelessWidget {
           ),
           child: TextField(
             onChanged: onChanged,
+            style: const TextStyle(color: AppColors.text),
             decoration: InputDecoration(
               hintText: AppLocalizations.of(context)!.searchBooks,
               border: InputBorder.none,
-              icon: const Icon(LucideIcons.search, color: Color(0xFF64748B)),
-              hintStyle: const TextStyle(color: Color(0xFF64748B)),
+              icon: const Icon(LucideIcons.search, color: AppColors.textLight),
+              hintStyle: const TextStyle(color: AppColors.textLight),
             ),
           ),
         ),

@@ -458,6 +458,18 @@ abstract class AppLocalizations {
   /// **'{count} Available Jobs'**
   String availableJobsCount(num count);
 
+  /// No description provided for @availableDoctorsCount.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} Available Doctors'**
+  String availableDoctorsCount(num count);
+
+  /// No description provided for @availableBooksCount.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} Available Books'**
+  String availableBooksCount(num count);
+
   /// No description provided for @verified.
   ///
   /// In en, this message translates to:
@@ -1591,6 +1603,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'No jobs found matching your criteria.'**
   String get noJobsFoundMatchingCriteria;
+
+  /// No description provided for @noDoctorsFoundMatchingCriteria.
+  ///
+  /// In en, this message translates to:
+  /// **'No doctors found matching your criteria.'**
+  String get noDoctorsFoundMatchingCriteria;
+
+  /// No description provided for @noBooksFoundMatchingCriteria.
+  ///
+  /// In en, this message translates to:
+  /// **'No books found matching your criteria.'**
+  String get noBooksFoundMatchingCriteria;
+
+  /// No description provided for @bookRequestSuccess.
+  ///
+  /// In en, this message translates to:
+  /// **'We will prepare your order and email you with the shipping details.'**
+  String get bookRequestSuccess;
 
   /// No description provided for @errorPickingFile.
   ///

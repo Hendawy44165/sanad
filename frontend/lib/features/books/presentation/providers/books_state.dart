@@ -1,37 +1,52 @@
-class Book {
-  final String title;
-  final String author;
-  final String category;
-  final List<String> formats;
+import 'package:sanad/core/constants/codes.dart';
+import '../../logic/entities/book_entity.dart';
 
-  Book({
-    required this.title,
-    required this.author,
-    required this.category,
-    required this.formats,
-  });
-}
-
+/// Represents the UI state for the Books feature.
 class BooksState {
-  final List<Book> books;
+  final List<BookEntity> allBooks;
+  final List<BookEntity> books;
   final String searchQuery;
-  final String selectedFilter;
+  final String? selectedCategory;
+  final Codes? error;
+  final int currentPage;
+  final bool hasNextPage;
+  final bool isSearching;
+  final bool isFetchingMore;
 
   BooksState({
-    required this.books,
+    this.allBooks = const [],
+    this.books = const [],
     this.searchQuery = '',
-    this.selectedFilter = 'All Formats',
+    this.selectedCategory,
+    this.error,
+    this.currentPage = 1,
+    this.hasNextPage = true,
+    this.isSearching = false,
+    this.isFetchingMore = false,
   });
 
   BooksState copyWith({
-    List<Book>? books,
+    List<BookEntity>? allBooks,
+    List<BookEntity>? books,
     String? searchQuery,
-    String? selectedFilter,
+    String? selectedCategory,
+    bool clearCategory = false,
+    Codes? error,
+    int? currentPage,
+    bool? hasNextPage,
+    bool? isSearching,
+    bool? isFetchingMore,
   }) {
     return BooksState(
+      allBooks: allBooks ?? this.allBooks,
       books: books ?? this.books,
       searchQuery: searchQuery ?? this.searchQuery,
-      selectedFilter: selectedFilter ?? this.selectedFilter,
+      selectedCategory: clearCategory ? null : (selectedCategory ?? this.selectedCategory),
+      error: error,
+      currentPage: currentPage ?? this.currentPage,
+      hasNextPage: hasNextPage ?? this.hasNextPage,
+      isSearching: isSearching ?? this.isSearching,
+      isFetchingMore: isFetchingMore ?? this.isFetchingMore,
     );
   }
 }

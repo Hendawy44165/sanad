@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 import 'package:go_router/go_router.dart';
+import 'package:sanad/core/theme/app_colors.dart';
 import '../../../../l10n/app_localizations.dart';
 
 class BooksAppBar extends StatelessWidget {
@@ -15,7 +16,7 @@ class BooksAppBar extends StatelessWidget {
           children: [
             Container(
               decoration: BoxDecoration(
-                color: Colors.white,
+                color: AppColors.surface,
                 shape: BoxShape.circle,
                 boxShadow: [
                   BoxShadow(
@@ -28,7 +29,7 @@ class BooksAppBar extends StatelessWidget {
               child: IconButton(
                 icon: const Icon(
                   LucideIcons.arrowLeft,
-                  color: Color(0xFF1E293B),
+                  color: AppColors.text,
                 ),
                 onPressed: () => context.pop(),
               ),
@@ -39,7 +40,7 @@ class BooksAppBar extends StatelessWidget {
               style: const TextStyle(
                 fontSize: 20,
                 fontWeight: FontWeight.bold,
-                color: Color(0xFF1E293B),
+                color: AppColors.text,
               ),
             ),
           ],

@@ -1,75 +1,71 @@
 import 'package:flutter/material.dart';
-import 'package:lucide_icons/lucide_icons.dart';
+import 'package:sanad/core/theme/app_colors.dart';
 import '../../../../l10n/app_localizations.dart';
 
 class BooksFilterList extends StatelessWidget {
-  final String selectedFilter;
-  final Function(String) onFilterSelected;
+  final String? selectedCategory;
+  final Function(String?) onCategorySelected;
 
   const BooksFilterList({
     super.key,
-    required this.selectedFilter,
-    required this.onFilterSelected,
+    required this.selectedCategory,
+    required this.onCategorySelected,
   });
 
   @override
   Widget build(BuildContext context) {
-    final filters = [
-      AppLocalizations.of(context)!.allFormats,
-      AppLocalizations.of(context)!.audioBook,
-      AppLocalizations.of(context)!.braille,
-      AppLocalizations.of(context)!.largePrint,
-      AppLocalizations.of(context)!.eBook,
+    final l10n = AppLocalizations.of(context)!;
+    
+    final filterItems = [
+      _FilterItem(label: l10n.allFormats, category: null),
+      _FilterItem(label: l10n.audioBook, category: 'Audio'),
+      _FilterItem(label: l10n.braille, category: 'Braille'),
+      _FilterItem(label: l10n.eBook, category: 'E-Book'),
+      _FilterItem(label: l10n.largePrint, category: 'Large Print'),
     ];
 
-    return SliverPadding(
-      padding: const EdgeInsets.symmetric(vertical: 24),
-      sliver: SliverToBoxAdapter(
-        child: SizedBox(
-          height: 40,
-          child: ListView.builder(
-            scrollDirection: Axis.horizontal,
-            padding: const EdgeInsets.symmetric(horizontal: 24),
-            itemCount: filters.length,
-            itemBuilder: (context, index) {
-              final filter = filters[index];
-              final isSelected = filter == selectedFilter || (index == 0 && selectedFilter == 'All Formats');
-              
-              return Container(
-                margin: const EdgeInsetsDirectional.only(end: 8),
-                child: GestureDetector(
-                  onTap: () => onFilterSelected(filter),
-                  child: Chip(
-                    avatar: index == 1
-                        ? Icon(LucideIcons.headphones, size: 14, color: isSelected ? Colors.white : const Color(0xFF64748B))
-                        : index == 2
-                        ? Icon(LucideIcons.type, size: 14, color: isSelected ? Colors.white : const Color(0xFF64748B))
-                        : null,
-                    label: Text(
-                      filter,
-                      style: TextStyle(
-                        color: isSelected ? Colors.white : const Color(0xFF1E293B),
-                        fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
-                      ),
-                    ),
-                    backgroundColor: isSelected
-                        ? const Color(0xFF004D40)
-                        : Colors.white,
-                    side: BorderSide(
-                      color: isSelected
-                          ? const Color(0xFF004D40)
-                          : const Color(0xFFE2E8F0),
-                    ),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(20),
-                    ),
+    return SliverToBoxAdapter(
+      child: Container(
+        height: 40,
+        margin: const EdgeInsets.symmetric(vertical: 24),
+        child: ListView.builder(
+          scrollDirection: Axis.horizontal,
+          padding: const EdgeInsets.symmetric(horizontal: 24),
+          itemCount: filterItems.length,
+          itemBuilder: (context, index) {
+            final item = filterItems[index];
+            final isSelected = item.category == selectedCategory;
+            
+            return Padding(
+              padding: const EdgeInsetsDirectional.only(end: 8),
+              child: ChoiceChip(
+                label: Text(item.label),
+                selected: isSelected,
+                onSelected: (_) => onCategorySelected(item.category),
+                selectedColor: AppColors.primary,
+                backgroundColor: AppColors.surface,
+                labelStyle: TextStyle(
+                  color: isSelected ? AppColors.onPrimary : AppColors.text,
+                  fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+                ),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(20),
+                  side: BorderSide(
+                    color: isSelected ? AppColors.primary : AppColors.border,
                   ),
                 ),
-              );
-            },
-          ),
+              ),
+            );
+          },
         ),
       ),
     );
   }
+}
+
+class _FilterItem {
+  final String label;
+  final String? category;
+
+  _FilterItem({required this.label, this.category});
 }

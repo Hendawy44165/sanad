@@ -1,0 +1,48 @@
+import 'dart:async';
+import 'dart:io';
+import 'package:dio/dio.dart';
+import 'package:sanad/core/constants/codes.dart';
+import 'package:sanad/core/constants/api_constants.dart';
+import 'package:sanad/core/models/app_exception.dart';
+import '../models/doctor_model.dart';
+
+/// Low-level data source for Doctors API interactions.
+class DoctorsRemoteDataSource {
+  final Dio _dio;
+  final ApiConfig _apiConfig;
+
+  DoctorsRemoteDataSource(this._dio, this._apiConfig);
+
+  /// Fetches a paginated list of doctors from the server.
+  Future<DoctorsResponse> getDoctors({String? query, String? specialty, int page = 1, int limit = 20}) async {
+    final url = _apiConfig.doctors.list;
+
+    try {
+      final response = await _dio.get(url, queryParameters: {if (query != null && query.isNotEmpty) 'q': query, if (specialty != null && specialty.isNotEmpty) 'specialty': specialty, 'page': page, 'limit': limit});
+
+      final decoded = response.data;
+
+      if (response.statusCode != null && response.statusCode! >= 200 && response.statusCode! < 300) {
+        if (decoded['success'] == true) {
+          return DoctorsResponse.fromJson(decoded);
+        } else {
+          throw const AppException(Codes.unexpectedFailure);
+        }
+      } else {
+        throw const AppException(Codes.unexpectedFailure);
+      }
+    } on DioException catch (e) {
+      if (e.type == DioExceptionType.connectionTimeout || e.type == DioExceptionType.receiveTimeout) {
+        throw const AppException(Codes.requestTimeout);
+      }
+      throw const AppException(Codes.unexpectedFailure);
+    } on SocketException {
+      throw const AppException(Codes.requestTimeout);
+    } on TimeoutException {
+      throw const AppException(Codes.requestTimeout);
+    } catch (e) {
+      if (e is AppException) rethrow;
+      throw const AppException(Codes.unexpectedFailure);
+    }
+  }
+}

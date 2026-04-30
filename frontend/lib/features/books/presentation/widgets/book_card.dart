@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:lucide_icons/lucide_icons.dart';
+import 'package:sanad/core/theme/app_colors.dart';
 import '../../../../l10n/app_localizations.dart';
-import '../providers/books_state.dart';
+import '../../logic/entities/book_entity.dart';
 
 class BookCard extends StatelessWidget {
-  final Book book;
+  final BookEntity book;
 
   const BookCard({super.key, required this.book});
 
@@ -13,15 +14,9 @@ class BookCard extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(24),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: AppColors.surface,
         borderRadius: BorderRadius.circular(24),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.03),
-            blurRadius: 10,
-            offset: const Offset(0, 4),
-          ),
-        ],
+        boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.03), blurRadius: 10, offset: const Offset(0, 4))],
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -30,15 +25,14 @@ class BookCard extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Container(
-                padding: const EdgeInsets.all(12),
+                width: 70,
+                height: 90,
                 decoration: BoxDecoration(
-                  color: const Color(0xFFD1FAE5),
-                  borderRadius: BorderRadius.circular(12),
+                  color: AppColors.secondary,
+                  borderRadius: BorderRadius.circular(8),
+                  image: book.thumbnailUrl != null ? DecorationImage(image: NetworkImage(book.thumbnailUrl!), fit: BoxFit.cover) : null,
                 ),
-                child: const Icon(
-                  LucideIcons.bookOpen,
-                  color: Color(0xFF065F46),
-                ),
+                child: book.thumbnailUrl == null ? const Icon(LucideIcons.book, color: AppColors.primary, size: 30) : null,
               ),
               const SizedBox(width: 16),
               Expanded(
@@ -46,107 +40,71 @@ class BookCard extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      book.title,
-                      style: const TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                        color: Color(0xFF1E293B),
-                      ),
+                      book.name,
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                      style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: AppColors.text),
                     ),
-                    Text(
-                      book.author,
-                      style: const TextStyle(
-                        fontSize: 14,
-                        color: Color(0xFF64748B),
-                      ),
-                    ),
+                    if (book.brand != null) Text(book.brand!, style: const TextStyle(fontSize: 14, color: AppColors.textLight)),
                     const SizedBox(height: 8),
-                    Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 8,
-                        vertical: 4,
-                      ),
-                      decoration: BoxDecoration(
-                        color: const Color(0xFFF1F5F9),
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                      child: Text(
-                        book.category,
-                        style: const TextStyle(
-                          fontSize: 10,
-                          fontWeight: FontWeight.w600,
-                          color: Color(0xFF64748B),
-                        ),
-                      ),
+                    Text(
+                      '${book.price} ${book.currency}',
+                      style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600, color: AppColors.primary),
                     ),
                   ],
                 ),
               ),
             ],
           ),
+          if (book.description != null && book.description!.isNotEmpty) ...[
+            const SizedBox(height: 16),
+            Text(
+              book.description!,
+              maxLines: 3,
+              overflow: TextOverflow.ellipsis,
+              style: const TextStyle(fontSize: 14, color: AppColors.textLight, height: 1.5),
+            ),
+          ],
           const SizedBox(height: 16),
-          Wrap(
-            spacing: 8,
-            runSpacing: 8,
-            children: book.formats
-                .map(
-                  (format) => Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 8,
-                      vertical: 4,
-                    ),
-                    decoration: BoxDecoration(
-                      color: const Color(0xFFD1FAE5),
-                      borderRadius: BorderRadius.circular(20),
-                    ),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Icon(
-                          format == 'Audio Book'
-                              ? LucideIcons.headphones
-                              : format == 'Braille'
-                              ? LucideIcons.type
-                              : LucideIcons.book,
-                          size: 12,
-                          color: const Color(0xFF065F46),
-                        ),
-                        const SizedBox(width: 4),
-                        Text(
-                          format,
-                          style: const TextStyle(
-                            fontSize: 10,
-                            fontWeight: FontWeight.bold,
-                            color: Color(0xFF065F46),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                )
-                .toList(),
-          ),
+          _buildTags(context),
           const SizedBox(height: 20),
           SizedBox(
             width: double.infinity,
             child: ElevatedButton(
-              onPressed: () {},
+              onPressed: () {
+                ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(AppLocalizations.of(context)!.bookRequestSuccess)));
+              },
               style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFF004D40),
-                foregroundColor: Colors.white,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
-                ),
+                backgroundColor: AppColors.primary,
+                foregroundColor: AppColors.onPrimary,
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                 padding: const EdgeInsets.symmetric(vertical: 16),
               ),
-              child: Text(
-                AppLocalizations.of(context)!.requestBook,
-                style: const TextStyle(fontWeight: FontWeight.bold),
-              ),
+              child: Text(AppLocalizations.of(context)!.requestBookShort, style: const TextStyle(fontWeight: FontWeight.bold)),
             ),
           ),
         ],
       ),
+    );
+  }
+
+  Widget _buildTags(BuildContext context) {
+    final tags = [book.category, if (!book.inStock) 'Out of Stock', ...book.accessibilityTags];
+
+    if (tags.isEmpty) return const SizedBox.shrink();
+
+    return Wrap(
+      spacing: 8,
+      runSpacing: 8,
+      children: tags
+          .map(
+            (tag) => Container(
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+              decoration: BoxDecoration(color: AppColors.inputFill, borderRadius: BorderRadius.circular(20)),
+              child: Text(tag, style: const TextStyle(fontSize: 12, color: AppColors.textLight)),
+            ),
+          )
+          .toList(),
     );
   }
 }

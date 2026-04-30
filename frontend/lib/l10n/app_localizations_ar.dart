@@ -196,6 +196,16 @@ class AppLocalizationsAr extends AppLocalizations {
   }
 
   @override
+  String availableDoctorsCount(num count) {
+    return '$count أطباء متاحين';
+  }
+
+  @override
+  String availableBooksCount(num count) {
+    return '$count كتب متاحة';
+  }
+
+  @override
   String get verified => 'موثق';
 
   @override
@@ -815,6 +825,18 @@ class AppLocalizationsAr extends AppLocalizations {
   @override
   String get noJobsFoundMatchingCriteria =>
       'لم يتم العثور على وظائف تطابق معاييرك.';
+
+  @override
+  String get noDoctorsFoundMatchingCriteria =>
+      'لم يتم العثور على أطباء يطابقون بحثك.';
+
+  @override
+  String get noBooksFoundMatchingCriteria =>
+      'لم يتم العثور على كتب تطابق بحثك.';
+
+  @override
+  String get bookRequestSuccess =>
+      'سنقوم بتجهيز طلبك ومراسلتك عبر البريد الإلكتروني بتفاصيل الشحن.';
 
   @override
   String errorPickingFile(String error) {
