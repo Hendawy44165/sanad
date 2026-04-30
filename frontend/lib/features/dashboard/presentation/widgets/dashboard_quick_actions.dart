@@ -3,7 +3,11 @@ import 'package:lucide_icons/lucide_icons.dart';
 import 'package:go_router/go_router.dart';
 import '../../../../l10n/app_localizations.dart';
 
+/// A grid of quick action cards on the dashboard for primary features.
+/// 
+/// Allows users to quickly navigate to Jobs, Doctors, Books, or the Translator.
 class DashboardQuickActions extends StatelessWidget {
+  /// Creates a [DashboardQuickActions] instance.
   const DashboardQuickActions({super.key});
 
   @override

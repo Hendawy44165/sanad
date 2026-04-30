@@ -8,7 +8,12 @@ import '../widgets/translator_status_card.dart';
 import '../widgets/translator_recording_button.dart';
 import '../widgets/translator_tips_section.dart';
 
+/// Screen for the Sign Language Translation feature.
+/// 
+/// Allows users to record video or capture signs and see real-time 
+/// translations (future implementation).
 class TranslatorScreen extends ConsumerWidget {
+  /// Creates a [TranslatorScreen] instance.
   const TranslatorScreen({super.key});
 
   @override

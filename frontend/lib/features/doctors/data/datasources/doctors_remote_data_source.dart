@@ -7,10 +7,17 @@ import 'package:sanad/core/models/app_exception.dart';
 import '../models/doctor_model.dart';
 
 /// Low-level data source for Doctors API interactions.
+/// 
+/// This class handles the direct HTTP communication with the backend
+/// endpoints defined in [ApiConfig]. It maps raw JSON responses to
+/// [DoctorModel] instances and handles network-level exceptions.
 class DoctorsRemoteDataSource {
   final Dio _dio;
   final ApiConfig _apiConfig;
 
+  /// Creates a [DoctorsRemoteDataSource] instance.
+  /// 
+  /// Variables: [_dio] Client for HTTP requests. [_apiConfig] configuration for endpoints.
   DoctorsRemoteDataSource(this._dio, this._apiConfig);
 
   /// Fetches a paginated list of doctors from the server.

@@ -1,162 +1,62 @@
 import 'package:flutter/material.dart';
-import 'package:lucide_icons/lucide_icons.dart';
 import 'package:go_router/go_router.dart';
+import 'package:sanad/core/theme/app_colors.dart';
+import 'package:sanad/features/doctors/logic/entities/doctor_entity.dart';
+import 'package:sanad/features/doctors/presentation/widgets/doctor_card.dart';
 import '../../../../l10n/app_localizations.dart';
 
+/// A section on the dashboard displaying featured doctors.
+///
+/// It accepts a list of [DoctorEntity] and displays them using [DoctorCard].
 class DashboardMedicalNetwork extends StatelessWidget {
-  const DashboardMedicalNetwork({super.key});
+  /// The list of featured doctors to display.
+  final List<DoctorEntity> doctors;
+
+  /// Creates a [DashboardMedicalNetwork] instance.
+  const DashboardMedicalNetwork({super.key, required this.doctors});
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+
+    if (doctors.isEmpty) return const SliverToBoxAdapter(child: SizedBox.shrink());
+
     return SliverPadding(
-      padding: const EdgeInsets.symmetric(horizontal: 24),
+      padding: const EdgeInsets.all(24),
       sliver: SliverToBoxAdapter(
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  AppLocalizations.of(context)!.medicalNetwork,
-                  style: const TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                    color: Color(0xFF1E293B),
-                  ),
+                  l10n.medicalNetwork,
+                  style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: AppColors.text),
                 ),
                 TextButton(
                   onPressed: () => context.go('/doctors'),
                   child: Row(
                     children: [
                       Text(
-                        AppLocalizations.of(context)!.findCare,
-                        style: const TextStyle(
-                          fontSize: 14,
-                          fontWeight: FontWeight.bold,
-                          color: Color(0xFF004D40),
-                        ),
+                        l10n.findCare,
+                        style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: AppColors.primary),
                       ),
-                      const Icon(
-                        Icons.chevron_right,
-                        size: 20,
-                        color: Color(0xFF004D40),
-                      ),
+                      const Icon(Icons.chevron_right, size: 20, color: AppColors.primary),
                     ],
                   ),
                 ),
               ],
             ),
             const SizedBox(height: 16),
-            _buildDoctorCard(
-              context,
-              'Dr. Layla Khaled',
-              'Neurology Specialist',
-              4.9,
-              120,
+            ...doctors.map(
+              (doctor) => Padding(
+                padding: const EdgeInsets.only(bottom: 16),
+                child: DoctorCard(doctor: doctor),
+              ),
             ),
-            const SizedBox(height: 16),
-            _buildDoctorCard(context, 'Dr. Omar Nasser', 'Physical Therapy', 4.8, 85),
           ],
         ),
-      ),
-    );
-  }
-
-  Widget _buildDoctorCard(
-    BuildContext context,
-    String name,
-    String specialty,
-    double rating,
-    int reviews,
-  ) {
-    return Container(
-      padding: const EdgeInsets.all(20),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(24),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.03),
-            blurRadius: 10,
-            offset: const Offset(0, 4),
-          ),
-        ],
-      ),
-      child: Column(
-        children: [
-          Row(
-            children: [
-              Container(
-                padding: const EdgeInsets.all(12),
-                decoration: const BoxDecoration(
-                  color: Color(0xFFD1FAE5),
-                  shape: BoxShape.circle,
-                ),
-                child: const Icon(
-                  LucideIcons.stethoscope,
-                  color: Color(0xFF065F46),
-                  size: 24,
-                ),
-              ),
-              const SizedBox(width: 16),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      name,
-                      style: const TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                        color: Color(0xFF1E293B),
-                      ),
-                    ),
-                    Text(
-                      specialty,
-                      style: const TextStyle(
-                        fontSize: 14,
-                        color: Color(0xFF64748B),
-                      ),
-                    ),
-                    Row(
-                      children: [
-                        const Icon(Icons.star, color: Colors.amber, size: 16),
-                        const SizedBox(width: 4),
-                        Text(
-                          AppLocalizations.of(context)!.reviews(reviews),
-                          style: const TextStyle(
-                            fontSize: 12,
-                            fontWeight: FontWeight.w600,
-                            color: Color(0xFF1E293B),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 16),
-          SizedBox(
-            width: double.infinity,
-            child: ElevatedButton(
-              onPressed: () {},
-              style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFF004D40),
-                foregroundColor: Colors.white,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                padding: const EdgeInsets.symmetric(vertical: 12),
-              ),
-              child: Text(
-                AppLocalizations.of(context)!.book,
-                style: const TextStyle(fontWeight: FontWeight.bold),
-              ),
-            ),
-          ),
-        ],
       ),
     );
   }

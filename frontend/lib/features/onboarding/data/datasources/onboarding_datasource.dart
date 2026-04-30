@@ -6,11 +6,19 @@ import 'package:sanad/core/constants/codes.dart';
 import 'package:sanad/core/constants/api_constants.dart';
 import 'package:sanad/core/models/app_exception.dart';
 
+/// Data source for managing the initial onboarding and profile setup.
+/// 
+/// This class handles updating the user's personal information and preferences
+/// in the backend after they first sign up.
 class OnboardingRemoteDataSource {
   final SupabaseClient _supabaseClient;
   final Dio _dio;
   final ApiConfig _apiConfig;
 
+  /// Creates an [OnboardingRemoteDataSource] instance.
+  /// 
+  /// Variables: [_supabaseClient] for session management. [_dio] for HTTP requests.
+  /// [_apiConfig] for endpoint configurations.
   OnboardingRemoteDataSource(this._supabaseClient, this._dio, this._apiConfig);
 
   Future<void> updateProfile(Map<String, dynamic> data) async {

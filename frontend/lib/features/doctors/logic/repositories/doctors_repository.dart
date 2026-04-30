@@ -6,10 +6,16 @@ import 'package:sanad/core/models/app_exception.dart';
 import 'package:sanad/core/constants/codes.dart';
 
 /// Repository for the Doctors feature.
-/// Translates data-layer models into domain-layer entities.
+/// 
+/// Acts as a mediator between the [DoctorsRemoteDataSource] and the UI providers.
+/// Translates data-layer models into domain-layer entities and encapsulates
+/// error handling logic.
 class DoctorsRepository {
   final DoctorsRemoteDataSource _remoteDataSource;
 
+  /// Creates a [DoctorsRepository] instance.
+  /// 
+  /// Variables: [_remoteDataSource] used to fetch raw data.
   DoctorsRepository(this._remoteDataSource);
 
   /// Fetches doctors and maps the response to [DoctorsListEntity].

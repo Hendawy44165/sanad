@@ -7,7 +7,13 @@ import 'package:sanad/core/router/router.dart';
 import 'package:sanad/core/theme/app_theme.dart';
 import 'package:sanad/l10n/app_localizations.dart';
 
+/// The root widget of the Sanad application.
+/// 
+/// This widget configures the global theme, routing, and localization
+/// for the entire app. It uses Riverpod for state management and
+/// GetIt for dependency injection.
 class SanadApp extends ConsumerWidget {
+  /// Creates a [SanadApp] instance.
   const SanadApp({super.key});
 
   @override

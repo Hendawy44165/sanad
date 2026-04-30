@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
 
+/// Centralized color palette for the Sanad application.
+/// 
+/// Defines the brand colors, text colors, and UI status colors
+/// to ensure visual consistency across all features.
 class AppColors {
   // Primary - Vibrant teal (from screenshot)
   static const Color primary = Color(0xFF00A38D);

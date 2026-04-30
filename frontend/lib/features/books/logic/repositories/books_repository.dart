@@ -6,9 +6,15 @@ import 'package:sanad/core/models/app_exception.dart';
 import 'package:sanad/core/constants/codes.dart';
 
 /// Repository for the Books feature.
+/// 
+/// Translates data-layer models into domain-layer [BookEntity] instances
+/// and manages error codes for the UI layer.
 class BooksRepository {
   final BooksRemoteDataSource _remoteDataSource;
 
+  /// Creates a [BooksRepository] instance.
+  /// 
+  /// Variables: [_remoteDataSource] used for data fetching.
   BooksRepository(this._remoteDataSource);
 
   Future<ResponseModel<BooksListEntity>> getBooks({String? query, String? category, int page = 1, int limit = 20}) async {

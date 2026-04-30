@@ -26,6 +26,10 @@ import 'package:dio/dio.dart';
 
 final getIt = GetIt.instance;
 
+/// Initializes and registers all singleton and lazy singleton dependencies.
+/// 
+/// This includes third-party packages, datasources, repositories, and providers.
+/// Must be called before [runApp] in [main].
 Future<void> configureDependencies() async {
   //! Packages Instances
   final prefs = await SharedPreferences.getInstance();
@@ -74,7 +78,15 @@ Future<void> configureDependencies() async {
   //? Books
   getIt.registerLazySingleton<BooksProvider>(() => BooksProvider(() => BooksNotifier(getIt<BooksRepository>())));
   //? Dashboard
-  getIt.registerLazySingleton<DashboardProvider>(() => DashboardProvider(DashboardNotifier.new));
+  getIt.registerLazySingleton<DashboardProvider>(
+    () => DashboardProvider(
+      () => DashboardNotifier(
+        getIt<JobsRepository>(),
+        getIt<DoctorsRepository>(),
+        getIt<BooksRepository>(),
+      ),
+    ),
+  );
   //? Doctors
   getIt.registerLazySingleton<DoctorsProvider>(() => DoctorsProvider(() => DoctorsNotifier(getIt<DoctorsRepository>())));
   //? Onboarding

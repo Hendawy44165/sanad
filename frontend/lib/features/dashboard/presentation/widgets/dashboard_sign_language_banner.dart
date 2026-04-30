@@ -2,7 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 import '../../../../l10n/app_localizations.dart';
 
+/// A promotional banner on the dashboard for the Sign Language feature.
+/// 
+/// Encourages users to try the sign language translation functionality.
 class DashboardSignLanguageBanner extends StatelessWidget {
+  /// Creates a [DashboardSignLanguageBanner] instance.
   const DashboardSignLanguageBanner({super.key});
 
   @override

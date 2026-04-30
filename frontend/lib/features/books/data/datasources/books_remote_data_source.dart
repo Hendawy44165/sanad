@@ -7,10 +7,16 @@ import 'package:sanad/core/models/app_exception.dart';
 import '../models/book_model.dart';
 
 /// Low-level data source for Store Products API interactions.
+/// 
+/// This class handles direct HTTP communication for fetching accessible books
+/// and products from the store module.
 class BooksRemoteDataSource {
   final Dio _dio;
   final ApiConfig _apiConfig;
 
+  /// Creates a [BooksRemoteDataSource] instance.
+  /// 
+  /// Variables: [_dio] Client for HTTP requests. [_apiConfig] configuration for endpoints.
   BooksRemoteDataSource(this._dio, this._apiConfig);
 
   /// Fetches a paginated list of books (products) from the server.

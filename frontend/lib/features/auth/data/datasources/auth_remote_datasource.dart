@@ -7,11 +7,20 @@ import 'package:sanad/core/constants/api_constants.dart';
 import 'package:sanad/core/models/app_exception.dart';
 import 'package:sanad/features/auth/data/models/user_model.dart';
 
+/// Low-level data source for Authentication API interactions.
+/// 
+/// This class handles the direct communication with Supabase for authentication
+/// and the custom backend for profile synchronization. It manages sessions,
+/// sign-up/sign-in flows, and token-based requests.
 class AuthRemoteDataSource {
   final SupabaseClient _supabaseClient;
   final Dio _dio;
   final ApiConfig _apiConfig;
 
+  /// Creates an [AuthRemoteDataSource] instance.
+  /// 
+  /// Variables: [_supabaseClient] for Supabase auth. [_dio] for backend requests.
+  /// [_apiConfig] for endpoint configurations.
   AuthRemoteDataSource(this._supabaseClient, this._dio, this._apiConfig);
 
   Stream<AuthState> get onAuthStateChange => _supabaseClient.auth.onAuthStateChange;

@@ -12,6 +12,9 @@ import 'package:sanad/features/books/presentation/screens/books_screen.dart';
 import 'package:sanad/features/translator/presentation/screens/translator_screen.dart';
 import 'package:sanad/features/profile/presentation/screens/profile_screen.dart';
 
+/// Provides the [GoRouter] configuration for the application.
+/// 
+/// Handles initial location, authentication-based redirects, and route definitions.
 final routerProvider = Provider<GoRouter>((ref) {
   return GoRouter(
     initialLocation: '/',

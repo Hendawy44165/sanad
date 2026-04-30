@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
 import '../../../../l10n/app_localizations.dart';
 
+/// Header widget for the dashboard displaying a welcome message.
+/// 
+/// Presents the page title and a brief subtitle to the user.
 class DashboardWelcomeHeader extends StatelessWidget {
+  /// Creates a [DashboardWelcomeHeader] instance.
   const DashboardWelcomeHeader({super.key});
 
   @override

@@ -29,9 +29,9 @@ class JobsRepository {
   ///   [isRemote] optional location filter.
   ///   [page] the page number to fetch.
   /// Assumptions: The backend returns a valid JSON matching the [JobModel] schema.
-  Future<ResponseModel<JobsListEntity>> getJobs({String? query, bool? isRemote, int page = 1}) async {
+  Future<ResponseModel<JobsListEntity>> getJobs({String? query, bool? isRemote, int page = 1, int limit = 20}) async {
     try {
-      final response = await _remoteDataSource.getJobs(query: query, isRemote: isRemote, page: page);
+      final response = await _remoteDataSource.getJobs(query: query, isRemote: isRemote, page: page, limit: limit);
 
       final entities = response.jobs.map((model) => JobEntity.fromModel(model)).toList();
       return ResponseModel.success(JobsListEntity(jobs: entities, hasNext: response.hasNext));

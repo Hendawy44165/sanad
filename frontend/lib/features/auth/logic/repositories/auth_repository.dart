@@ -8,11 +8,14 @@ import 'package:sanad/core/services/error_handling_service.dart';
 
 /// Repository for authentication operations.
 /// 
-/// Bridges the AuthRemoteDataSource with the presentation layer by mapping
-/// data models to business entities.
+/// Bridges the [AuthRemoteDataSource] with the presentation layer by mapping
+/// data models to business [UserEntity] entities and standardizing error codes.
 class AuthRepository {
   final AuthRemoteDataSource _remoteDataSource;
 
+  /// Creates an [AuthRepository] instance.
+  /// 
+  /// Variables: [_remoteDataSource] used for auth logic.
   AuthRepository(this._remoteDataSource);
 
   /// Stream of authentication state changes from Supabase.

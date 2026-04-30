@@ -1,7 +1,12 @@
 import 'package:flutter/material.dart';
 import 'app_colors.dart';
 
+/// Global theme configuration for the Sanad application.
+/// 
+/// This class defines the Material 3 light theme, including button styles,
+/// input decorations, and card themes.
 class AppTheme {
+  /// Defines the light theme for the application.
   static final lightTheme = ThemeData(
     useMaterial3: true,
     scaffoldBackgroundColor: AppColors.background,

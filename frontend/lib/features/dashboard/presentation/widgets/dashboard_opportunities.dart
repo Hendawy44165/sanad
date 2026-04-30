@@ -1,198 +1,62 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:sanad/core/theme/app_colors.dart';
+import 'package:sanad/features/jobs/logic/entities/job_entity.dart';
+import 'package:sanad/features/jobs/presentation/widgets/job_card.dart';
 import '../../../../l10n/app_localizations.dart';
 
+/// A section on the dashboard displaying featured job opportunities.
+///
+/// It accepts a list of [JobEntity] and displays them using [JobCard].
 class DashboardOpportunities extends StatelessWidget {
-  const DashboardOpportunities({super.key});
+  /// The list of featured jobs to display.
+  final List<JobEntity> jobs;
+
+  /// Creates a [DashboardOpportunities] instance.
+  const DashboardOpportunities({super.key, required this.jobs});
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+
+    if (jobs.isEmpty) return const SliverToBoxAdapter(child: SizedBox.shrink());
+
     return SliverPadding(
-      padding: const EdgeInsets.all(24),
+      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
       sliver: SliverToBoxAdapter(
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  AppLocalizations.of(context)!.opportunities,
-                  style: const TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                    color: Color(0xFF1E293B),
-                  ),
+                  l10n.opportunities,
+                  style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: AppColors.text),
                 ),
                 TextButton(
                   onPressed: () => context.go('/jobs'),
                   child: Row(
                     children: [
                       Text(
-                        AppLocalizations.of(context)!.viewAllJobs,
-                        style: const TextStyle(
-                          fontSize: 14,
-                          fontWeight: FontWeight.bold,
-                          color: Color(0xFF004D40),
-                        ),
+                        l10n.viewAllJobs,
+                        style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: AppColors.primary),
                       ),
-                      const Icon(
-                        Icons.chevron_right,
-                        size: 20,
-                        color: Color(0xFF004D40),
-                      ),
+                      const Icon(Icons.chevron_right, size: 20, color: AppColors.primary),
                     ],
                   ),
                 ),
               ],
             ),
             const SizedBox(height: 16),
-            _buildOpportunityCard(
-              context,
-              'Senior UX Researcher',
-              'TechFlow Innovations',
-              ['Remote', 'Full-Time'],
-              true,
-            ),
-            const SizedBox(height: 16),
-            _buildOpportunityCard(
-              context,
-              'Accessibility Specialist',
-              'Global Health Corp',
-              ['Hybrid', 'Contract'],
-              true,
+            ...jobs.map(
+              (job) => Padding(
+                padding: const EdgeInsets.only(bottom: 16),
+                child: JobCard(job: job, hasCv: true), // For dashboard, assume CV is present for UI consistency or handle properly
+              ),
             ),
           ],
         ),
-      ),
-    );
-  }
-
-  Widget _buildOpportunityCard(
-    BuildContext context,
-    String title,
-    String company,
-    List<String> tags,
-    bool isVerified,
-  ) {
-    return Container(
-      padding: const EdgeInsets.all(20),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(24),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.03),
-            blurRadius: 10,
-            offset: const Offset(0, 4),
-          ),
-        ],
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      title,
-                      style: const TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                        color: Color(0xFF1E293B),
-                      ),
-                    ),
-                    Text(
-                      company,
-                      style: const TextStyle(
-                        fontSize: 14,
-                        color: Color(0xFF64748B),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              if (isVerified)
-                Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 10,
-                    vertical: 6,
-                  ),
-                  decoration: BoxDecoration(
-                    color: const Color(0xFFD1FAE5),
-                    borderRadius: BorderRadius.circular(20),
-                  ),
-                  child: Row(
-                    children: [
-                      const Icon(
-                        Icons.check_circle_outline,
-                        size: 14,
-                        color: Color(0xFF065F46),
-                      ),
-                      const SizedBox(width: 4),
-                      Text(
-                        AppLocalizations.of(context)!.verifiedAccessible,
-                        style: const TextStyle(
-                          fontSize: 10,
-                          fontWeight: FontWeight.bold,
-                          color: Color(0xFF065F46),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-            ],
-          ),
-          const SizedBox(height: 16),
-          Row(
-            children: tags
-                .map(
-                  (tag) => Container(
-                    margin: const EdgeInsetsDirectional.only(end: 8),
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 12,
-                      vertical: 6,
-                    ),
-                    decoration: BoxDecoration(
-                      color: const Color(0xFFF1F5F9),
-                      borderRadius: BorderRadius.circular(20),
-                    ),
-                    child: Text(
-                      tag,
-                      style: const TextStyle(
-                        fontSize: 12,
-                        color: Color(0xFF64748B),
-                      ),
-                    ),
-                  ),
-                )
-                .toList(),
-          ),
-          const SizedBox(height: 16),
-          SizedBox(
-            width: double.infinity,
-            child: OutlinedButton(
-              onPressed: () {},
-              style: OutlinedButton.styleFrom(
-                side: const BorderSide(color: Color(0xFF004D40)),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                padding: const EdgeInsets.symmetric(vertical: 12),
-              ),
-              child: Text(
-                AppLocalizations.of(context)!.viewDetails,
-                style: const TextStyle(
-                  color: Color(0xFF004D40),
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ),
-          ),
-        ],
       ),
     );
   }
