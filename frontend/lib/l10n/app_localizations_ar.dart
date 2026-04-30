@@ -104,7 +104,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get books => 'كتب';
 
   @override
-  String get welcomeTitle => 'رفيق';
+  String get welcomeTitle => 'سند';
 
   @override
   String get welcomeSubtitle =>

@@ -6,12 +6,36 @@ import 'package:sanad/core/models/response_model.dart';
 import 'package:sanad/core/models/app_exception.dart';
 import 'package:sanad/core/constants/codes.dart';
 
+import 'package:sanad/features/auth/logic/entities/user_entity.dart';
+
 /// Repository for Profile related operations.
 class ProfileRepository {
   final AuthRemoteDataSource _authRemoteDataSource;
   final JobsRemoteDataSource _jobsRemoteDataSource;
 
   ProfileRepository(this._authRemoteDataSource, this._jobsRemoteDataSource);
+
+  Future<ResponseModel<UserEntity>> getProfile() async {
+    try {
+      final userModel = await _authRemoteDataSource.getProfile();
+      return ResponseModel.success(UserEntity.fromModel(userModel));
+    } on AppException catch (e) {
+      return ResponseModel.failure(e.code);
+    } catch (e) {
+      return const ResponseModel.failure(Codes.unknown);
+    }
+  }
+
+  Future<ResponseModel<void>> updateProfile(Map<String, dynamic> data) async {
+    try {
+      await _authRemoteDataSource.updateProfile(data);
+      return const ResponseModel.success(null);
+    } on AppException catch (e) {
+      return ResponseModel.failure(e.code);
+    } catch (e) {
+      return const ResponseModel.failure(Codes.unknown);
+    }
+  }
 
   /// Performs a sign out operation.
   Future<ResponseModel<void>> logout() async {

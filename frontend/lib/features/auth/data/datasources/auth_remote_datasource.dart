@@ -140,6 +140,39 @@ class AuthRemoteDataSource {
     }
   }
 
+  Future<UserModel> getProfile() async {
+    final session = _supabaseClient.auth.currentSession;
+    if (session == null) throw const AppException(Codes.noAuthorization);
+
+    final url = _apiConfig.profile.me;
+    try {
+      final response = await _dio.get(url, options: Options(headers: {'Authorization': 'Bearer ${session.accessToken}'}));
+      if (response.data['success'] == true) {
+        return UserModel.fromJson(response.data['data']);
+      }
+      throw const AppException(Codes.unexpectedFailure);
+    } catch (e) {
+      if (e is AppException) rethrow;
+      throw const AppException(Codes.unexpectedFailure);
+    }
+  }
+
+  Future<void> updateProfile(Map<String, dynamic> data) async {
+    final session = _supabaseClient.auth.currentSession;
+    if (session == null) throw const AppException(Codes.noAuthorization);
+
+    final url = _apiConfig.profile.me;
+    try {
+      await _dio.patch(
+        url,
+        data: data,
+        options: Options(headers: {'Authorization': 'Bearer ${session.accessToken}', 'Content-Type': 'application/json'}),
+      );
+    } catch (e) {
+      throw const AppException(Codes.unexpectedFailure);
+    }
+  }
+
   Future<void> signOut() async {
     await _supabaseClient.auth.signOut();
   }

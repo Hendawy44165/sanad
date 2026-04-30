@@ -8,7 +8,6 @@ import 'package:sanad/core/services/error_handling_service.dart';
 import '../providers/profile_provider.dart';
 import '../widgets/profile_header.dart';
 import '../widgets/language_section.dart';
-import '../widgets/notifications_section.dart';
 import '../widgets/cv_section.dart';
 import '../widgets/logout_section.dart';
 
@@ -25,9 +24,7 @@ class ProfileScreen extends ConsumerWidget {
       final error = next.value?.error;
       if (error != null) {
         final errorMessage = ErrorHandlingService.getMessage(error, l10n);
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(errorMessage), backgroundColor: Colors.red),
-        );
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(errorMessage), backgroundColor: Colors.red));
         ref.read(getIt<ProfileProvider>().notifier).clearError();
       }
     });
@@ -49,15 +46,6 @@ class ProfileScreen extends ConsumerWidget {
               SliverPadding(
                 padding: const EdgeInsets.symmetric(horizontal: 24),
                 sliver: SliverToBoxAdapter(
-                  child: NotificationsSection(
-                    enabled: profile.notificationsEnabled,
-                  ),
-                ),
-              ),
-              const SliverToBoxAdapter(child: SizedBox(height: 16)),
-              SliverPadding(
-                padding: const EdgeInsets.symmetric(horizontal: 24),
-                sliver: SliverToBoxAdapter(
                   child: CvSection(
                     cvUploaded: profile.cvUploaded,
                     onUpload: (cvPath) async {
@@ -69,9 +57,7 @@ class ProfileScreen extends ConsumerWidget {
               const SliverToBoxAdapter(child: SizedBox(height: 16)),
               SliverPadding(
                 padding: const EdgeInsets.symmetric(horizontal: 24),
-                sliver: SliverToBoxAdapter(
-                  child: LogoutSection(profileNotifier: profileNotifier),
-                ),
+                sliver: SliverToBoxAdapter(child: LogoutSection(profileNotifier: profileNotifier)),
               ),
               const SliverToBoxAdapter(child: SizedBox(height: 48)),
             ],
@@ -95,30 +81,17 @@ class ProfileScreen extends ConsumerWidget {
               decoration: BoxDecoration(
                 color: Colors.white,
                 shape: BoxShape.circle,
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withValues(alpha: 0.05),
-                    blurRadius: 10,
-                    offset: const Offset(0, 4),
-                  ),
-                ],
+                boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.05), blurRadius: 10, offset: const Offset(0, 4))],
               ),
               child: IconButton(
-                icon: const Icon(
-                  LucideIcons.arrowLeft,
-                  color: Color(0xFF1E293B),
-                ),
+                icon: const Icon(LucideIcons.arrowLeft, color: Color(0xFF1E293B)),
                 onPressed: () => context.pop(),
               ),
             ),
             const SizedBox(width: 16),
             Text(
               l10n.profileTitle,
-              style: const TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-                color: Color(0xFF1E293B),
-              ),
+              style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Color(0xFF1E293B)),
             ),
           ],
         ),
