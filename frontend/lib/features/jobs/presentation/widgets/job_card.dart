@@ -6,43 +6,39 @@ import '../../../../l10n/app_localizations.dart';
 import '../../logic/entities/job_entity.dart';
 
 /// A premium card widget for displaying job information to the user.
-/// 
+///
 /// This widget presents a summary of a [JobEntity], including its title,
 /// company, type, and location. It allows users to launch an external
 /// application link if they have uploaded their CV.
 class JobCard extends StatelessWidget {
   /// The job data to be displayed.
   final JobEntity job;
-  
+
   /// Whether the current user has a CV on file.
   /// Determines if the "Apply Now" action is enabled.
   final bool hasCv;
 
   /// Creates a [JobCard] instance.
-  /// 
+  ///
   /// Side Effects: None.
   /// Variables: [job] The source entity. [hasCv] Boolean gate for applications.
   const JobCard({super.key, required this.job, required this.hasCv});
 
   /// Logic to launch the job's application URL.
-  /// 
+  ///
   /// Side Effects: Triggers external browser/app if [job.applyUrl] is valid.
   /// Variables: [context] used for snackbars.
   /// Assumptions: [url_launcher] package is correctly configured for the target OS.
   Future<void> _handleApply(BuildContext context) async {
     final l10n = AppLocalizations.of(context)!;
-    
+
     if (!hasCv) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(l10n.uploadCV)),
-      );
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(l10n.uploadCV)));
       return;
     }
 
     if (job.applyUrl == null || job.applyUrl!.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(l10n.applicationLinkUnavailable)),
-      );
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(l10n.applicationLinkUnavailable)));
       return;
     }
 
@@ -52,16 +48,12 @@ class JobCard extends StatelessWidget {
         await launchUrl(uri, mode: LaunchMode.externalApplication);
       } else {
         if (context.mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text(l10n.couldNotOpenLink)),
-          );
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(l10n.couldNotOpenLink)));
         }
       }
     } catch (e) {
       if (context.mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(l10n.couldNotOpenLink)),
-        );
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(l10n.couldNotOpenLink)));
       }
     }
   }
@@ -73,13 +65,7 @@ class JobCard extends StatelessWidget {
       decoration: BoxDecoration(
         color: AppColors.surface,
         borderRadius: BorderRadius.circular(24),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.03),
-            blurRadius: 10,
-            offset: const Offset(0, 4),
-          ),
-        ],
+        boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.03), blurRadius: 10, offset: const Offset(0, 4))],
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -89,14 +75,8 @@ class JobCard extends StatelessWidget {
             children: [
               Container(
                 padding: const EdgeInsets.all(12),
-                decoration: BoxDecoration(
-                  color: AppColors.secondary,
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: const Icon(
-                  LucideIcons.briefcase,
-                  color: AppColors.primary,
-                ),
+                decoration: BoxDecoration(color: AppColors.secondary, borderRadius: BorderRadius.circular(12)),
+                child: const Icon(LucideIcons.briefcase, color: AppColors.primary),
               ),
               const SizedBox(width: 16),
               Expanded(
@@ -107,19 +87,9 @@ class JobCard extends StatelessWidget {
                       job.title,
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
-                      style: const TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                        color: AppColors.text,
-                      ),
+                      style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: AppColors.text),
                     ),
-                    Text(
-                      job.company,
-                      style: const TextStyle(
-                        fontSize: 14,
-                        color: AppColors.textLight,
-                      ),
-                    ),
+                    Text(job.company, style: const TextStyle(fontSize: 14, color: AppColors.textLight)),
                   ],
                 ),
               ),
@@ -130,11 +100,7 @@ class JobCard extends StatelessWidget {
             job.description,
             maxLines: 3,
             overflow: TextOverflow.ellipsis,
-            style: const TextStyle(
-              fontSize: 14,
-              color: AppColors.textLight,
-              height: 1.5,
-            ),
+            style: const TextStyle(fontSize: 14, color: AppColors.textLight, height: 1.5),
           ),
           const SizedBox(height: 16),
           _buildTags(context),
@@ -146,15 +112,10 @@ class JobCard extends StatelessWidget {
               style: ElevatedButton.styleFrom(
                 backgroundColor: AppColors.primary,
                 foregroundColor: AppColors.onPrimary,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
-                ),
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                 padding: const EdgeInsets.symmetric(vertical: 16),
               ),
-              child: Text(
-                AppLocalizations.of(context)!.applyNow,
-                style: const TextStyle(fontWeight: FontWeight.bold),
-              ),
+              child: Text(AppLocalizations.of(context)!.applyNow, style: const TextStyle(fontWeight: FontWeight.bold)),
             ),
           ),
         ],
@@ -163,15 +124,11 @@ class JobCard extends StatelessWidget {
   }
 
   /// Builds the horizontal list of metadata tags (Remote, Type, Location).
-  /// 
+  ///
   /// Variables: [context] for localization.
   Widget _buildTags(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
-    final tags = [
-      if (job.isRemote) l10n.remote,
-      _getEmploymentTypeLabel(job.type, l10n),
-      if (job.location != null) job.location!,
-    ];
+    final tags = [if (job.isRemote) l10n.remote, _getEmploymentTypeLabel(job.type, l10n), if (job.location != null) job.location!];
 
     return Wrap(
       spacing: 8,
@@ -180,14 +137,8 @@ class JobCard extends StatelessWidget {
           .map(
             (tag) => Container(
               padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-              decoration: BoxDecoration(
-                color: AppColors.inputFill,
-                borderRadius: BorderRadius.circular(20),
-              ),
-              child: Text(
-                tag,
-                style: const TextStyle(fontSize: 12, color: AppColors.textLight),
-              ),
+              decoration: BoxDecoration(color: AppColors.inputFill, borderRadius: BorderRadius.circular(20)),
+              child: Text(tag, style: const TextStyle(fontSize: 12, color: AppColors.textLight)),
             ),
           )
           .toList(),
@@ -195,7 +146,7 @@ class JobCard extends StatelessWidget {
   }
 
   /// Maps the [JobType] enum to a localized string.
-  /// 
+  ///
   /// Variables: [type] The source enum. [l10n] Localization source.
   String _getEmploymentTypeLabel(JobType type, AppLocalizations l10n) {
     switch (type) {
