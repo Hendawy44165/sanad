@@ -269,7 +269,7 @@ class _WelcomeScreenState extends ConsumerState<WelcomeScreen> with SingleTicker
                       children: [
                         const Icon(Icons.lock_outline, size: 16, color: AppColors.textLight),
                         const SizedBox(width: 8),
-                        Text('Your data is secure and private', style: TextStyle(color: AppColors.text.withValues(alpha: 0.5), fontSize: 14)),
+                        Text(l10n.dataSecureText, style: TextStyle(color: AppColors.text.withValues(alpha: 0.5), fontSize: 14)),
                       ],
                     ),
                   ],

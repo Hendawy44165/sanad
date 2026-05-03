@@ -46,7 +46,7 @@ class ProfileHeader extends StatelessWidget {
                       width: 72,
                       height: 72,
                       decoration: const BoxDecoration(
-                        color: Color(0xFFD1FAE5),
+                        color: AppColors.secondary,
                         shape: BoxShape.circle,
                       ),
                       alignment: Alignment.center,
@@ -65,7 +65,7 @@ class ProfileHeader extends StatelessWidget {
                               style: const TextStyle(
                                 fontSize: 28,
                                 fontWeight: FontWeight.bold,
-                                color: Color(0xFF065F46),
+                                color: AppColors.primary,
                               ),
                             ),
                     ),
@@ -75,13 +75,13 @@ class ProfileHeader extends StatelessWidget {
                       child: Container(
                         padding: const EdgeInsets.all(4),
                         decoration: const BoxDecoration(
-                          color: Color(0xFF004D40),
+                          color: AppColors.primary,
                           shape: BoxShape.circle,
                         ),
                         child: const Icon(
                           LucideIcons.camera,
                           size: 12,
-                          color: Colors.white,
+                          color: AppColors.onPrimary,
                         ),
                       ),
                     ),
@@ -102,7 +102,7 @@ class ProfileHeader extends StatelessWidget {
                       style: const TextStyle(
                         fontSize: 20,
                         fontWeight: FontWeight.bold,
-                        color: Color(0xFF1E293B),
+                        color: AppColors.text,
                       ),
                     ),
                     const SizedBox(height: 4),
@@ -111,7 +111,7 @@ class ProfileHeader extends StatelessWidget {
                       profile.userEmail,
                       style: const TextStyle(
                         fontSize: 14,
-                        color: Color(0xFF64748B),
+                        color: AppColors.textLight,
                       ),
                     ),
                     const SizedBox(height: 8),
@@ -122,7 +122,7 @@ class ProfileHeader extends StatelessWidget {
               IconButton(
                 icon: const Icon(
                   LucideIcons.pencil,
-                  color: Color(0xFF64748B),
+                  color: AppColors.textLight,
                   size: 20,
                 ),
                 onPressed: () => _handleEditName(context, profile.name),
@@ -155,8 +155,8 @@ class ProfileHeader extends StatelessWidget {
           ElevatedButton(
             onPressed: () => Navigator.pop(context, controller.text),
             style: ElevatedButton.styleFrom(
-              backgroundColor: const Color(0xFF004D40),
-              foregroundColor: Colors.white,
+              backgroundColor: AppColors.primary,
+              foregroundColor: AppColors.onPrimary,
             ),
             child: Text(l10n.save),
           ),

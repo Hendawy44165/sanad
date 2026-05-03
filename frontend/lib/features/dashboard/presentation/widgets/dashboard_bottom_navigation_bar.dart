@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:lucide_icons/lucide_icons.dart';
+import 'package:sanad/core/theme/app_colors.dart';
 import '../../../../l10n/app_localizations.dart';
 
 class DashboardBottomNavigationBar extends StatelessWidget {
@@ -28,9 +29,9 @@ class DashboardBottomNavigationBar extends StatelessWidget {
       child: BottomNavigationBar(
         currentIndex: selectedIndex,
         onTap: onItemSelected,
-        backgroundColor: Colors.white,
-        selectedItemColor: const Color(0xFF004D40),
-        unselectedItemColor: const Color(0xFF94A3B8),
+        backgroundColor: AppColors.surface,
+        selectedItemColor: AppColors.primary,
+        unselectedItemColor: AppColors.textLight,
         type: BottomNavigationBarType.fixed,
         elevation: 0,
         items: [

@@ -7,13 +7,15 @@ class ApiConfig {
   final JobsEndpoints jobs;
   final DoctorsEndpoints doctors;
   final StoreEndpoints store;
+  final TranslatorEndpoints translator;
 
   ApiConfig(this.baseUrl)
       : auth = AuthEndpoints(baseUrl),
         profile = ProfileEndpoints(baseUrl),
         jobs = JobsEndpoints(baseUrl),
         doctors = DoctorsEndpoints(baseUrl),
-        store = StoreEndpoints(baseUrl);
+        store = StoreEndpoints(baseUrl),
+        translator = TranslatorEndpoints(baseUrl);
 
   factory ApiConfig.fromDotEnv() {
     return ApiConfig(dotenv.env['API_BASE_URL']!);
@@ -51,4 +53,10 @@ class StoreEndpoints {
   final String products;
 
   StoreEndpoints(String baseUrl) : products = '$baseUrl/store/products';
+}
+
+class TranslatorEndpoints {
+  final String translateVideo;
+
+  TranslatorEndpoints(String baseUrl) : translateVideo = '$baseUrl/translator/translate';
 }

@@ -8,7 +8,7 @@ import 'package:sanad/core/theme/app_theme.dart';
 import 'package:sanad/l10n/app_localizations.dart';
 
 /// The root widget of the Sanad application.
-/// 
+///
 /// This widget configures the global theme, routing, and localization
 /// for the entire app. It uses Riverpod for state management and
 /// GetIt for dependency injection.
@@ -21,18 +21,6 @@ class SanadApp extends ConsumerWidget {
     final router = ref.watch(routerProvider);
     final locale = ref.watch(getIt<LocaleProvider>());
 
-    return MaterialApp.router(
-      title: 'Sanad',
-      routerConfig: router,
-      localizationsDelegates: const [
-        AppLocalizations.delegate,
-        GlobalMaterialLocalizations.delegate,
-        GlobalWidgetsLocalizations.delegate,
-        GlobalCupertinoLocalizations.delegate,
-      ],
-      supportedLocales: const [Locale('en'), Locale('ar')],
-      locale: locale,
-      theme: AppTheme.lightTheme,
-    );
+    return MaterialApp.router(title: 'Sanad', debugShowCheckedModeBanner: false, routerConfig: router, localizationsDelegates: const [AppLocalizations.delegate, GlobalMaterialLocalizations.delegate, GlobalWidgetsLocalizations.delegate, GlobalCupertinoLocalizations.delegate], supportedLocales: const [Locale('en'), Locale('ar')], locale: locale, theme: AppTheme.lightTheme);
   }
 }

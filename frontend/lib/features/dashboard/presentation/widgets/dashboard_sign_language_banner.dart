@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:lucide_icons/lucide_icons.dart';
+import 'package:sanad/core/theme/app_colors.dart';
 import '../../../../l10n/app_localizations.dart';
 
 /// A promotional banner on the dashboard for the Sign Language feature.
-/// 
+///
 /// Encourages users to try the sign language translation functionality.
 class DashboardSignLanguageBanner extends StatelessWidget {
   /// Creates a [DashboardSignLanguageBanner] instance.
@@ -16,23 +17,13 @@ class DashboardSignLanguageBanner extends StatelessWidget {
       sliver: SliverToBoxAdapter(
         child: Container(
           padding: const EdgeInsets.all(24),
-          decoration: BoxDecoration(
-            color: const Color(0xFF004D40),
-            borderRadius: BorderRadius.circular(24),
-          ),
+          decoration: BoxDecoration(color: AppColors.primary, borderRadius: BorderRadius.circular(24)),
           child: Row(
             children: [
               Container(
                 padding: const EdgeInsets.all(16),
-                decoration: BoxDecoration(
-                  color: Colors.white.withValues(alpha: 0.1),
-                  borderRadius: BorderRadius.circular(20),
-                ),
-                child: const Icon(
-                  LucideIcons.handMetal,
-                  color: Colors.white,
-                  size: 32,
-                ),
+                decoration: BoxDecoration(color: Colors.white.withValues(alpha: 0.1), borderRadius: BorderRadius.circular(20)),
+                child: const Icon(LucideIcons.handMetal, color: Colors.white, size: 32),
               ),
               const SizedBox(width: 16),
               Expanded(
@@ -41,20 +32,10 @@ class DashboardSignLanguageBanner extends StatelessWidget {
                   children: [
                     const Text(
                       'Sign Language',
-                      style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white,
-                      ),
+                      style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white),
                     ),
                     const SizedBox(height: 4),
-                    Text(
-                      AppLocalizations.of(context)!.tapToSign,
-                      style: TextStyle(
-                        fontSize: 14,
-                        color: Colors.white.withValues(alpha: 0.8),
-                      ),
-                    ),
+                    Text(AppLocalizations.of(context)!.tapToSign, style: TextStyle(fontSize: 14, color: Colors.white.withValues(alpha: 0.8))),
                   ],
                 ),
               ),

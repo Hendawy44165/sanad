@@ -288,5 +288,15 @@
   "retry": "إعادة المحاولة",
   "err_fileNotFound": "الملف غير موجود.",
   "err_invalidFileType": "نوع الملف غير مدعوم. يرجى استخدام PDF أو DOC أو DOCX.",
-  "err_permissionDenied": "لا يوجد إذن للوصول إلى الملف."
+  "err_permissionDenied": "لا يوجد إذن للوصول إلى الملف.",
+  "translatorInstruction": "ارفع أو سجل فيديو بلغة الإشارة",
+  "translateVideo": "ترجمة الفيديو",
+  "videoSelected": "تم اختيار الفيديو",
+  "removeVideo": "إزالة الفيديو",
+  "recordVideo": "تسجيل",
+  "chooseFromGallery": "المعرض",
+  "err_couldNotOpenAudio": "تعذر فتح ملف الصوت.",
+  "translationReady": "الترجمة جاهزة",
+  "openAudio": "فتح الصوت",
+  "dataSecureText": "بياناتك آمنة وخاصة"
 }

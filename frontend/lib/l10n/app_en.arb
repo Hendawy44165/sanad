@@ -302,5 +302,15 @@
   "retry": "Retry",
   "err_fileNotFound": "File not found.",
   "err_invalidFileType": "Invalid file type. Please use PDF, DOC, or DOCX.",
-  "err_permissionDenied": "Permission denied to access the file."
+  "err_permissionDenied": "Permission denied to access the file.",
+  "translatorInstruction": "Upload or Record a Sign Language Video",
+  "translateVideo": "Translate Video",
+  "videoSelected": "Video Selected",
+  "removeVideo": "Remove Video",
+  "recordVideo": "Record",
+  "chooseFromGallery": "Gallery",
+  "err_couldNotOpenAudio": "Could not open audio file.",
+  "translationReady": "Translation Ready",
+  "openAudio": "Open Audio",
+  "dataSecureText": "Your data is secure and private"
 }

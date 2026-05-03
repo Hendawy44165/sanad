@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sanad/core/theme/app_colors.dart';
 import 'profile_icon_box.dart';
 
 class ProfileSectionLabel extends StatelessWidget {
@@ -17,8 +18,8 @@ class ProfileSectionLabel extends StatelessWidget {
       children: [
         ProfileIconBox(
           icon: icon,
-          bg: const Color(0xFFD1FAE5),
-          fg: const Color(0xFF065F46),
+          bg: AppColors.secondary,
+          fg: AppColors.primary,
         ),
         const SizedBox(width: 12),
         Text(
@@ -26,7 +27,7 @@ class ProfileSectionLabel extends StatelessWidget {
           style: const TextStyle(
             fontSize: 17,
             fontWeight: FontWeight.bold,
-            color: Color(0xFF1E293B),
+            color: AppColors.text,
           ),
         ),
       ],

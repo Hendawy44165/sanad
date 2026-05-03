@@ -860,4 +860,34 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get err_permissionDenied => 'Permission denied to access the file.';
+
+  @override
+  String get translatorInstruction => 'Upload or Record a Sign Language Video';
+
+  @override
+  String get translateVideo => 'Translate Video';
+
+  @override
+  String get videoSelected => 'Video Selected';
+
+  @override
+  String get removeVideo => 'Remove Video';
+
+  @override
+  String get recordVideo => 'Record';
+
+  @override
+  String get chooseFromGallery => 'Gallery';
+
+  @override
+  String get err_couldNotOpenAudio => 'Could not open audio file.';
+
+  @override
+  String get translationReady => 'Translation Ready';
+
+  @override
+  String get openAudio => 'Open Audio';
+
+  @override
+  String get dataSecureText => 'Your data is secure and private';
 }

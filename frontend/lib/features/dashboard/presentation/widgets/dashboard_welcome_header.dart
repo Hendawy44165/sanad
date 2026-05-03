@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sanad/core/theme/app_colors.dart';
 import '../../../../l10n/app_localizations.dart';
 
 /// Header widget for the dashboard displaying a welcome message.
@@ -21,13 +22,13 @@ class DashboardWelcomeHeader extends StatelessWidget {
               style: const TextStyle(
                 fontSize: 32,
                 fontWeight: FontWeight.bold,
-                color: Color(0xFF1E293B),
+                color: AppColors.text,
               ),
             ),
             const SizedBox(height: 8),
             Text(
               AppLocalizations.of(context)!.dashboardSubtitle,
-              style: const TextStyle(fontSize: 16, color: Color(0xFF64748B)),
+              style: const TextStyle(fontSize: 16, color: AppColors.textLight),
             ),
           ],
         ),

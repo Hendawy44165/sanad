@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sanad/core/dependency_injection.dart';
+import 'package:sanad/core/theme/app_colors.dart';
 import '../../../../core/providers/locale_provider.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../providers/profile_provider.dart';
@@ -32,9 +33,7 @@ class LanguageSection extends ConsumerWidget {
                   onTap: () {
                     final localeProvider = getIt<LocaleProvider>();
                     final profileProvider = getIt<ProfileProvider>();
-                    ref
-                        .read(localeProvider.notifier)
-                        .setLocale(const Locale('en'));
+                    ref.read(localeProvider.notifier).setLocale(const Locale('en'));
                     ref.read(profileProvider.notifier).updateLanguage('en');
                   },
                 ),
@@ -47,9 +46,7 @@ class LanguageSection extends ConsumerWidget {
                   onTap: () {
                     final localeProvider = getIt<LocaleProvider>();
                     final profileProvider = getIt<ProfileProvider>();
-                    ref
-                        .read(localeProvider.notifier)
-                        .setLocale(const Locale('ar'));
+                    ref.read(localeProvider.notifier).setLocale(const Locale('ar'));
                     ref.read(profileProvider.notifier).updateLanguage('ar');
                   },
                 ),
@@ -67,11 +64,7 @@ class _LanguageChip extends StatelessWidget {
   final bool isSelected;
   final VoidCallback onTap;
 
-  const _LanguageChip({
-    required this.label,
-    required this.isSelected,
-    required this.onTap,
-  });
+  const _LanguageChip({required this.label, required this.isSelected, required this.onTap});
 
   @override
   Widget build(BuildContext context) {
@@ -81,26 +74,14 @@ class _LanguageChip extends StatelessWidget {
         duration: const Duration(milliseconds: 200),
         padding: const EdgeInsets.symmetric(vertical: 14),
         decoration: BoxDecoration(
-          color: isSelected ? const Color(0xFF004D40) : const Color(0xFFF1F5F9),
+          color: isSelected ? AppColors.primary : AppColors.background,
           borderRadius: BorderRadius.circular(16),
-          boxShadow: isSelected
-              ? [
-                  BoxShadow(
-                    color: const Color(0xFF004D40).withValues(alpha: 0.25),
-                    blurRadius: 8,
-                    offset: const Offset(0, 4),
-                  ),
-                ]
-              : [],
+          boxShadow: isSelected ? [BoxShadow(color: AppColors.primary.withValues(alpha: 0.25), blurRadius: 8, offset: const Offset(0, 4))] : [],
         ),
         alignment: Alignment.center,
         child: Text(
           label,
-          style: TextStyle(
-            fontSize: 15,
-            fontWeight: FontWeight.w600,
-            color: isSelected ? Colors.white : const Color(0xFF64748B),
-          ),
+          style: TextStyle(fontSize: 15, fontWeight: FontWeight.w600, color: isSelected ? AppColors.onPrimary : AppColors.textLight),
         ),
       ),
     );

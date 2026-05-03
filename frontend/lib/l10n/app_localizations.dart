@@ -1663,6 +1663,66 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Permission denied to access the file.'**
   String get err_permissionDenied;
+
+  /// No description provided for @translatorInstruction.
+  ///
+  /// In en, this message translates to:
+  /// **'Upload or Record a Sign Language Video'**
+  String get translatorInstruction;
+
+  /// No description provided for @translateVideo.
+  ///
+  /// In en, this message translates to:
+  /// **'Translate Video'**
+  String get translateVideo;
+
+  /// No description provided for @videoSelected.
+  ///
+  /// In en, this message translates to:
+  /// **'Video Selected'**
+  String get videoSelected;
+
+  /// No description provided for @removeVideo.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove Video'**
+  String get removeVideo;
+
+  /// No description provided for @recordVideo.
+  ///
+  /// In en, this message translates to:
+  /// **'Record'**
+  String get recordVideo;
+
+  /// No description provided for @chooseFromGallery.
+  ///
+  /// In en, this message translates to:
+  /// **'Gallery'**
+  String get chooseFromGallery;
+
+  /// No description provided for @err_couldNotOpenAudio.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not open audio file.'**
+  String get err_couldNotOpenAudio;
+
+  /// No description provided for @translationReady.
+  ///
+  /// In en, this message translates to:
+  /// **'Translation Ready'**
+  String get translationReady;
+
+  /// No description provided for @openAudio.
+  ///
+  /// In en, this message translates to:
+  /// **'Open Audio'**
+  String get openAudio;
+
+  /// No description provided for @dataSecureText.
+  ///
+  /// In en, this message translates to:
+  /// **'Your data is secure and private'**
+  String get dataSecureText;
 }
 
 class _AppLocalizationsDelegate

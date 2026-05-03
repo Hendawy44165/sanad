@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sanad/core/dependency_injection.dart';
+import 'package:sanad/core/theme/app_colors.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../providers/profile_provider.dart';
 import 'profile_card.dart';
@@ -19,11 +20,7 @@ class NotificationsSection extends ConsumerWidget {
     return ProfileCard(
       child: Row(
         children: [
-          ProfileIconBox(
-            icon: LucideIcons.bell,
-            bg: const Color(0xFFD1FAE5),
-            fg: const Color(0xFF065F46),
-          ),
+          ProfileIconBox(icon: LucideIcons.bell, bg: AppColors.secondary, fg: AppColors.primary),
           const SizedBox(width: 16),
           Expanded(
             child: Column(
@@ -31,29 +28,13 @@ class NotificationsSection extends ConsumerWidget {
               children: [
                 Text(
                   l10n.notifications,
-                  style: const TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w600,
-                    color: Color(0xFF1E293B),
-                  ),
+                  style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600, color: AppColors.text),
                 ),
-                Text(
-                  enabled ? l10n.notificationsOn : l10n.notificationsOff,
-                  style: const TextStyle(
-                    fontSize: 13,
-                    color: Color(0xFF64748B),
-                  ),
-                ),
+                Text(enabled ? l10n.notificationsOn : l10n.notificationsOff, style: const TextStyle(fontSize: 13, color: AppColors.textLight)),
               ],
             ),
           ),
-          Switch.adaptive(
-            value: enabled,
-            activeThumbColor: const Color(0xFF004D40),
-            onChanged: (val) => ref
-                .read(getIt<ProfileProvider>().notifier)
-                .toggleNotifications(val),
-          ),
+          Switch.adaptive(value: enabled, activeThumbColor: AppColors.primary, onChanged: (val) => ref.read(getIt<ProfileProvider>().notifier).toggleNotifications(val)),
         ],
       ),
     );

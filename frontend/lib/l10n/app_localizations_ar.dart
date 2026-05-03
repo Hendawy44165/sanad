@@ -861,4 +861,34 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get err_permissionDenied => 'لا يوجد إذن للوصول إلى الملف.';
+
+  @override
+  String get translatorInstruction => 'ارفع أو سجل فيديو بلغة الإشارة';
+
+  @override
+  String get translateVideo => 'ترجمة الفيديو';
+
+  @override
+  String get videoSelected => 'تم اختيار الفيديو';
+
+  @override
+  String get removeVideo => 'إزالة الفيديو';
+
+  @override
+  String get recordVideo => 'تسجيل';
+
+  @override
+  String get chooseFromGallery => 'المعرض';
+
+  @override
+  String get err_couldNotOpenAudio => 'تعذر فتح ملف الصوت.';
+
+  @override
+  String get translationReady => 'الترجمة جاهزة';
+
+  @override
+  String get openAudio => 'فتح الصوت';
+
+  @override
+  String get dataSecureText => 'بياناتك آمنة وخاصة';
 }

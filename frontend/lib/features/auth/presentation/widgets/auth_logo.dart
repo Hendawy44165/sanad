@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../../../../core/theme/app_colors.dart';
+import 'package:sanad/core/theme/app_colors.dart';
 
 class AuthLogo extends StatelessWidget {
   const AuthLogo({super.key});
@@ -9,15 +9,8 @@ class AuthLogo extends StatelessWidget {
     return Container(
       width: 80,
       height: 80,
-      decoration: BoxDecoration(
-        color: const Color(0xFFE0F2F1), // Very light teal
-        borderRadius: BorderRadius.circular(24),
-      ),
-      child: const Icon(
-        Icons.favorite_border,
-        color: AppColors.primary,
-        size: 40,
-      ),
+      decoration: BoxDecoration(color: AppColors.secondary, borderRadius: BorderRadius.circular(24)),
+      child: const Icon(Icons.favorite_border, color: AppColors.primary, size: 40),
     );
   }
 }

@@ -12,6 +12,8 @@ import 'package:sanad/features/onboarding/presentation/providers/onboarding_prov
 import 'package:sanad/features/jobs/presentation/providers/jobs_provider.dart';
 import 'package:sanad/features/profile/presentation/providers/profile_provider.dart';
 import 'package:sanad/features/profile/logic/repositories/profile_repository.dart';
+import 'package:sanad/features/translator/data/datasources/translator_remote_data_source.dart';
+import 'package:sanad/features/translator/logic/repositories/translator_repository.dart';
 import 'package:sanad/features/translator/presentation/providers/translator_provider.dart';
 import 'package:sanad/features/onboarding/data/datasources/onboarding_datasource.dart';
 import 'package:sanad/features/books/data/datasources/books_remote_data_source.dart';
@@ -27,7 +29,7 @@ import 'package:dio/dio.dart';
 final getIt = GetIt.instance;
 
 /// Initializes and registers all singleton and lazy singleton dependencies.
-/// 
+///
 /// This includes third-party packages, datasources, repositories, and providers.
 /// Must be called before [runApp] in [main].
 Future<void> configureDependencies() async {
@@ -56,8 +58,12 @@ Future<void> configureDependencies() async {
   //? Books
   getIt.registerLazySingleton<BooksRemoteDataSource>(() => BooksRemoteDataSource(getIt<Dio>(), getIt<ApiConfig>()));
 
+  //? Translator
+  getIt.registerLazySingleton<TranslatorRemoteDataSource>(() => TranslatorRemoteDataSource(getIt<Dio>(), getIt<ApiConfig>()));
+
   //! Repositories
   getIt.registerLazySingleton<AuthRepository>(() => AuthRepository(getIt<AuthRemoteDataSource>()));
+
   getIt.registerLazySingleton<ProfileRepository>(() => ProfileRepository(getIt<AuthRemoteDataSource>(), getIt<JobsRemoteDataSource>()));
 
   getIt.registerLazySingleton<OnboardingRepository>(() => OnboardingRepository(getIt<OnboardingRemoteDataSource>()));
@@ -67,6 +73,8 @@ Future<void> configureDependencies() async {
   getIt.registerLazySingleton<DoctorsRepository>(() => DoctorsRepository(getIt<DoctorsRemoteDataSource>()));
 
   getIt.registerLazySingleton<BooksRepository>(() => BooksRepository(getIt<BooksRemoteDataSource>()));
+
+  getIt.registerLazySingleton<TranslatorRepository>(() => TranslatorRepository(getIt<TranslatorRemoteDataSource>()));
 
   //! Providers
   //? Locale
@@ -78,15 +86,7 @@ Future<void> configureDependencies() async {
   //? Books
   getIt.registerLazySingleton<BooksProvider>(() => BooksProvider(() => BooksNotifier(getIt<BooksRepository>())));
   //? Dashboard
-  getIt.registerLazySingleton<DashboardProvider>(
-    () => DashboardProvider(
-      () => DashboardNotifier(
-        getIt<JobsRepository>(),
-        getIt<DoctorsRepository>(),
-        getIt<BooksRepository>(),
-      ),
-    ),
-  );
+  getIt.registerLazySingleton<DashboardProvider>(() => DashboardProvider(() => DashboardNotifier(getIt<JobsRepository>(), getIt<DoctorsRepository>(), getIt<BooksRepository>())));
   //? Doctors
   getIt.registerLazySingleton<DoctorsProvider>(() => DoctorsProvider(() => DoctorsNotifier(getIt<DoctorsRepository>())));
   //? Onboarding
@@ -94,5 +94,5 @@ Future<void> configureDependencies() async {
   //? Jobs
   getIt.registerLazySingleton<JobsProvider>(() => JobsProvider(() => JobsNotifier(getIt<JobsRepository>())));
   //? Translator
-  getIt.registerLazySingleton<TranslatorProvider>(() => TranslatorProvider(TranslatorNotifier.new));
+  getIt.registerLazySingleton<TranslatorProvider>(() => TranslatorProvider(() => TranslatorNotifier(getIt<TranslatorRepository>())));
 }
